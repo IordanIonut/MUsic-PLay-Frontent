@@ -1,0 +1,125 @@
+.pop-up-container {
+  width: 100%;
+  display: flex;
+  overflow: auto;
+  min-height: 100vh;
+  align-items: center;
+  flex-direction: column;
+  background-image: linear-gradient(-45deg, rgb(19, 19, 19) 85.00%,rgb(44, 62, 80) 100.00%);
+}
+.pop-up-error-corect {
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  width: 40%;
+  bottom: 0px;
+  height: 40%;
+  margin: auto;
+  display: flex;
+  opacity: 1;
+  position: absolute;
+  box-shadow: 5px 5px 20px 0px #2c3e50,-5px -5px 20px 0px #2c3e50;
+  align-items: center;
+  flex-direction: row;
+  justify-content: center;
+}
+.pop-up-message {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  opacity: 0.3;
+  transition: 0.3s;
+  align-items: center;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.pop-up-message:hover {
+  opacity: 0.6;
+}
+.pop-up-image {
+  width: 40%;
+  height: 40%;
+  margin-top: 30px;
+  object-fit: cover;
+}
+.pop-up-text {
+  color: var(--dl-color-gray-700);
+  width: 100%;
+  height: auto;
+  font-size: 20px;
+  margin-top: 50px;
+  text-align: center;
+}
+.pop-up-change {
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  width: 40%;
+  bottom: 0px;
+  height: 40%;
+  margin: auto;
+  display: none;
+  opacity: 1;
+  position: absolute;
+  box-shadow: 5px 5px 20px 0px #2c3e50,-5px -5px 20px 0px #2c3e50;
+  align-items: center;
+  flex-direction: row;
+  justify-content: center;
+}
+.pop-up-message1 {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  opacity: 0.3;
+  transition: 0.3s;
+  align-items: center;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.pop-up-message1:hover {
+  opacity: 0.6;
+}
+.pop-up-text3 {
+  color: var(--dl-color-gray-700);
+  width: 100%;
+  height: auto;
+  font-size: 20px;
+  margin-top: 50px;
+  text-align: center;
+}
+.pop-up-textinput {
+  color: var(--dl-color-gray-700);
+  width: 80%;
+  height: auto;
+  align-self: center;
+  margin-top: 50px;
+  border-color: #2c3e50;
+  border-radius: 4px;
+  margin-bottom: 50px;
+  background-color: transparent;
+  border-bottom-width: 2px;
+}
+.pop-up-button {
+  color: var(--dl-color-gray-700);
+  width: 250px;
+  height: 50px;
+  align-self: center;
+  margin-top: 10px;
+  transition: 0.3s;
+}
+.pop-up-button:hover {
+  color: var(--dl-color-gray-700);
+  align-items: center;
+  border-radius: 30px;
+  justify-content: center;
+}
+.pop-up-text6 {
+  font-size: 18px;
+  align-self: center;
+  text-transform: uppercase;
+}
+@media(max-width: 479px) {
+  .pop-up-button {
+    width: 150px;
+  }
+}

@@ -1,0 +1,633 @@
+.account-container {
+  width: 100%;
+  height: 100hv;
+  min-height: 100vh;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  background-image: linear-gradient(-69deg, rgb(19, 19, 19) 85.00%,rgb(44, 62, 80) 100.00%);
+}
+.account-up {
+  width: 100%;
+  height: 10%;
+  display: flex;
+  padding: 0px;
+  z-index: 100;
+  position: relative;
+  align-self: flex-start;
+  align-items: center;
+  justify-content: flex-start;
+}
+.account-image {
+  width: 70px;
+  object-fit: cover;
+  margin-left: 30px;
+}
+.account-image1 {
+  width: 100px;
+  object-fit: cover;
+}
+.account-account {
+  top: 0px;
+  right: 80px;
+  width: 40px;
+  bottom: 0px;
+  margin: auto;
+  opacity: 0.3;
+  position: absolute;
+  align-self: center;
+  transition: 0.3s;
+  margin-left: 0px;
+  padding-top: 0px;
+  margin-right: 0px;
+  padding-left: 0px;
+  border-radius: var(--dl-radius-radius-round);
+  padding-right: 0px;
+  padding-bottom: 0px;
+  justify-content: center;
+}
+.account-account:hover {
+  width: 40px;
+  opacity: 0.4;
+  margin-right: 0px;
+}
+.account-button {
+  align-self: center;
+  transition: 0.3s;
+  margin-left: 0px;
+  margin-right: 0px;
+  justify-content: center;
+}
+.account-button:hover {
+  margin-left: 0px;
+  margin-right: 0px;
+}
+.account-icon {
+  fill: var(--dl-color-gray-700);
+  width: 100%;
+  height: 100%;
+}
+.account-view {
+  width: 100%;
+  height: 90%;
+  margin: 0;
+  display: flex;
+  z-index: 100;
+  align-self: flex-start;
+  align-items: baseline;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+.account-left-bar {
+  width: 120px;
+  height: 100%;
+  display: flex;
+  z-index: 100;
+  position: relative;
+  align-self: flex-start;
+  align-items: center;
+  padding-top: 30px;
+  margin-right: 0px;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.account-icon02 {
+  fill: var(--dl-color-gray-700);
+  width: 100%;
+  height: 100%;
+}
+.account-button2 {
+  color: var(--dl-color-gray-700);
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+  flex-direction: row;
+  justify-content: center;
+}
+.account-icon04 {
+  fill: var(--dl-color-gray-700);
+  width: 100%;
+  height: 100%;
+}
+.account-button3 {
+  color: var(--dl-color-gray-700);
+  margin-top: mixed;
+  align-items: center;
+  margin-bottom: 30px;
+  flex-direction: column;
+  justify-content: center;
+}
+.account-icon06 {
+  fill: var(--dl-color-gray-700);
+  width: 100%;
+  height: 100%;
+}
+.account-cont {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 10px;
+  overflow: scroll;
+  align-self: flex-start;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.account-text {
+  color: var(--dl-color-gray-500);
+  width: auto;
+  height: 40px;
+  opacity: 0.6;
+  font-size: 30px;
+  align-self: flex-start;
+  text-align: left;
+  transition: 0.3s;
+  margin-left: 50px;
+}
+.account-text:hover {
+  opacity: 1;
+  margin-left: 45px;
+}
+.account-account1 {
+  width: 90%;
+  height: auto;
+  display: flex;
+  padding: 10px;
+  position: relative;
+  margin-top: 10px;
+  align-items: flex-start;
+  margin-left: 50px;
+  border-color: var(--dl-color-gray-700);
+  border-width: 1px;
+  flex-direction: column;
+  justify-content: center;
+  border-top-width: 2px;
+  border-left-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 0px;
+}
+.account-text01 {
+  color: var(--dl-color-gray-500);
+  width: 100%;
+  height: 40px;
+  opacity: 0.6;
+  font-size: 25px;
+  align-self: flex-start;
+  text-align: left;
+  transition: 0.3s;
+  margin-left: 40px;
+  margin-bottom: 40px;
+}
+.account-text01:hover {
+  opacity: 1;
+  margin-left: 45px;
+}
+.account-account2 {
+  top: 10px;
+  right: 50px;
+  width: 40px;
+  opacity: 0.3;
+  position: absolute;
+  align-self: stretch;
+  transition: 0.3s;
+  margin-left: 0px;
+  padding-top: 0px;
+  margin-right: 0px;
+  padding-left: 0px;
+  border-radius: var(--dl-radius-radius-round);
+  padding-right: 0px;
+  padding-bottom: 0px;
+  justify-content: center;
+}
+.account-account2:hover {
+  width: 40px;
+  opacity: 0.4;
+  margin-right: 0px;
+}
+.account-button4 {
+  align-self: center;
+  transition: 0.3s;
+  margin-left: 0px;
+  margin-right: 0px;
+  justify-content: center;
+}
+.account-button4:hover {
+  margin-left: 0px;
+  margin-right: 0px;
+}
+.account-icon08 {
+  fill: var(--dl-color-gray-700);
+  width: 100%;
+  height: 100%;
+}
+.account-text04 {
+  color: var(--dl-color-gray-500);
+  width: 100%;
+  height: 40px;
+  opacity: 0.6;
+  font-size: 25px;
+  align-self: flex-start;
+  text-align: left;
+  transition: 0.3s;
+  margin-left: 40px;
+  margin-bottom: 10px;
+}
+.account-text04:hover {
+  opacity: 1;
+  margin-left: 45px;
+}
+.account-account3 {
+  right: 50px;
+  width: 40px;
+  bottom: 20px;
+  opacity: 0.3;
+  position: absolute;
+  align-self: stretch;
+  transition: 0.3s;
+  margin-left: 0px;
+  padding-top: 0px;
+  margin-right: 0px;
+  padding-left: 0px;
+  border-radius: var(--dl-radius-radius-round);
+  padding-right: 0px;
+  padding-bottom: 0px;
+  justify-content: center;
+}
+.account-account3:hover {
+  width: 40px;
+  opacity: 0.4;
+  margin-right: 0px;
+}
+.account-button5 {
+  align-self: center;
+  transition: 0.3s;
+  margin-left: 0px;
+  margin-right: 0px;
+  justify-content: center;
+}
+.account-button5:hover {
+  margin-left: 0px;
+  margin-right: 0px;
+}
+.account-icon10 {
+  fill: var(--dl-color-gray-700);
+  width: 100%;
+  height: 100%;
+}
+.account-image2 {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  display: none;
+  padding: 10px;
+  overflow: scroll;
+  align-self: flex-start;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.account-text05 {
+  color: var(--dl-color-gray-500);
+  width: auto;
+  height: 40px;
+  opacity: 0.6;
+  font-size: 30px;
+  align-self: flex-start;
+  text-align: left;
+  transition: 0.3s;
+  margin-left: 50px;
+}
+.account-text05:hover {
+  opacity: 1;
+  margin-left: 45px;
+}
+.account-image3 {
+  width: 90%;
+  height: auto;
+  display: flex;
+  padding: 10px;
+  position: relative;
+  margin-top: 10px;
+  align-items: flex-start;
+  margin-left: 50px;
+  border-color: var(--dl-color-gray-700);
+  border-width: 1px;
+  flex-direction: column;
+  justify-content: center;
+  border-top-width: 2px;
+  border-left-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 0px;
+}
+.account-text06 {
+  color: var(--dl-color-gray-500);
+  height: 40px;
+  opacity: 0.6;
+  font-size: 25px;
+  align-self: center;
+  text-align: left;
+  transition: 0.3s;
+  margin-left: 40px;
+  margin-bottom: 10px;
+}
+.account-text06:hover {
+  opacity: 1;
+  margin-left: 45px;
+}
+.account-button6 {
+  color: var(--dl-color-gray-700);
+  width: 250px;
+  height: 50px;
+  align-self: center;
+  margin-top: 10px;
+  transition: 0.3s;
+}
+.account-button6:hover {
+  color: var(--dl-color-gray-700);
+  align-items: center;
+  border-radius: 30px;
+  justify-content: center;
+}
+.account-text07 {
+  font-size: 18px;
+  align-self: center;
+  text-transform: uppercase;
+}
+.account-password {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  display: none;
+  padding: 10px;
+  overflow: scroll;
+  align-self: flex-start;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.account-text10 {
+  color: var(--dl-color-gray-500);
+  width: auto;
+  height: 40px;
+  opacity: 0.6;
+  font-size: 30px;
+  align-self: flex-start;
+  text-align: left;
+  transition: 0.3s;
+  margin-left: 50px;
+}
+.account-text10:hover {
+  opacity: 1;
+  margin-left: 45px;
+}
+.account-password1 {
+  width: 90%;
+  height: auto;
+  display: flex;
+  padding: 10px;
+  position: relative;
+  margin-top: 10px;
+  align-items: flex-start;
+  margin-left: 50px;
+  border-color: var(--dl-color-gray-700);
+  border-width: 1px;
+  flex-direction: column;
+  justify-content: center;
+  border-top-width: 2px;
+  border-left-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 0px;
+}
+.account-textinput {
+  color: var(--dl-color-gray-700);
+  width: 30%;
+  height: auto;
+  align-self: center;
+  margin-top: 10px;
+  border-color: #2c3e50;
+  border-radius: 4px;
+  background-color: transparent;
+  border-bottom-width: 2px;
+}
+.account-textinput1 {
+  color: var(--dl-color-gray-700);
+  width: 30%;
+  height: auto;
+  align-self: center;
+  margin-top: 10px;
+  border-color: #2c3e50;
+  border-radius: 4px;
+  background-color: transparent;
+  border-bottom-width: 2px;
+}
+.account-button7 {
+  color: var(--dl-color-gray-700);
+  width: 250px;
+  height: 50px;
+  align-self: center;
+  margin-top: 10px;
+  transition: 0.3s;
+}
+.account-button7:hover {
+  color: var(--dl-color-gray-700);
+  align-items: center;
+  border-radius: 30px;
+  justify-content: center;
+}
+.account-text11 {
+  font-size: 18px;
+  align-self: center;
+  text-transform: uppercase;
+}
+@media(max-width: 1200px) {
+  .account-account {
+    width: auto;
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+  .account-left-bar {
+    width: 120px;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+  .account-account2 {
+    width: auto;
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+  .account-account3 {
+    width: auto;
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+}
+@media(max-width: 991px) {
+  .account-account {
+    width: 50px;
+    padding-top: 4px;
+    padding-left: 4px;
+    padding-right: 4px;
+    padding-bottom: 4px;
+  }
+  .account-left-bar {
+    width: 120px;
+    height: 100%;
+  }
+  .account-text {
+    font-size: 25px;
+    max-width: 100%;
+  }
+  .account-text01 {
+    width: auto;
+    max-width: 100%;
+  }
+  .account-account2 {
+    width: 50px;
+    padding-top: 4px;
+    padding-left: 4px;
+    padding-right: 4px;
+    padding-bottom: 4px;
+  }
+  .account-text04 {
+    width: auto;
+    max-width: 100%;
+  }
+  .account-account3 {
+    width: 50px;
+    padding-top: 4px;
+    padding-left: 4px;
+    padding-right: 4px;
+    padding-bottom: 4px;
+  }
+  .account-text05 {
+    font-size: 25px;
+    max-width: 100%;
+  }
+  .account-text06 {
+    max-width: 100%;
+  }
+  .account-text10 {
+    font-size: 25px;
+    max-width: 100%;
+  }
+  .account-text11 {
+    font-size: 16px;
+  }
+}
+@media(max-width: 767px) {
+  .account-account {
+    margin-right: 20px;
+    padding-right: 4px;
+  }
+  .account-left-bar {
+    width: 120px;
+    height: 100%;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+  .account-cont {
+    height: 550px;
+  }
+  .account-text {
+    font-size: 20px;
+    padding-left: var(--dl-space-space-unit);
+    padding-right: var(--dl-space-space-unit);
+  }
+  .account-text01 {
+    font-size: 20px;
+    padding-left: var(--dl-space-space-unit);
+    padding-right: var(--dl-space-space-unit);
+  }
+  .account-account2 {
+    margin-right: 20px;
+    padding-right: 4px;
+  }
+  .account-text04 {
+    font-size: 20px;
+    padding-left: var(--dl-space-space-unit);
+    padding-right: var(--dl-space-space-unit);
+  }
+  .account-account3 {
+    margin-right: 20px;
+    padding-right: 4px;
+  }
+  .account-image2 {
+    height: 550px;
+  }
+  .account-text05 {
+    font-size: 20px;
+    padding-left: var(--dl-space-space-unit);
+    padding-right: var(--dl-space-space-unit);
+  }
+  .account-text06 {
+    font-size: 20px;
+    padding-left: var(--dl-space-space-unit);
+    padding-right: var(--dl-space-space-unit);
+  }
+  .account-text07 {
+    font-size: 16px;
+  }
+  .account-password {
+    height: 550px;
+  }
+  .account-text10 {
+    font-size: 20px;
+    padding-left: var(--dl-space-space-unit);
+    padding-right: var(--dl-space-space-unit);
+  }
+}
+@media(max-width: 479px) {
+  .account-image {
+    width: 50px;
+    margin-left: 0px;
+  }
+  .account-image1 {
+    width: 70px;
+  }
+  .account-account {
+    width: auto;
+    margin-left: 10px;
+    margin-right: 20px;
+  }
+  .account-left-bar {
+    width: 200px;
+    height: 100%;
+    display: none;
+  }
+  .account-cont {
+    width: 100%;
+    height: 100%;
+    display: none;
+  }
+  .account-account1 {
+    margin-left: 10px;
+  }
+  .account-account2 {
+    width: auto;
+    margin-left: 10px;
+    margin-right: 20px;
+  }
+  .account-account3 {
+    width: auto;
+    margin-left: 10px;
+    margin-right: 20px;
+  }
+  .account-image2 {
+    width: auto;
+    height: 100%;
+    display: none;
+  }
+  .account-image3 {
+    margin-left: 20px;
+  }
+  .account-password {
+    width: 100%;
+    height: 100%;
+  }
+  .account-textinput {
+    width: 300px;
+  }
+  .account-textinput1 {
+    width: 300px;
+  }
+}
