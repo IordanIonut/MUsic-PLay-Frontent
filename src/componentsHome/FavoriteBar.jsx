@@ -10,23 +10,20 @@ const FavoriteBar = (props)=>{
     return(
         <section className="home-favorite"style={{display: 'flex'}}>
         <span className="home-text39 text">Favorite Playlist</span>
-        <div className="home-share4 posibili buttonChange">
-          <button className="home-button27 button">
-            <svg
-              viewBox="0 0 877.7142857142857 1024"
-              className="home-icon080"
-            >
-              <path d="M877.714 128v640c0 80.571-120.571 109.714-182.857 109.714s-182.857-29.143-182.857-109.714 120.571-109.714 182.857-109.714c37.714 0 75.429 6.857 109.714 22.286v-306.857l-438.857 135.429v405.143c0 80.571-120.571 109.714-182.857 109.714s-182.857-29.143-182.857-109.714 120.571-109.714 182.857-109.714c37.714 0 75.429 6.857 109.714 22.286v-552.571c0-24 16-45.143 38.857-52.571l475.429-146.286c5.143-1.714 10.286-2.286 16-2.286 30.286 0 54.857 24.571 54.857 54.857z"></path>
-            </svg>
-          </button>
-        </div>
-        <div className="home-play-list08 posibili buttonChange">
-          <button className="home-button28 button account">
-            <svg viewBox="0 0 1024 1024" className="home-icon082">
-              <path d="M598 598l212 128-212 128v-256zM170 598h342v84h-342v-84zM170 256h512v86h-512v-86zM170 426h512v86h-512v-86z"></path>
-            </svg>
-          </button>
-        </div>
+        <div className="home-share2 posibili buttonChange" name="music">
+            <button className="home-button22 button account">
+              <svg viewBox="0 0 1024 1024" className="home-icon070">
+                <path d="M960 0h64v736c0 88.366-100.29 160-224 160s-224-71.634-224-160c0-88.368 100.29-160 224-160 62.684 0 119.342 18.4 160 48.040v-368.040l-512 113.778v494.222c0 88.366-100.288 160-224 160s-224-71.634-224-160c0-88.368 100.288-160 224-160 62.684 0 119.342 18.4 160 48.040v-624.040l576-128z"></path>
+              </svg>
+            </button>
+          </div>
+          <div className="home-play-list06 posibili buttonChange"name="playlist">
+            <button className="home-button23 button account">
+              <svg viewBox="0 0 1024 1024" className="home-icon072">
+                <path d="M86 682v-84h340v84h-340zM768 598h170v84h-170v172h-86v-172h-170v-84h170v-172h86v172zM598 256v86h-512v-86h512zM598 426v86h-512v-86h512z"></path>
+              </svg>
+            </button>
+          </div>
         <div className="home-card5 music-card">
           <FeatureCard rootClassName="feature-card-root-class-name20"></FeatureCard>
           <FeatureCard rootClassName="feature-card-root-class-name20"></FeatureCard>

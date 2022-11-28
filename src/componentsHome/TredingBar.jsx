@@ -13,26 +13,27 @@ const TredingBar = (props)=>{
         <span>Trending Now</span>
         <br></br>
       </span>
-      <div className="home-share5 posibili buttonChange">
-        <button className="home-button29 button">
-          <svg
-            viewBox="0 0 877.7142857142857 1024"
-            className="home-icon084"
-          >
-            <path d="M877.714 128v640c0 80.571-120.571 109.714-182.857 109.714s-182.857-29.143-182.857-109.714 120.571-109.714 182.857-109.714c37.714 0 75.429 6.857 109.714 22.286v-306.857l-438.857 135.429v405.143c0 80.571-120.571 109.714-182.857 109.714s-182.857-29.143-182.857-109.714 120.571-109.714 182.857-109.714c37.714 0 75.429 6.857 109.714 22.286v-552.571c0-24 16-45.143 38.857-52.571l475.429-146.286c5.143-1.714 10.286-2.286 16-2.286 30.286 0 54.857 24.571 54.857 54.857z"></path>
-          </svg>
-        </button>
-      </div>
-      <div className="home-play-list09 posibili buttonChange">
-        <svg viewBox="0 0 1024 1024" className="home-icon086">
-          <path d="M598 598l212 128-212 128v-256zM170 598h342v84h-342v-84zM170 256h512v86h-512v-86zM170 426h512v86h-512v-86z"></path>
-        </svg>
-      </div>
-      <div className="home-like4 posibili buttonChange">
-        <svg viewBox="0 0 1024 1024" className="home-icon088">
-          <path d="M384 426l298 172-298 170v-342zM896 854v-512h-768v512h768zM896 256q36 0 61 25t25 61v512q0 34-26 59t-60 25h-768q-34 0-60-25t-26-59v-512q0-36 25-61t61-25h324l-140-140 30-30 170 170 170-170 30 30-140 140h324z"></path>
-        </svg>
-      </div>
+      <div className="home-share2 posibili buttonChange" name="music">
+            <button className="home-button22 button account">
+              <svg viewBox="0 0 1024 1024" className="home-icon070">
+                <path d="M960 0h64v736c0 88.366-100.29 160-224 160s-224-71.634-224-160c0-88.368 100.29-160 224-160 62.684 0 119.342 18.4 160 48.040v-368.040l-512 113.778v494.222c0 88.366-100.288 160-224 160s-224-71.634-224-160c0-88.368 100.288-160 224-160 62.684 0 119.342 18.4 160 48.040v-624.040l576-128z"></path>
+              </svg>
+            </button>
+          </div>
+          <div className="home-play-list06 posibili buttonChange"name="playlist">
+            <button className="home-button23 button account">
+              <svg viewBox="0 0 1024 1024" className="home-icon072">
+                <path d="M86 682v-84h340v84h-340zM768 598h170v84h-170v172h-86v-172h-170v-84h170v-172h86v172zM598 256v86h-512v-86h512zM598 426v86h-512v-86h512z"></path>
+              </svg>
+            </button>
+          </div>
+          <div className="home-like2 posibili buttonChange"name="live">
+            <button className="home-button24 button account">
+              <svg viewBox="0 0 1024 1024" className="home-icon074">
+                <path d="M384 426l298 172-298 170v-342zM896 854v-512h-768v512h768zM896 256q36 0 61 25t25 61v512q0 34-26 59t-60 25h-768q-34 0-60-25t-26-59v-512q0-36 25-61t61-25h324l-140-140 30-30 170 170 170-170 30 30-140 140h324z"></path>
+              </svg>
+            </button>
+          </div>
       <div className="home-list5 music-list">
         <Music rootClassName="music-root-class-name20"></Music>
         <Music rootClassName="music-root-class-name20"></Music>
