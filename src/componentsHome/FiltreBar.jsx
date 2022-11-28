@@ -6,7 +6,7 @@ import Music1 from "../components/music1";
 import Home from "../views/home";
 import '../views/home.css'
 
-const FilreBar = (props)=>{
+const FiltreBar = (props)=>{
     return(
 <section className="home-filtre"style={{display: 'flex'}}>
           <div className="home-card6 music-card">

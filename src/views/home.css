@@ -1714,10 +1714,12 @@
   margin-right: 10px;
 }
 .home-icon108 {
+  fill: #999;
   width: 100%;
   height: 100%;
 }
 .home-icon110 {
+  fill: #999;
   width: 100%;
   height: 100%;
 }
@@ -1748,10 +1750,12 @@
   border-left-width: 4px;
 }
 .home-icon112 {
+  fill: #999;
   width: 100%;
   height: 100%;
 }
 .home-icon114 {
+  fill: #999;
   width: 100%;
   height: 100%;
   display: none;
@@ -1764,10 +1768,12 @@
 }
 .home-icon116 {
   width: 100%;
+  fill: #999;
   height: 100%;
 }
 .home-icon118 {
   width: 100%;
+  fill: #999;
   height: 100%;
 }
 .home-button41 {
@@ -1793,6 +1799,7 @@
 .home-icon120 {
   fill: var(--dl-color-gray-black);
   width: 100%;
+  fill: #999;
   height: 100%;
 }
 .home-button42 {
@@ -1815,6 +1822,7 @@
 }
 .home-icon122 {
   width: 100%;
+  fill: #999;
   height: 100%;
 }
 .home-container7 {
