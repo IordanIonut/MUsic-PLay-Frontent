@@ -1,5 +1,4 @@
 import React from 'react'
-
 import { Helmet } from 'react-helmet'
 import FeatureCard from '../components/feature-card'
 import Music from '../components/music'
@@ -15,7 +14,6 @@ import HistoryBar from '../componentsHome/HistoryBar'
 import LiveBar from '../componentsHome/LiveBar'
 import {QrBar}  from '../componentsHome/QrBar'
 import SendBar from '../componentsHome/SendBar'
-import { element, object } from 'prop-types'
 
 const Home = (props) => {
   const [statusHomeButton, setStatusHomeButton] = React.useState(true)
@@ -122,7 +120,6 @@ const Home = (props) => {
                           styleChangeOf('send');
                           styleChangeOf('qr');
                         }}>
-           
             <svg viewBox="0 0 1024 1024" name='img1' className="home-icon010">
               <path d="M426 854h-212v-342h-128l426-384 426 384h-128v342h-212v-256h-172v256z"></path>
             </svg>
