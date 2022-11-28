@@ -6,7 +6,7 @@ import Music1 from "../components/music1";
 import Home from "../views/home";
 import '../views/home.css'
 
-const HomeBar = (props)=>{
+const HomeBar = ()=>{
     return(
         <section className="home-home" style={{display: 'flex'}}>
         <span className="text home-text">Playlist</span>
@@ -35,11 +35,6 @@ const HomeBar = (props)=>{
           </button>
         </div>
         <div className="home-card music-card">
-          <FeatureCard></FeatureCard>
-          <FeatureCard></FeatureCard>
-          <FeatureCard></FeatureCard>
-          <FeatureCard></FeatureCard>
-          <FeatureCard></FeatureCard>
           <FeatureCard></FeatureCard>
         </div>
         <span className="text">
