@@ -38,7 +38,7 @@ const Home = (props) => {
   })
   const styleChangeOf=((idClass)=>{
     document.getElementById(idClass).classList.remove("hover");
-    document.getElementById(idClass).lastElementChild.style.display='flex';
+    document.getElementById(idClass).lastElementChild.style.display='block';
     document.getElementById(idClass).firstElementChild.style.display='none';
   })
 
@@ -165,7 +165,7 @@ const Home = (props) => {
             <svg viewBox="0 0 1024 1024" name='img1' className="home-icon010">
               <path d="M426 854h-212v-342h-128l426-384 426 384h-128v342h-212v-256h-172v256z"></path>
             </svg>
-           <svg viewBox="0 0 1024 1024" name='img2'   className="home-icon008">
+           <svg viewBox="0 0 1024 1024" name='img2' style={{display:'flex'}}  className="home-icon008">
               <path d="M101.803 350.336c-10.069 7.851-16.469 20.011-16.469 33.664v469.333c0 35.328 14.379 67.413 37.504 90.496s55.168 37.504 90.496 37.504h597.333c35.328 0 67.413-14.379 90.496-37.504s37.504-55.168 37.504-90.496v-469.333c-0.043-12.8-5.717-25.301-16.469-33.664l-384-298.667c-15.275-11.733-36.736-12.16-52.395 0zM682.667 896v-384c0-23.552-19.115-42.667-42.667-42.667h-256c-23.552 0-42.667 19.115-42.667 42.667v384h-128c-11.776 0-22.4-4.736-30.165-12.501s-12.501-18.389-12.501-30.165v-448.469l341.333-265.472 341.333 265.472v448.469c0 11.776-4.736 22.4-12.501 30.165s-18.389 12.501-30.165 12.501zM426.667 896v-341.333h170.667v341.333z"></path>
             </svg>
           </button>
@@ -191,10 +191,10 @@ const Home = (props) => {
                           styleChangeOf('send');
                           styleChangeOf('qr');
                         }}>
-                 <svg xmlns="http://www.w3.org/2000/svg" name='img2' className="home-icon014" viewBox="0 0 16 16">
+                 <svg xmlns="http://www.w3.org/2000/svg" name='img1' className="home-icon014" viewBox="0 0 16 16">
                     <path d="M15.5 8.516a7.5 7.5 0 1 1-9.462-7.24A1 1 0 0 1 7 0h2a1 1 0 0 1 .962 1.276 7.503 7.503 0 0 1 5.538 7.24zm-3.61-3.905L6.94 7.439 4.11 12.39l4.95-2.828 2.828-4.95z"/>
                   </svg>
-                <svg xmlns="http://www.w3.org/2000/svg" name='img1' className="home-icon012" viewBox="0 0 16 16">
+                <svg xmlns="http://www.w3.org/2000/svg" name='img2' className="home-icon012" viewBox="0 0 16 16">
                   <path d="M8 16.016a7.5 7.5 0 0 0 1.962-14.74A1 1 0 0 0 9 0H7a1 1 0 0 0-.962 1.276A7.5 7.5 0 0 0 8 16.016zm6.5-7.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0z"/>
                   <path d="m6.94 7.44 4.95-2.83-2.83 4.95-4.949 2.83 2.828-4.95z"/>
                 </svg>

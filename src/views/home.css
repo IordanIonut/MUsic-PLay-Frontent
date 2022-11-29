@@ -163,12 +163,12 @@
 .home-icon012 {
   fill: var(--dl-color-gray-700);
   width: 100%;
-  height: 100%;
-  display: none;
+  height: 100%; 
 }
 .home-icon014 {
   fill: var(--dl-color-gray-700);
   width: 100%;
+  display:none;
   height: 100%;
 }
 .home-button06 {

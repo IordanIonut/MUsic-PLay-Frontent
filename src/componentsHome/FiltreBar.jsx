@@ -8,13 +8,8 @@ import '../views/home.css'
 
 const FiltreBar = (props)=>{
     return(
-<section className="home-filtre"style={{display: 'flex'}}>
+    <section className="home-filtre"style={{display: 'flex'}}>
           <div className="home-card6 music-card">
-            <span className="home-text43 text">
-              <span>Favorite Filtre</span>
-              <br></br>
-              <br></br>
-            </span>
             <FilreCard rootClassName="filre-card-root-class-name6"></FilreCard>
             <FilreCard rootClassName="filre-card-root-class-name6"></FilreCard>
             <FilreCard rootClassName="filre-card-root-class-name6"></FilreCard>
@@ -28,6 +23,7 @@ const FiltreBar = (props)=>{
             <FilreCard rootClassName="filre-card-root-class-name6"></FilreCard>
             <FilreCard rootClassName="filre-card-root-class-name6"></FilreCard>
           </div>
-        </section>    )
+        </section>    
+    )
 }
 export default FiltreBar
