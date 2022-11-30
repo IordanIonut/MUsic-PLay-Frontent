@@ -40,7 +40,6 @@ const SendBar = (props)=>{
                 <textarea
                   cols="30"
                   rows="7"
-                  autoFocus
                   placeholder="Your Message"
                   autoComplete="on"
                   className="home-textarea input textarea"
