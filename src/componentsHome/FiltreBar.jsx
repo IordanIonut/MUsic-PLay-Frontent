@@ -10,18 +10,8 @@ const FiltreBar = (props)=>{
     return(
     <section className="home-filtre"style={{display: 'flex'}}>
           <div className="home-card6 music-card">
-            <FilreCard rootClassName="filre-card-root-class-name6"></FilreCard>
-            <FilreCard rootClassName="filre-card-root-class-name6"></FilreCard>
-            <FilreCard rootClassName="filre-card-root-class-name6"></FilreCard>
-            <FilreCard rootClassName="filre-card-root-class-name6"></FilreCard>
-            <FilreCard rootClassName="filre-card-root-class-name6"></FilreCard>
-            <FilreCard rootClassName="filre-card-root-class-name6"></FilreCard>
-            <FilreCard rootClassName="filre-card-root-class-name6"></FilreCard>
-            <FilreCard rootClassName="filre-card-root-class-name6"></FilreCard>
-            <FilreCard rootClassName="filre-card-root-class-name6"></FilreCard>
-            <FilreCard rootClassName="filre-card-root-class-name6"></FilreCard>
-            <FilreCard rootClassName="filre-card-root-class-name6"></FilreCard>
-            <FilreCard rootClassName="filre-card-root-class-name6"></FilreCard>
+            <FilreCard   rootClassName="filre-card-root-class-name6"></FilreCard>
+            
           </div>
         </section>    
     )
