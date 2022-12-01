@@ -1,13 +1,10 @@
-const axios = require("axios");
+import axios, * as others from 'axios';
 
 const BASE_URL='https://youtube-v31.p.rapidapi.com';
 
 const homeBarApiYouTube = {
-    params: {
-      relatedToVideoId: '7ghhRHRP6t4',
-      part: 'id,snippet',
-      type: 'video',
-      maxResults: '50'
+    params: {  
+      maxResults: '10'
     },
     headers: {
       'X-RapidAPI-Key': process.env.REACT_APP_RAPID_API_KEY,
@@ -16,8 +13,7 @@ const homeBarApiYouTube = {
 };
 
 export const fetchAPI = async(url) =>{
-    const {data} = await axios.get(`${BASE_URL}/${url}`, 
-            homeBarApiYouTube);
+    const {data} = await axios.get(`${BASE_URL}/${url}`,homeBarApiYouTube);
     return data;
 }
  

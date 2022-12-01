@@ -1,19 +1,35 @@
-import React from "react";
-import FeatureCard from "../components/feature-card";
+import React, { useEffect, useState } from 'react'
 import FilreCard from "../components/filre-card";
-import Music from "../components/music";
-import Music1 from "../components/music1";
-import Home from "../views/home";
+import genres from "../utils/filtre";
+import { Home } from '../views/home';
 import '../views/home.css'
+import '../components/filre-card.css'
+import SearchBar from './SearchBar';
 
-const FiltreBar = (props)=>{
-    return(
-    <section className="home-filtre"style={{display: 'flex'}}>
+
+
+const FiltreBar = ({selectedFiltre, setSelectedFiltre})=>(
+    <section className="home-filtre" style={{display: 'block', overflow: 'scroll'}}>
           <div className="home-card6 music-card">
-            <FilreCard   rootClassName="filre-card-root-class-name6"></FilreCard>
-            
+            {genres.map((genrey) =>(
+                <div
+                className={`filre-card-filre-card filtre-card  `}>
+                <button 
+                className="filre-card-button button" 
+                key={genrey.text}
+                onClick={() => {setSelectedFiltre(genrey.text);}}
+                style={{background: `${genrey.image_alt}`}}>
+                 <span className="filre-card-text">{genrey.text}</span>
+                  <img
+                    alt=''
+                    src={genrey.image_src}
+                    className="filre-card-image"
+                  />
+                </button>
+              </div>
+                ))}
           </div>
-        </section>    
-    )
-}
+    </section>
+)    
+
 export default FiltreBar

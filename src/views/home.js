@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet'
 import './home.css'
 import '../style.css'
@@ -15,22 +15,27 @@ import FiltreBar from '../componentsHome/FiltreBar'
 import ChanelBar from '../componentsHome/ChanelBar'
 import SearchBar from '../componentsHome/SearchBar'
 import VideoBar from '../componentsHome/VideoBar'
+import { fetchAPI } from '../utils/fetchAPI'
 
 const Home = (props) => {
-  const [statusHomeButton, setStatusHomeButton] = React.useState(true)
-  const [statusTredingButton, setStatusTredingButton] = React.useState(false)
-  const [statusFavoriteButton, setStatusFavoriteButton] = React.useState(false)
-  const [statusPlayListButton, setStatusPlayListButton] = React.useState(false)
-  const [statusHistoryButton, setStatusHistoryButton] = React.useState(false)
-  const [statusLiveButton, setStatusLiveButtons] = React.useState(false)
-  const [statusQrButton, setStatusQrButtons] = React.useState(false)
-  const [statusSendButton, setStatusSendButtons] = React.useState(false)
-  const [statusChanelButton, setStatusChanelButtons] = React.useState(false)
-  const [statusFiltreButton, setStatusFiltreButtons] = React.useState(false)
-  const [statusSearcheButton, setStatusSearchButtons] = React.useState(false)
-  const [statusVideoButton, setStatusVideoButtons] = React.useState(false)
+  const [statusHomeButton, setStatusHomeButton] = React.useState(true);
+  const [statusTredingButton, setStatusTredingButton] = React.useState(false);
+  const [statusFavoriteButton, setStatusFavoriteButton] = React.useState(false);
+  const [statusPlayListButton, setStatusPlayListButton] = React.useState(false);
+  const [statusHistoryButton, setStatusHistoryButton] = React.useState(false);
+  const [statusLiveButton, setStatusLiveButtons] = React.useState(false);
+  const [statusQrButton, setStatusQrButtons] = React.useState(false);
+  const [statusSendButton, setStatusSendButtons] = React.useState(false);
+  const [statusChanelButton, setStatusChanelButtons] = React.useState(false);
+  const [statusFiltreButton, setStatusFiltreButtons] = React.useState(false);
+  const [statusSearcheButton, setStatusSearchButtons] = React.useState(false);
+  const [statusVideoButton, setStatusVideoButtons] = React.useState(false);
 
-  
+  //API YOUTUUBE
+  const [selectedFiltre, setSelectedFiltre] = React.useState('new');
+  const [videos, setvideos] = React.useState([]);
+
+
   const styleChangeOn=((idClass)=>{
     document.getElementById(idClass).classList.add("hover");
     document.getElementById(idClass).firstElementChild.style.display='block';
@@ -42,6 +47,10 @@ const Home = (props) => {
     document.getElementById(idClass).firstElementChild.style.display='none';
   })
 
+  useEffect(() =>{
+    fetchAPI(`search?part=snippet&q=${selectedFiltre}`).then((data) => 
+    setvideos(data.items));
+  },[selectedFiltre]);
 
   return (
     <div className="home-container">
@@ -60,7 +69,6 @@ const Home = (props) => {
           src="/playground_assets/2-removebg-preview-1500h.png"
           className="home-image1"
         />
-        
         <input
           type="text"
           id="search"
@@ -139,6 +147,7 @@ const Home = (props) => {
         </div>
       </div>
       <div className="home-view content">
+        <h1>{selectedFiltre}</h1>
         <section className="home-left-bar">
           <button  id="home" className="home-button05 navbar button account hover" onClick={()=>{
                           setStatusHomeButton(true);
@@ -380,7 +389,10 @@ const Home = (props) => {
             </svg>
           </button>
         </section>
-            {statusHomeButton? <HomeBar></HomeBar> :null}
+            {statusHomeButton? <HomeBar>
+                    </HomeBar>
+                    
+            :null}
             {statusTredingButton? <TredingBar></TredingBar>  :null}
             {statusFavoriteButton? <FavoriteBar></FavoriteBar> :null}
             {statusPlayListButton? <PlayListBar></PlayListBar> :null}
@@ -388,9 +400,15 @@ const Home = (props) => {
             {statusLiveButton? <LiveBar></LiveBar> :null}
             {statusQrButton? <QrBar></QrBar> :null}
             {statusSendButton? <SendBar></SendBar> :null}
-            {statusFiltreButton? <FiltreBar></FiltreBar> :null}
+            {statusFiltreButton? <FiltreBar
+                    selectedFiltre={selectedFiltre}
+                    setSelectedFiltre={setSelectedFiltre}>
+                    </FiltreBar>
+            :null}
             {statusChanelButton? <ChanelBar></ChanelBar> :null}
-            {statusSearcheButton? <SearchBar></SearchBar> :null}
+            {statusSearcheButton? <SearchBar
+            videos={videos}></SearchBar>
+            :null}
             {statusVideoButton? <VideoBar></VideoBar> :null}
 
       </div>
@@ -398,5 +416,4 @@ const Home = (props) => {
     </div>
   )
 }
-
 export default Home

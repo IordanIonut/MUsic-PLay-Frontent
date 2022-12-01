@@ -5,11 +5,11 @@ import Music1 from "../components/music1";
 import Home from "../views/home";
 import '../views/home.css'
 
-const SearchBar = () => {
+const SearchBar = ({videos}) => {
+  console.log(videos);
   return (
     <section className="home-seach music-list"style={{display: 'flex'}}>
     <span className="home-text62 text">
-      <span>aAS</span>
       <br></br>
       <br></br>
     </span>
