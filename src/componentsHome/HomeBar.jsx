@@ -5,10 +5,11 @@ import Music from "../components/music";
 import Music1 from "../components/music1";
 import Home from "../views/home";
 import '../views/home.css'
+import '../style.css'
 
-const HomeBar = ({videos})=>{
+const HomeBar = ()=>{
     return(
-        <section className="home-home" style={{display: 'flex'}}>
+        <section className="home-home scroll scroll5" style={{display: 'flex'}}>
         <span className="text home-text">Playlist</span>
         <div className="home-share2 posibili buttonChange" name="music">
             <button className="home-button22 button account">
@@ -39,21 +40,10 @@ const HomeBar = ({videos})=>{
           <br></br>
         </span>
         <div className="home-list music-list">
-          <Music></Music>
-          <Music></Music>
-          <Music></Music>
-          <Music></Music>
-        </div>
-        <span className="text">
-          <span>Popular Filtre</span>
-          <br></br>
-          <br></br>
-        </span>
-        <div className="music-card home-card1">
-          <FilreCard></FilreCard>
-          <FilreCard></FilreCard>
-          <FilreCard></FilreCard>
-          <FilreCard></FilreCard>
+          <Music1></Music1>
+          <Music1></Music1>
+          <Music1></Music1>
+          <Music1></Music1>
         </div>
       </section> 
     )

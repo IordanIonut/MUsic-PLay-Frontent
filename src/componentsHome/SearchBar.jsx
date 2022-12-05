@@ -4,16 +4,18 @@ import Music from "../components/music";
 import Music1 from "../components/music1";
 import Home from "../views/home";
 import '../views/home.css'
+import '../components/music.css'
+import '../componentsHome/VideoBar'
+import ChanelCard from '../components/chanel-card';
 
 const SearchBar = ({videos}) => {
-  console.log(videos);
   return (
     <section className="home-seach music-list"style={{display: 'flex'}}>
     <span className="home-text62 text">
       <br></br>
       <br></br>
     </span>
-    <div className="home-share2 posibili buttonChange" name="music">
+         <div className="home-share2 posibili buttonChange" name="music">
             <button className="home-button22 button account">
               <svg viewBox="0 0 1024 1024" className="home-icon070">
                 <path d="M960 0h64v736c0 88.366-100.29 160-224 160s-224-71.634-224-160c0-88.368 100.29-160 224-160 62.684 0 119.342 18.4 160 48.040v-368.040l-512 113.778v494.222c0 88.366-100.288 160-224 160s-224-71.634-224-160c0-88.368 100.288-160 224-160 62.684 0 119.342 18.4 160 48.040v-624.040l576-128z"></path>
@@ -34,9 +36,13 @@ const SearchBar = ({videos}) => {
               </svg>
             </button>
           </div>
-    <Music rootClassName="music-root-class-name26"></Music>
-    <Music rootClassName="music-root-class-name26"></Music>
-    <Music rootClassName="music-root-class-name26"></Music>
+          {videos.map((item, idx) => (
+            <div key={idx} style={{width: '100%' }}> 
+            {  item.id.channelId && <ChanelCard channelDetail={item}></ChanelCard>}
+            {  item.id.videoId && <Music video={item}></Music>}
+            </div>
+          ))}
+                
   </section>
   )
 }

@@ -32,11 +32,8 @@ const HistoryBar = (props)=>{
             </button>
           </div>
           <div className="home-card2 music-card">
-            <FeatureCard rootClassName="feature-card-root-class-name9"></FeatureCard>
-            <FeatureCard rootClassName="feature-card-root-class-name9"></FeatureCard>
-            <FeatureCard rootClassName="feature-card-root-class-name9"></FeatureCard>
-            <FeatureCard rootClassName="feature-card-root-class-name9"></FeatureCard>
-            <FeatureCard rootClassName="feature-card-root-class-name9"></FeatureCard>
+            FeatureCard rootClassName="feature-card-root-class-name9"
+          
           </div>
           <span className="home-text30 text">
             <span>Last View</span>
@@ -44,11 +41,8 @@ const HistoryBar = (props)=>{
             <br></br>
           </span>
           <div className="home-list3 music-list">
-            <Music rootClassName="music-root-class-name9"></Music>
-            <Music rootClassName="music-root-class-name9"></Music>
-            <Music rootClassName="music-root-class-name9"></Music>
-            <Music rootClassName="music-root-class-name9"></Music>
-            <Music rootClassName="music-root-class-name9"></Music>
+            Music rootClassName="music-root-class-name9"
+  
           </div>
           <span className="home-text34 text">
             <span>Last Filtre</span>
@@ -56,12 +50,7 @@ const HistoryBar = (props)=>{
             <br></br>
           </span>
           <div className="home-card3 music-card">
-            <FilreCard rootClassName="filre-card-root-class-name"></FilreCard>
-            <FilreCard rootClassName="filre-card-root-class-name"></FilreCard>
-            <FilreCard rootClassName="filre-card-root-class-name"></FilreCard>
-            <FilreCard rootClassName="filre-card-root-class-name"></FilreCard>
-            <FilreCard rootClassName="filre-card-root-class-name"></FilreCard>
-            <FilreCard rootClassName="filre-card-root-class-name"></FilreCard>
+            FilreCard rootClassName="filre-card-root-class-name"
           </div>
         </section>
     )

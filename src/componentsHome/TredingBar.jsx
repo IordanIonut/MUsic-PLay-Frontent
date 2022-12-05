@@ -35,12 +35,7 @@ const TredingBar = (props)=>{
             </button>
           </div>
       <div className="home-list5 music-list">
-        <Music rootClassName="music-root-class-name20"></Music>
-        <Music rootClassName="music-root-class-name20"></Music>
-        <Music rootClassName="music-root-class-name20"></Music>
-        <Music rootClassName="music-root-class-name20"></Music>
-        <Music rootClassName="music-root-class-name20"></Music>
-        <Music rootClassName="music-root-class-name20"></Music>
+        
       </div>
       <span className="home-text50 text">
         <span>Treding Gen</span>
@@ -48,11 +43,7 @@ const TredingBar = (props)=>{
         <br></br>
       </span>
       <div className="home-card7 music-card">
-        <FilreCard rootClassName="filre-card-root-class-name7"></FilreCard>
-        <FilreCard rootClassName="filre-card-root-class-name7"></FilreCard>
-        <FilreCard rootClassName="filre-card-root-class-name7"></FilreCard>
-        <FilreCard rootClassName="filre-card-root-class-name7"></FilreCard>
-        <FilreCard rootClassName="filre-card-root-class-name7"></FilreCard>
+        
       </div>
     </section>
     )

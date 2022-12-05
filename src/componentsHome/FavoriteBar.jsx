@@ -25,23 +25,14 @@ const FavoriteBar = (props)=>{
             </button>
           </div>
         <div className="home-card5 music-card">
-          <FeatureCard rootClassName="feature-card-root-class-name20"></FeatureCard>
-          <FeatureCard rootClassName="feature-card-root-class-name20"></FeatureCard>
-          <FeatureCard rootClassName="feature-card-root-class-name20"></FeatureCard>
-          <FeatureCard rootClassName="feature-card-root-class-name20"></FeatureCard>
-          <FeatureCard rootClassName="feature-card-root-class-name20"></FeatureCard>
+          FeatureCard rootClassName="feature-card-root-class-name20"
         </div>
         <span className="home-text40 text">
           <span>Favoirt Song</span>
           <br></br>
         </span>
         <div className="home-list4 music-list">
-          <Music rootClassName="music-root-class-name14"></Music>
-          <Music rootClassName="music-root-class-name14"></Music>
-          <Music rootClassName="music-root-class-name14"></Music>
-          <Music rootClassName="music-root-class-name14"></Music>
-          <Music rootClassName="music-root-class-name14"></Music>
-          <Music rootClassName="music-root-class-name14"></Music>
+          Music rootClassName="music-root-class-name14"
         </div>
       </section>
     )

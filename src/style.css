@@ -327,7 +327,6 @@
   height: auto;
   display: flex;
   opacity: 0.6;
-  overflow: hidden;
   flex-wrap: wrap;
   align-items: center;
   padding-top: 20px;
@@ -395,7 +394,7 @@
 }
 .music-list {
   width: 100%;
-  height: auto;
+  height: 100%;
   display: flex;
   align-items: center;
   padding-top: 20px;
@@ -576,7 +575,7 @@
     width: 100%;
     height: auto;
     display: flex;
-    overflow: visible;
+    overflow-y: visible;
     flex-wrap: wrap;
     align-items: flex-start;
     flex-direction: row;
@@ -801,4 +800,20 @@
     height: auto;
     justify-content: flex-end;
   }
+  ::-webkit-scrollbar{
+    width: 1.2em;
+    overflow-x: none;
+  }
+  ::-webkit-scrollbar-track{
+    background-color: #242942;
+    margin-block: 0.25em;
+    border-radius: 0.3em;
+  }
+  ::-webkit-scrollbar-thumb{
+    background: #00c6ff;
+    background: -webkit-linear-gradient(to right, #006cff, #0072ff);
+    background: linear-gradient(to right, #00c6ff, #0072ff);
+    border-radius: 0.3em;
+  }
+  
 }

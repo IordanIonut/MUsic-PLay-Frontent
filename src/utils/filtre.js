@@ -1,4 +1,5 @@
 const genres = [
+    { text: 'JavaScript Mastery', image_alt: '', image_src: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSDDrNJbrCbb2xQ4V2XNz90wAR5wT_gr2Di0w&usqp=CAU'},
     { text: 'Podcast', image_alt: '#DE4C8A', image_src: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSDDrNJbrCbb2xQ4V2XNz90wAR5wT_gr2Di0w&usqp=CAU'},
     { text: 'Pop', image_alt: '#78858B', image_src: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbfbCXm4eKWKmcaXo2sXE2Y_kj26Qdj2yMHA&usqp=CAU'},
     { text: 'Hip-Hop', image_alt: '#4A192C', image_src: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9CDJoNp6ZH08TVU5qWeusNTIST5JOqUvAVQ&usqp=CAU'},

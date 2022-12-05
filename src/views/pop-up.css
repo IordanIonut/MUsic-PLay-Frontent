@@ -1,7 +1,7 @@
 .pop-up-container {
   width: 100%;
   display: flex;
-  overflow: auto;
+  overflow-y: auto;
   min-height: 100vh;
   align-items: center;
   flex-direction: column;

@@ -38,7 +38,7 @@ const FeatureCard = (props) => {
     </div>
   )
 }
-
+/*
 FeatureCard.defaultProps = {
   Text1: 'asdadasdsadsa',
   rootClassName: '',
@@ -55,5 +55,5 @@ FeatureCard.propTypes = {
   image_alt: PropTypes.string,
   image_src: PropTypes.string,
 }
-
+*/
 export default FeatureCard

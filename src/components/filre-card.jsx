@@ -3,15 +3,15 @@ import './filre-card.css'
 import Home from '../views/home'
 import {FiltreBar} from '../componentsHome/FiltreBar'
 
-function FilreCard  (genre, setSelectedFiltre, selectedFiltre) {
+function FilreCard  (genre,selectedFiltre1,setSelectedFiltre1) {
   return (
     <div
       className={`filre-card-filre-card filtre-card  `}>
       <button 
       className="filre-card-button button" 
       key={genre.text}
-      onClick={() => {setSelectedFiltre=genre.text;
-        console.log(setSelectedFiltre=genre.text);}}
+      onClick={() => {setSelectedFiltre1(genre.text);
+        console.log(selectedFiltre1);}}
       style={{background: `${genre.image_alt}`}}>
        <span className="filre-card-text">{genre.text}</span>
         <img

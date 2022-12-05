@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet'
 import './home.css'
+import {useParams} from 'react-router-dom';
 import '../style.css'
 import HomeBar from '../componentsHome/HomeBar'
 import TredingBar from '../componentsHome/TredingBar'
@@ -16,9 +17,10 @@ import ChanelBar from '../componentsHome/ChanelBar'
 import SearchBar from '../componentsHome/SearchBar'
 import VideoBar from '../componentsHome/VideoBar'
 import { fetchAPI } from '../utils/fetchAPI'
+import { Link } from 'react-router-dom';
 
-const Home = (props) => {
-  const [statusHomeButton, setStatusHomeButton] = React.useState(true);
+const Home = () => {
+  const [statusHomeButton, setStatusHomeButton] = React.useState(false);
   const [statusTredingButton, setStatusTredingButton] = React.useState(false);
   const [statusFavoriteButton, setStatusFavoriteButton] = React.useState(false);
   const [statusPlayListButton, setStatusPlayListButton] = React.useState(false);
@@ -31,10 +33,11 @@ const Home = (props) => {
   const [statusSearcheButton, setStatusSearchButtons] = React.useState(false);
   const [statusVideoButton, setStatusVideoButtons] = React.useState(false);
 
-  //API YOUTUUBE
-  const [selectedFiltre, setSelectedFiltre] = React.useState('new');
+  //API YOUTUBE
+  const [selectedFiltre, setSelectedFiltre] = React.useState('JavaScript Mastery');
   const [videos, setvideos] = React.useState([]);
 
+  const {id} = useParams();
 
   const styleChangeOn=((idClass)=>{
     document.getElementById(idClass).classList.add("hover");
@@ -50,6 +53,43 @@ const Home = (props) => {
   useEffect(() =>{
     fetchAPI(`search?part=snippet&q=${selectedFiltre}`).then((data) => 
     setvideos(data.items));
+    if(id === 'home'){
+      setStatusHomeButton(true);
+      styleChangeOn('home');
+    }
+    else if(id === 'treding'){
+      setStatusTredingButton(true);
+      styleChangeOn('treding');
+    }
+    else if(id === 'favorite'){
+     setStatusFavoriteButton(true);
+     styleChangeOn('favorite');
+    }
+    else if(id === 'palyList'){
+      setStatusPlayListButton(true);
+      styleChangeOn('palyList');
+    }
+    else if(id === 'history'){
+      setStatusHistoryButton(true);
+      styleChangeOn('history');
+    }
+    else if(id === 'live'){
+      setStatusLiveButtons(true);
+      styleChangeOn('live');
+    }
+    else if(id === 'qr'){
+      setStatusQrButtons(true);
+      styleChangeOn('qr');
+    }
+    else if(id === 'send'){
+      setStatusSendButtons(true);
+      styleChangeOn('send');
+    }
+    else if(id === 'filtre' && selectedFiltre!='JavaScript Mastery'){
+        setStatusFiltreButtons(false);
+    }else if(id === 'filtre' && selectedFiltre==='JavaScript Mastery'){
+      setStatusFiltreButtons(true);
+  }
   },[selectedFiltre]);
 
   return (
@@ -69,7 +109,9 @@ const Home = (props) => {
           src="/playground_assets/2-removebg-preview-1500h.png"
           className="home-image1"
         />
+       <Link to={`/filtre`} style={{width: '100vh',margin: 'auto'}}>
         <input
+           style={{width: '90vh'}}
           type="text"
           id="search"
           name="search-bar"
@@ -87,8 +129,15 @@ const Home = (props) => {
                           setStatusSearchButtons(false);
                           setStatusVideoButtons(false);
                           setStatusFiltreButtons(true);
-                  }
-          }
+                          styleChangeOf('home');
+                          styleChangeOf('treding');
+                          styleChangeOf('favorite');
+                          styleChangeOf('playList');
+                          styleChangeOf('history');
+                          styleChangeOf('live');
+                          styleChangeOf('send');
+                          styleChangeOf('qr');
+                  }}
           onKeyPress={event => {
                    if (event.key === 'Enter') {
                         setStatusHomeButton(false);
@@ -109,6 +158,7 @@ const Home = (props) => {
           autoComplete="on"
           className="home-search-bar input search-bar"
         />
+        </Link>
         <div className="home-posibili posibili">
           <button className="home-button button account">
             <svg viewBox="0 0 1024 1024" className="home-icon">
@@ -147,9 +197,9 @@ const Home = (props) => {
         </div>
       </div>
       <div className="home-view content">
-        <h1>{selectedFiltre}</h1>
         <section className="home-left-bar">
-          <button  id="home" className="home-button05 navbar button account hover" onClick={()=>{
+          <Link to={`/home`}>
+          <button  id="home" className="home-button05 navbar button account" onClick={()=>{
                           setStatusHomeButton(true);
                           setStatusTredingButton(false);
                           setStatusFavoriteButton(false);
@@ -171,13 +221,15 @@ const Home = (props) => {
                           styleChangeOf('send');
                           styleChangeOf('qr');
                           }}>
-             <svg xmlns="http://www.w3.org/2000/svg"  name='img2'  className="home-icon008" viewBox="0 0 16 16">
+             <svg xmlns="http://www.w3.org/2000/svg"  name='img2'  className="home-icon014" viewBox="0 0 16 16">
                 <path d="M6.5 14.5v-3.505c0-.245.25-.495.5-.495h2c.25 0 .5.25.5.5v3.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5Z"/>
               </svg>
-              <svg xmlns="http://www.w3.org/2000/svg" name='img1'  className="home-icon010" viewBox="0 0 16 16">
+              <svg xmlns="http://www.w3.org/2000/svg" name='img1'  className="home-icon012" viewBox="0 0 16 16">
                 <path d="M8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4.5a.5.5 0 0 0 .5-.5v-4h2v4a.5.5 0 0 0 .5.5H14a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146ZM2.5 14V7.707l5.5-5.5 5.5 5.5V14H10v-4a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v4H2.5Z"/>
               </svg>
           </button>
+          </Link>
+          <Link to={`/treding`}>
           <button id="treding" className="home-button05 navbar button account" onClick={()=>{
                           setStatusHomeButton(false);
                           setStatusTredingButton(true);
@@ -208,6 +260,8 @@ const Home = (props) => {
                   <path d="m6.94 7.44 4.95-2.83-2.83 4.95-4.949 2.83 2.828-4.95z"/>
                 </svg>
           </button>
+          </Link>
+          <Link to={`/favorite`}>
           <button id="favorite" className="home-button06 navbar button account"onClick={()=>{
                           setStatusHomeButton(false);
                           setStatusTredingButton(false);
@@ -237,6 +291,8 @@ const Home = (props) => {
               <path d="M516 792q96-86 142-130t100-104 75-106 21-90q0-64-43-106t-107-42q-50 0-93 28t-59 72h-80q-16-44-59-72t-93-28q-64 0-107 42t-43 106q0 44 21 90t75 106 100 104 142 130l4 4zM704 128q100 0 167 68t67 166q0 58-22 113t-81 123-107 114-154 142l-62 56-62-54q-138-124-199-186t-113-146-52-162q0-98 67-166t167-68q116 0 192 90 76-90 192-90z"></path>
             </svg>
           </button>
+          </Link>
+          <Link to={`/playList`}>
           <button id="playList" className="home-button07 navbar button account"onClick={()=>{
                           setStatusHomeButton(false);
                           setStatusTredingButton(false);
@@ -266,6 +322,8 @@ const Home = (props) => {
               <path d="M598 598l212 128-212 128v-256zM170 598h342v84h-342v-84zM170 256h512v86h-512v-86zM170 426h512v86h-512v-86z"></path>
             </svg>
           </button>
+          </Link>
+          <Link to={`/history`}>
           <button id="history" className="navbar button account"onClick={()=>{
                           setStatusHomeButton(false);
                           setStatusTredingButton(false);
@@ -295,6 +353,8 @@ const Home = (props) => {
               <path d="M2.5 15a.5.5 0 1 1 0-1h1v-1a4.5 4.5 0 0 1 2.557-4.06c.29-.139.443-.377.443-.59v-.7c0-.213-.154-.451-.443-.59A4.5 4.5 0 0 1 3.5 3V2h-1a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1h-1v1a4.5 4.5 0 0 1-2.557 4.06c-.29.139-.443.377-.443.59v.7c0 .213.154.451.443.59A4.5 4.5 0 0 1 12.5 13v1h1a.5.5 0 0 1 0 1h-11zm2-13v1c0 .537.12 1.045.337 1.5h6.326c.216-.455.337-.963.337-1.5V2h-7zm3 6.35c0 .701-.478 1.236-1.011 1.492A3.5 3.5 0 0 0 4.5 13s.866-1.299 3-1.48V8.35zm1 0v3.17c2.134.181 3 1.48 3 1.48a3.5 3.5 0 0 0-1.989-3.158C8.978 9.586 8.5 9.052 8.5 8.351z"/>
             </svg>
           </button>
+          </Link>
+          <Link to={`/live`}>
           <button id="live" className="navbar button account"onClick={()=>{
                           setStatusHomeButton(false);
                           setStatusTredingButton(false);
@@ -325,6 +385,8 @@ const Home = (props) => {
               <path d="M3.05 3.05a7 7 0 0 0 0 9.9.5.5 0 0 1-.707.707 8 8 0 0 1 0-11.314.5.5 0 0 1 .707.707zm2.122 2.122a4 4 0 0 0 0 5.656.5.5 0 1 1-.708.708 5 5 0 0 1 0-7.072.5.5 0 0 1 .708.708zm5.656-.708a.5.5 0 0 1 .708 0 5 5 0 0 1 0 7.072.5.5 0 1 1-.708-.708 4 4 0 0 0 0-5.656.5.5 0 0 1 0-.708zm2.122-2.12a.5.5 0 0 1 .707 0 8 8 0 0 1 0 11.313.5.5 0 0 1-.707-.707 7 7 0 0 0 0-9.9.5.5 0 0 1 0-.707zM6 8a2 2 0 1 1 2.5 1.937V15.5a.5.5 0 0 1-1 0V9.937A2 2 0 0 1 6 8z"/>
             </svg>
           </button>
+          </Link>
+          <Link to={`/qr`}>
           <button id="qr" className="home-button10 navbar button account"onClick={()=>{
                            setStatusHomeButton(false);
                            setStatusTredingButton(false);
@@ -357,8 +419,9 @@ const Home = (props) => {
             <svg viewBox="0 0 804.5714285714286 1024" style={{display: 'flex'}} name='img2' className="home-icon034">
               <path d="M219.429 658.286v73.143h-73.143v-73.143h73.143zM219.429 219.429v73.143h-73.143v-73.143h73.143zM658.286 219.429v73.143h-73.143v-73.143h73.143zM73.143 804h219.429v-218.857h-219.429v218.857zM73.143 365.714h219.429v-219.429h-219.429v219.429zM512 365.714h219.429v-219.429h-219.429v219.429zM365.714 512v365.714h-365.714v-365.714h365.714zM658.286 804.571v73.143h-73.143v-73.143h73.143zM804.571 804.571v73.143h-73.143v-73.143h73.143zM804.571 512v219.429h-219.429v-73.143h-73.143v219.429h-73.143v-365.714h219.429v73.143h73.143v-73.143h73.143zM365.714 73.143v365.714h-365.714v-365.714h365.714zM804.571 73.143v365.714h-365.714v-365.714h365.714z"></path>
             </svg>
-
           </button>
+          </Link>
+          <Link to={`/send`}>
           <button id="send" className="home-button11 navbar button account"onClick={()=>{
                           setStatusHomeButton(false);
                           setStatusTredingButton(false);
@@ -388,11 +451,9 @@ const Home = (props) => {
               <path d="M1008 6.286c12 8.571 17.714 22.286 15.429 36.571l-146.286 877.714c-1.714 10.857-8.571 20-18.286 25.714-5.143 2.857-11.429 4.571-17.714 4.571-4.571 0-9.143-1.143-13.714-2.857l-301.143-122.857-170.286 186.857c-6.857 8-16.571 12-26.857 12-4.571 0-9.143-0.571-13.143-2.286-14.286-5.714-23.429-19.429-23.429-34.286v-258.286l-269.714-110.286c-13.143-5.143-21.714-17.143-22.857-31.429-1.143-13.714 6.286-26.857 18.286-33.714l950.857-548.571c12-7.429 27.429-6.857 38.857 1.143zM812.571 862.857l126.286-756-819.429 472.571 192 78.286 493.143-365.143-273.143 455.429z"></path>
             </svg>
           </button>
+          </Link>
         </section>
-            {statusHomeButton? <HomeBar>
-                    </HomeBar>
-                    
-            :null}
+            {statusHomeButton? <HomeBar></HomeBar>:null}
             {statusTredingButton? <TredingBar></TredingBar>  :null}
             {statusFavoriteButton? <FavoriteBar></FavoriteBar> :null}
             {statusPlayListButton? <PlayListBar></PlayListBar> :null}
@@ -402,13 +463,12 @@ const Home = (props) => {
             {statusSendButton? <SendBar></SendBar> :null}
             {statusFiltreButton? <FiltreBar
                     selectedFiltre={selectedFiltre}
+                    setStatusSearchButtons={setStatusSearchButtons}
+                    setStatusFiltreButtons={setStatusFiltreButtons}
                     setSelectedFiltre={setSelectedFiltre}>
-                    </FiltreBar>
-            :null}
-            {statusChanelButton? <ChanelBar></ChanelBar> :null}
+                    </FiltreBar> :null}
             {statusSearcheButton? <SearchBar
-            videos={videos}></SearchBar>
-            :null}
+                      videos={videos}></SearchBar> :null}
             {statusVideoButton? <VideoBar></VideoBar> :null}
 
       </div>

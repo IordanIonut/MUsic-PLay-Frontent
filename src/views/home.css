@@ -284,7 +284,7 @@
   height: 100%;
   margin: 0;
   display: none;
-  overflow: scroll;
+  overflow-y: scroll;
   flex-wrap: wrap;
   align-self: flex-start;
   align-items: flex-start;
@@ -354,7 +354,7 @@
   width: 100%;
   height: 100%;
   display: flex;
-  overflow: scroll;
+  overflow-y: scroll;
   position: relative;
   flex-wrap: wrap;
   align-self: center;
@@ -671,7 +671,7 @@
   width: 100%;
   height: 100%;
   display: none;
-  overflow: scroll;
+  overflow-y: scroll;
   position: relative;
   flex-wrap: wrap;
   align-self: center;
@@ -886,7 +886,7 @@
   width: 100%;
   height: 100%;
   display: none;
-  overflow: scroll;
+  overflow-y: scroll;
   flex-wrap: wrap;
   align-self: center;
   align-items: flex-start;
@@ -1007,7 +1007,7 @@
   width: 100%;
   height: 100%;
   display: none;
-  overflow: scroll;
+  overflow-y: scroll;
   position: relative;
   align-self: center;
   align-items: flex-start;
@@ -1083,7 +1083,7 @@
   width: 100%;
   height: 100%;
   display: none;
-  overflow: scroll;
+  overflow-y: scroll;
   flex-wrap: wrap;
   align-self: center;
   align-items: flex-start;
@@ -1151,7 +1151,7 @@
   height: 100%;
 }
 .home-card5 {
-  overflow: visible;
+  overflow-y: visible;
   align-items: flex-start;
 }
 .home-text40 {
@@ -1176,7 +1176,7 @@
   width: 100%;
   height: 100%;
   display: none;
-  overflow: scroll;
+  overflow-y: scroll;
   align-self: center;
   align-items: flex-start;
   flex-direction: column;
@@ -1210,7 +1210,7 @@
   width: 100%;
   height: 100%;
   display: none;
-  overflow: scroll;
+  overflow-y: scroll;
   flex-wrap: wrap;
   align-self: center;
   align-items: center;
@@ -1306,14 +1306,14 @@
   width: 98%;
   display: flex;
   opacity: 0.6;
-  overflow: visible;
+  overflow-y: visible;
   flex-wrap: wrap;
 }
 .home-qr {
   width: 100%;
   height: 100%;
   display: none;
-  overflow: scroll;
+  overflow-y: scroll;
   align-self: center;
   align-items: flex-start;
   flex-direction: row;
@@ -1332,7 +1332,7 @@
   width: 100%;
   height: 100%;
   display: none;
-  overflow: scroll;
+  overflow-y: scroll;
   position: relative;
   align-self: stretch;
   align-items: center;
@@ -1572,7 +1572,7 @@
 }
 .home-seach {
   display: none;
-  overflow: scroll;
+  overflow-y: scroll;
   flex-wrap: wrap;
   align-self: flex-start;
   align-items: flex-start;
