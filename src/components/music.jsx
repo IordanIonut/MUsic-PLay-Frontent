@@ -6,14 +6,13 @@ import './music.css'
 
 const demoURL='/video/GDa8kZLNhJ4';
 
-const Music = ({video: {id: {videoId}, snippet} }) => {
-  const [count, setCount] = React.useState(1);
+const Music = ({video: {id: {videoId}, snippet} ,idx}) => {
 
   return (
     <div className={`music-music `} style={{display: 'flex'}}>
-      <Link to={videoId ? `/video/${videoId}` : demoURl}>
+      <Link to={videoId ? `/video/${videoId}` : demoURL}>
       <div className="button music-line">
-        <span id="number" className="music-text">#{count}</span>
+      <span id="number" className="music-text" >#{++idx}</span>
         <img
           alt={snippet?.title}
           src={snippet?.thumbnails?.high?.url}

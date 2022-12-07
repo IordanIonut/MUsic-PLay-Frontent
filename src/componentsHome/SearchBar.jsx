@@ -9,6 +9,7 @@ import '../componentsHome/VideoBar'
 import ChanelCard from '../components/chanel-card';
 
 const SearchBar = ({videos}) => {
+
   return (
     <section className="home-seach music-list"style={{display: 'flex'}}>
     <span className="home-text62 text">
@@ -37,12 +38,11 @@ const SearchBar = ({videos}) => {
             </button>
           </div>
           {videos.map((item, idx) => (
-            <div key={idx} style={{width: '100%' }}> 
-            {  item.id.channelId && <ChanelCard channelDetail={item}></ChanelCard>}
-            {  item.id.videoId && <Music video={item}></Music>}
-            </div>
+            <section key={idx} style={{width: '100%' }}> 
+            {  item.id.channelId && <ChanelCard channelDetail={item} ></ChanelCard>}
+            {  item.id.videoId  && <Music video={item} idx={idx}></Music>}
+            </section>
           ))}
-                
   </section>
   )
 }

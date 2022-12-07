@@ -85,7 +85,7 @@ const ChanelBar = () => {
       </span> 
       {videos.map((item, idx) => (
       <div key={idx} style={{width: '100%' }}> 
-      {  item.id.videoId && <Music video={item}></Music>}
+      {  item.id.videoId && <Music video={item} idx={idx++}></Music>}
       </div>
     ))}
     </div>

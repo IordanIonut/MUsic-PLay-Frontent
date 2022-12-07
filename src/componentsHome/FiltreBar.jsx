@@ -31,7 +31,6 @@ const FiltreBar = ({selectedFiltre, setSelectedFiltre,setStatusFiltreButtons,set
                       className="filre-card-image"
                     />
                   </button>
-                  
                 </div>
                ))};
           </div>

@@ -18,7 +18,6 @@ import SearchBar from '../componentsHome/SearchBar'
 import VideoBar from '../componentsHome/VideoBar'
 import { fetchAPI } from '../utils/fetchAPI'
 import Home from './home';
-import { useHistory } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
 const Chanel = () => {
@@ -29,8 +28,6 @@ const Chanel = () => {
   const [videos, setVideo] = React.useState([]);
 
   const {id} = useParams();
-
-  const history = useHistory();
 
   //console.log(channelDetail);
   //console.log(videos);
@@ -60,7 +57,8 @@ const Chanel = () => {
           src="/playground_assets/2-removebg-preview-1500h.png"
           className="home-image1"
         />
-        <Link to={'/filtre'} style={{width: '100vh',margin: 'auto'}}>
+       <form style={{width: 'auto',margin: 'auto'}}> 
+        <Link to={`/filtre`} >
         <input
            style={{width: '90vh'}}
           type="text"
@@ -73,6 +71,7 @@ const Chanel = () => {
           className="home-search-bar input search-bar"
         />
         </Link>
+        </form>
         <div className="home-posibili posibili">
           <button className="home-button button account">
             <svg viewBox="0 0 1024 1024" className="home-icon">
@@ -182,7 +181,6 @@ const Chanel = () => {
             </svg>
           </Link>
         </section>
-            {statusVideoButton? <VideoBar></VideoBar> :null}
             {statusChanelButton? <ChanelBar></ChanelBar> :null}
       </div>
       <MusicBar></MusicBar>

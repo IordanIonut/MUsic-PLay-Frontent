@@ -18,6 +18,8 @@ import SearchBar from '../componentsHome/SearchBar'
 import VideoBar from '../componentsHome/VideoBar'
 import { fetchAPI } from '../utils/fetchAPI'
 import { Link } from 'react-router-dom';
+import {useHistory} from 'react-router-dom';
+import { display } from '@mui/system';
 
 const Home = () => {
   const [statusHomeButton, setStatusHomeButton] = React.useState(false);
@@ -38,7 +40,17 @@ const Home = () => {
   const [videos, setvideos] = React.useState([]);
 
   const {id} = useParams();
+  const [seachText, setseachText] = useState('');
+  const history = useHistory();
 
+  const handleSubmit =(e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if(seachText){
+      history.push(`/search/${seachText}`);
+      setseachText('');
+    }
+  };
   const styleChangeOn=((idClass)=>{
     document.getElementById(idClass).classList.add("hover");
     document.getElementById(idClass).firstElementChild.style.display='block';
@@ -109,56 +121,42 @@ const Home = () => {
           src="/playground_assets/2-removebg-preview-1500h.png"
           className="home-image1"
         />
-       <Link to={`/filtre`} style={{width: '100vh',margin: 'auto'}}>
-        <input
-           style={{width: '90vh'}}
-          type="text"
-          id="search"
-          name="search-bar"
-          required
-          onClick={() =>{
-                          setStatusHomeButton(false);
-                          setStatusTredingButton(false);
-                          setStatusFavoriteButton(false);
-                          setStatusPlayListButton(false);
-                          setStatusHistoryButton(false);
-                          setStatusLiveButtons(false);
-                          setStatusQrButtons(false);
-                          setStatusSendButtons(false);
-                          setStatusChanelButtons(false);
-                          setStatusSearchButtons(false);
-                          setStatusVideoButtons(false);
-                          setStatusFiltreButtons(true);
-                          styleChangeOf('home');
-                          styleChangeOf('treding');
-                          styleChangeOf('favorite');
-                          styleChangeOf('playList');
-                          styleChangeOf('history');
-                          styleChangeOf('live');
-                          styleChangeOf('send');
-                          styleChangeOf('qr');
-                  }}
-          onKeyPress={event => {
-                   if (event.key === 'Enter') {
-                        setStatusHomeButton(false);
-                        setStatusTredingButton(false);
-                        setStatusFavoriteButton(false);
-                        setStatusPlayListButton(false);
-                        setStatusHistoryButton(false);
-                        setStatusLiveButtons(false);
-                        setStatusQrButtons(false);
-                        setStatusChanelButtons(false);
-                        setStatusSearchButtons(true);
-                        setStatusVideoButtons(false);
-                        setStatusSendButtons(false);
-                        setStatusFiltreButtons(false);
-                    }
-                  }}
-          placeholder="Search..."
-          autoComplete="on"
-          className="home-search-bar input search-bar"
-        />
-        </Link>
+        <form onSubmit={handleSubmit} style={{width: '90vh',margin: 'auto'}}> 
+          <input
+            style={{width: '90vh'}}
+            type="text"
+            id="search"
+            required
+            value={seachText}
+            onClick={() =>{
+                            setStatusHomeButton(false);
+                            setStatusTredingButton(false);
+                            setStatusFavoriteButton(false);
+                            setStatusPlayListButton(false);
+                            setStatusHistoryButton(false);
+                            setStatusLiveButtons(false);
+                            setStatusQrButtons(false);
+                            setStatusSendButtons(false);
+                            setStatusChanelButtons(false);
+                            setStatusSearchButtons(false);
+                            setStatusVideoButtons(false);
+                            setStatusFiltreButtons(true);
+                            styleChangeOf('home');
+                            styleChangeOf('treding');
+                            styleChangeOf('favorite');
+                            styleChangeOf('playList');
+                            styleChangeOf('history');
+                            styleChangeOf('live');
+                            styleChangeOf('send');
+                            styleChangeOf('qr');    history.push(`/filtre`);
+
+                    }}
+            onChange={(e) => setseachText(e.target.value)}
+            placeholder="Search..."
+            autoComplete="on"
+            className="home-search-bar input search-bar"
+          />
+        </form>
         <div className="home-posibili posibili">
           <button className="home-button button account">
             <svg viewBox="0 0 1024 1024" className="home-icon">

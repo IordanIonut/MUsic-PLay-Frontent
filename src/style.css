@@ -99,10 +99,8 @@
   text-align: left;
   transition: 0.3s;
   line-height: 1.5;
-  margin-left: 10%;
   border-color: var(--dl-color-gray-black);
   border-radius: 30px;
-  text-transform: capitalize;
   background-color: transparent;
 }
 .search-bar:hover {

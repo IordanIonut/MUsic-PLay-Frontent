@@ -6,8 +6,6 @@ const demoURL='/video/GDa8kZLNhJ4';
 
 
 const ChanelCard = ({channelDetail}) => {
-    //console.log(parseInt(channelDetail?.statistics?.subscriberCount).toLocaleString());
-
     return(
       <div className={`music-music `} style={{display: 'flex'}}>
         <Link to={`/channel/${channelDetail?.id?.channelId}`}>

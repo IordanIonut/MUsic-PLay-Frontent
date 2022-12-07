@@ -7,14 +7,15 @@ import Account from './views/account'
 import Login from './views/login'
 import PopUp from './views/pop-up'
 import Chanel from './views/chanel'
+import Search from './views/search'
 
 const App = () => {
   return (
-
     <Router>
       <div>
         <Route component={Home} exact path="/:id" />
         <Route component={Chanel} path="/channel/:id" />
+        <Route component={Search} path="/search/:searchTerm" />
         <Route component={Account} exact path="/account" />
         <Route component={Login} exact path="/login" />
         <Route component={PopUp} exact path="/pop-up" />
