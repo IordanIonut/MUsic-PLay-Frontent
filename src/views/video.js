@@ -6,19 +6,20 @@ import {useParams} from 'react-router-dom';
 import MusicBar from '../componentsHome/MusicBar'
 import ChanelBar from '../componentsHome/ChanelBar'
 import VideoBar from '../componentsHome/VideoBar'
-import { ApiYouTube3 } from '../utils/fetchAPI'
+import { ApiYouTube3, ApiYouTube5 } from '../utils/fetchAPI'
 import { Link } from 'react-router-dom';
 import ReactPlayer from 'react-player';
 
 const video = () => {
     const [videos, setVideo] = React.useState([]);
+    const [like, setLike] = useState([])
     const {id} = useParams();
   
     useEffect(() =>{
-      ApiYouTube3(`video/details/?id=${id}`).then((data) => setVideo(data));
+      ApiYouTube3(`video/details/?id=${id}`).then((data1) => setVideo(data1));
+      ApiYouTube5(`votes?videoId=${id}`).then((data2) => setLike(data2));
     },[id]);
-
-  console.log(videos);
+    
   return ( 
       <div className="home-container">
       <Helmet>
@@ -28,12 +29,12 @@ const video = () => {
       <div className="home-up up">
         <img 
           alt="image"
-          src="/playground_assets/1-removebg-preview-1500h.png"
+          src={process.env.PUBLIC_URL+"/playground_assets/1-removebg-preview-1500h.png"}
           className="home-image"
         />
         <img
           alt="image"
-          src="/playground_assets/2-removebg-preview-1500h.png"
+          src={process.env.PUBLIC_URL+"/playground_assets/2-removebg-preview-1500h.png"}
           className="home-image1"
         />
        <form style={{width: 'auto',margin: 'auto'}}> 
@@ -159,7 +160,7 @@ const video = () => {
             </svg>
           </Link>
         </section>
-             <VideoBar videos={videos} id={id}></VideoBar> 
+             <VideoBar videos={videos} like={like}  id={id}></VideoBar> 
       </div>
       <MusicBar></MusicBar>
     </div>

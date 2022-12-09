@@ -1,6 +1,7 @@
 {
   "name": "MusicPLay",
   "version": "1.0.0",
+  "homepage": "/home",
   "private": true,
   "dependencies": {
     "@craco/craco": "^7.0.0-alpha.0",
