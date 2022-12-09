@@ -9,7 +9,6 @@ import '../componentsHome/VideoBar'
 import ChanelCard from '../components/chanel-card';
 
 const SearchBar = ({videos}) => {
-
   return (
     <section className="home-seach music-list"style={{display: 'flex'}}>
     <span className="home-text62 text">
@@ -37,13 +36,15 @@ const SearchBar = ({videos}) => {
               </svg>
             </button>
           </div>
-          {videos.map((item, idx) => (
-            <section key={idx} style={{width: '100%' }}> 
-            {  item.id.channelId && <ChanelCard channelDetail={item} ></ChanelCard>}
-            {  item.id.videoId  && <Music video={item} idx={idx}></Music>}
+          {videos.map((item, id) => (
+            <section key={id} style={{width: '100%' }}> 
+            {  <Music video={item} idx={id}></Music>}
+            {  <ChanelCard channelDetail={item} idx={id} ></ChanelCard>}
             </section>
           ))}
   </section>
   )
 }
 export default SearchBar
+
+//             {  <ChanelCard channelDetail={item} idx={idx} ></ChanelCard>}

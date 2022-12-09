@@ -6,7 +6,7 @@ import {useParams} from 'react-router-dom';
 import MusicBar from '../componentsHome/MusicBar'
 import ChanelBar from '../componentsHome/ChanelBar'
 import VideoBar from '../componentsHome/VideoBar'
-import { fetchAPI } from '../utils/fetchAPI'
+import { ApiYouTube1 } from '../utils/fetchAPI'
 import { Link } from 'react-router-dom';
 import ChanelCard from '../components/chanel-card';
 import SearchBar from '../componentsHome/SearchBar';
@@ -16,8 +16,7 @@ const Search = () => {
     const {searchTerm} = useParams();
   
     useEffect(() =>{
-      fetchAPI(`search?part=snippet&q=${searchTerm}`)
-          .then((data) => setVideo(data.items));
+      ApiYouTube1(`search?query=${searchTerm}`).then((data) => setVideo(data.data));
     },[searchTerm]);
   
     return ( 
@@ -45,7 +44,6 @@ const Search = () => {
             id="search"
             name="search-bar"
             required
-            onClick={() =>{history.goBack()}}
             placeholder="Search..."
             autoComplete="on"
             className="home-search-bar input search-bar"

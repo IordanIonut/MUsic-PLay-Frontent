@@ -3,41 +3,22 @@ import { Helmet } from 'react-helmet'
 import './home.css'
 import '../style.css'
 import {useParams} from 'react-router-dom';
-import HomeBar from '../componentsHome/HomeBar'
-import TredingBar from '../componentsHome/TredingBar'
-import FavoriteBar from '../componentsHome/FavoriteBar'
-import PlayListBar from '../componentsHome/PlayListBar'
-import HistoryBar from '../componentsHome/HistoryBar'
-import LiveBar from '../componentsHome/LiveBar'
-import {QrBar}  from '../componentsHome/QrBar'
-import SendBar from '../componentsHome/SendBar'
 import MusicBar from '../componentsHome/MusicBar'
-import FiltreBar from '../componentsHome/FiltreBar'
 import ChanelBar from '../componentsHome/ChanelBar'
-import SearchBar from '../componentsHome/SearchBar'
 import VideoBar from '../componentsHome/VideoBar'
 import { ApiYouTube3 } from '../utils/fetchAPI'
-import Home from './home';
 import { Link } from 'react-router-dom';
+import ReactPlayer from 'react-player';
 
-const Chanel = () => {
-  const [statusChanelButton, setStatusChanelButtons] = React.useState(true);
-  const [statusVideoButton, setStatusVideoButtons] = React.useState(false);
+const video = () => {
+    const [videos, setVideo] = React.useState([]);
+    const {id} = useParams();
+  
+    useEffect(() =>{
+      ApiYouTube3(`video/details/?id=${id}`).then((data) => setVideo(data));
+    },[id]);
 
-  const [channelDetail, setchannelDetail] = React.useState(null);
-  const [videos, setVideo] = React.useState([]);
-
-  const {id} = useParams();
-
-  console.log(channelDetail);
   console.log(videos);
-  console.log(id);
-
-  useEffect(() =>{
-    ApiYouTube3(`channel/details/?id=${id}`).then((data2) => setchannelDetail(data2));
-    ApiYouTube3(`channel/videos/?id=${id}`).then((data1) => setVideo(data1.contents));
-  },[id])
-
   return ( 
       <div className="home-container">
       <Helmet>
@@ -178,11 +159,11 @@ const Chanel = () => {
             </svg>
           </Link>
         </section>
-            {statusChanelButton? <ChanelBar 
-                channelDetail={channelDetail} videos={videos}></ChanelBar> :null}
+             <VideoBar videos={videos} id={id}></VideoBar> 
       </div>
       <MusicBar></MusicBar>
     </div>
   )
 }
-export default Chanel
+
+export default video

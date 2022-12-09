@@ -13,13 +13,11 @@ import {QrBar}  from '../componentsHome/QrBar'
 import SendBar from '../componentsHome/SendBar'
 import MusicBar from '../componentsHome/MusicBar'
 import FiltreBar from '../componentsHome/FiltreBar'
-import ChanelBar from '../componentsHome/ChanelBar'
 import SearchBar from '../componentsHome/SearchBar'
 import VideoBar from '../componentsHome/VideoBar'
-import { fetchAPI } from '../utils/fetchAPI'
+import { ApiYouTube4, ApiYouTube2 } from '../utils/fetchAPI'
 import { Link } from 'react-router-dom';
 import {useHistory} from 'react-router-dom';
-import { display } from '@mui/system';
 
 const Home = () => {
   const [statusHomeButton, setStatusHomeButton] = React.useState(false);
@@ -36,8 +34,9 @@ const Home = () => {
   const [statusVideoButton, setStatusVideoButtons] = React.useState(false);
 
   //API YOUTUBE
-  const [selectedFiltre, setSelectedFiltre] = React.useState('JavaScript Mastery');
+  const [selectedFiltre, setSelectedFiltre] = React.useState(' ');
   const [videos, setvideos] = React.useState([]);
+  const [trending, setTrending] = React.useState([]);
 
   const {id} = useParams();
   const [seachText, setseachText] = useState('');
@@ -61,10 +60,12 @@ const Home = () => {
     document.getElementById(idClass).lastElementChild.style.display='flex';
     document.getElementById(idClass).firstElementChild.style.display='none';
   })
-
+  console.log(videos);
   useEffect(() =>{
-    fetchAPI(`search?part=snippet&q=${selectedFiltre}`).then((data) => 
-    setvideos(data.items));
+    ApiYouTube4(`search?query=${selectedFiltre}`).then((data) => 
+        setvideos(data.data));
+    ApiYouTube2(`trending`).then((data2) => 
+       setTrending(data2));
     if(id === 'home'){
       setStatusHomeButton(true);
       styleChangeOn('home');
@@ -97,9 +98,10 @@ const Home = () => {
       setStatusSendButtons(true);
       styleChangeOn('send');
     }
-    else if(id === 'filtre' && selectedFiltre!='JavaScript Mastery'){
-        setStatusFiltreButtons(false);
-    }else if(id === 'filtre' && selectedFiltre==='JavaScript Mastery'){
+    else if(id === 'filtre' && selectedFiltre == ' '){
+        setStatusFiltreButtons(true);
+    }
+    else if(id === 'filtre' && selectedFiltre === ' '){
       setStatusFiltreButtons(true);
   }
   },[selectedFiltre]);
@@ -452,7 +454,7 @@ const Home = () => {
           </Link>
         </section>
             {statusHomeButton? <HomeBar></HomeBar>:null}
-            {statusTredingButton? <TredingBar></TredingBar>  :null}
+            {statusTredingButton? <TredingBar trending={trending}></TredingBar>  :null}
             {statusFavoriteButton? <FavoriteBar></FavoriteBar> :null}
             {statusPlayListButton? <PlayListBar></PlayListBar> :null}
             {statusHistoryButton? <HistoryBar></HistoryBar> :null}

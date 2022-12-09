@@ -6,26 +6,38 @@ import './music.css'
 
 const demoURL='/video/GDa8kZLNhJ4';
 
-const Music = ({video: {id: {videoId}, snippet} ,idx}) => {
+const Music = ({video,idx}) => {
+
+  function toTime(seconds) {
+    var date = new Date(null);
+    date.setSeconds(seconds);
+    return date.toISOString().substr(11, 8);
+ }
 
   return (
     <div className={`music-music `} style={{display: 'flex'}}>
-      <Link to={videoId ? `/video/${videoId}` : demoURL}>
+      <Link to={video?.video?.videoId ? `/video/${video?.video?.videoId}` : null ||
+          video?.id ? `/video/${video?.id}` : null ||
+          video?.videoId ? `/video/${video?.videoId}` : null}>
       <div className="button music-line">
       <span id="number" className="music-text" >#{++idx}</span>
         <img
-          alt={snippet?.title}
-          src={snippet?.thumbnails?.high?.url}
+           alt='imageeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' 
+           src={video?.video ?  video?.video?.thumbnails[0]?.url : null || 
+                video?.videoThumbnails ? video?.videoThumbnails[1]?.url : null || 
+                video?.thumbnail ?  video?.thumbnail[0]?.url : null}
           className="music-image"
         />
-        <span id="song" className="music-text01">
+        <span id="song" className="music-text01"style={video?.video ? {display:'none', width: '550px'} : null ||
+        video?.channelTitle ? {display:'block', width: '300px'} : null}>
           <span className="">
-            {snippet?.channelTitle}
+            {video?.video ? video?.video?.title : null || video?.author ? video?.author : video?.channelTitle}
           </span>
           <br className=""></br>
         </span>
-        <span className="music-text04">
-          <span className="">{snippet?.title.slice(0,60)}</span>
+        <span className="music-text04"  style={video?.video ? {display:'block' ,    width: '600px'} : null || 
+            video?.title ? {display:'block' ,  width: '300px'} : null }>
+          <span className="">{video?.video ? video?.video?.title : video?.title.slice(0,50)}</span>
           <br className=""></br>
         </span>
         <svg viewBox="0 0 1024 1024" className="music-icon">
@@ -34,7 +46,7 @@ const Music = ({video: {id: {videoId}, snippet} ,idx}) => {
             className=""
           ></path>
         </svg>
-        <span className="music-text07">viewB</span>
+        <span className="music-text07">{video?.video ? video?.video?.stats?.views : video?.viewCount } views</span>
         <svg viewBox="0 0 1024 1024" className="music-icon2">
           <path
             d="M658.744 749.256l-210.744-210.746v-282.51h128v229.49l173.256 173.254zM512 0c-282.77 0-512 229.23-512 512s229.23 512 512 512 512-229.23 512-512-229.23-512-512-512zM512 896c-212.078 0-384-171.922-384-384s171.922-384 384-384c212.078 0 384 171.922 384 384s-171.922 384-384 384z"
@@ -42,7 +54,8 @@ const Music = ({video: {id: {videoId}, snippet} ,idx}) => {
           ></path>
         </svg>
         <span className="music-text08">
-          <span className="">2,39</span>
+          <span className="">{video?.video ? toTime(video?.video?.lengthSeconds) : null ||
+                 video?.timeText ? video?.timeText: video?.lengthText}</span>
           <br className=""></br>
         </span>
       </div>

@@ -40,10 +40,6 @@ const HomeBar = ()=>{
           <br></br>
         </span>
         <div className="home-list music-list">
-          <Music1></Music1>
-          <Music1></Music1>
-          <Music1></Music1>
-          <Music1></Music1>
         </div>
       </section> 
     )
