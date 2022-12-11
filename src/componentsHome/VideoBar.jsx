@@ -3,8 +3,9 @@ import Music1 from "../components/music1";
 import '../views/home.css'
 import ReactPlayer from 'react-player';
 import FeatureCard from "../components/feature-card";
+import { Link } from 'react-router-dom';
 
-const VideoBar = ({videos, id, like}) => {
+const VideoBar = ({videos, id, like, related}) => {
   return (
     <section className="home-video" style={{display: 'flex'}}>
     <div className="home-video1 video">
@@ -62,15 +63,17 @@ const VideoBar = ({videos, id, like}) => {
       </div>
       <figure className="home-artist artist">
         <div className="home-container2">
-          <button className="home-button19 button">
+          <Link to={videos?.channelid ? `/channel/${videos?.channelid}` : null }>
+          <div className="home-button19 button">
             <img
               alt="image"
-              src={videos?.author?.avatar[0]?.url}
+              src={videos ? videos?.thumb : null}
               className="home-image4"
             />
-          </button>
+          </div>
+          </Link>
           <div className="home-text11">
-            <span className="home-text12">{videos?.author?.title}</span>
+            <span className="home-text12">{videos?.author}</span>
             <span className="home-text13">{videos?.author?.stats?.subscribersText}</span>
           </div>
         </div>
@@ -79,7 +82,7 @@ const VideoBar = ({videos, id, like}) => {
             <path d="M512 192c-223.318 0-416.882 130.042-512 320 95.118 189.958 288.682 320 512 320 223.312 0 416.876-130.042 512-320-95.116-189.958-288.688-320-512-320zM764.45 361.704c60.162 38.374 111.142 89.774 149.434 150.296-38.292 60.522-89.274 111.922-149.436 150.296-75.594 48.218-162.89 73.704-252.448 73.704-89.56 0-176.858-25.486-252.452-73.704-60.158-38.372-111.138-89.772-149.432-150.296 38.292-60.524 89.274-111.924 149.434-150.296 3.918-2.5 7.876-4.922 11.86-7.3-9.96 27.328-15.41 56.822-15.41 87.596 0 141.382 114.616 256 256 256 141.382 0 256-114.618 256-256 0-30.774-5.452-60.268-15.408-87.598 3.978 2.378 7.938 4.802 11.858 7.302v0zM512 416c0 53.020-42.98 96-96 96s-96-42.98-96-96 42.98-96 96-96 96 42.982 96 96z"></path>
           </svg>
           <span className="home-text14">
-            <span>{videos?.stats?.views}</span>
+            <span>{videos?.view_count}</span>
             <br></br>
           </span>
         </div>
@@ -87,7 +90,7 @@ const VideoBar = ({videos, id, like}) => {
           <svg viewBox="0 0 1024 1024" className="home-icon056">
             <path d="M534 298v224l192 114-32 54-224-136v-256h64zM512 854q140 0 241-101t101-241-101-241-241-101-241 101-101 241 101 241 241 101zM512 86q176 0 301 125t125 301-125 301-301 125-301-125-125-301 125-301 301-125z"></path>
           </svg>
-          <span className="home-text17">{videos?.publishedDate}</span>
+          <span className="home-text17">{videos?.length}</span>
         </div>
         <div className="home-rating posibili">
           <svg
@@ -96,7 +99,7 @@ const VideoBar = ({videos, id, like}) => {
           >
             <path d="M146.286 768c0-20-16.571-36.571-36.571-36.571s-36.571 16.571-36.571 36.571 16.571 36.571 36.571 36.571 36.571-16.571 36.571-36.571zM804.571 438.857c0-38.857-34.857-73.143-73.143-73.143h-201.143c0-66.857 54.857-115.429 54.857-182.857 0-66.857-13.143-109.714-91.429-109.714-36.571 37.143-17.714 124.571-73.143 182.857-16 16.571-29.714 34.286-44 52-25.714 33.143-93.714 130.857-138.857 130.857h-18.286v365.714h18.286c32 0 84.571 20.571 115.429 31.429 62.857 21.714 128 41.714 195.429 41.714h69.143c64.571 0 109.714-25.714 109.714-95.429 0-10.857-1.143-21.714-2.857-32 24-13.143 37.143-45.714 37.143-72 0-13.714-3.429-27.429-10.286-39.429 19.429-18.286 30.286-41.143 30.286-68 0-18.286-8-45.143-20-58.857 26.857-0.571 42.857-52 42.857-73.143zM877.714 438.286c0 33.143-9.714 65.714-28 93.143 3.429 12.571 5.143 26.286 5.143 39.429 0 28.571-7.429 57.143-21.714 82.286 1.143 8 1.714 16.571 1.714 24.571 0 36.571-12 73.143-34.286 101.714 1.143 108-72.571 171.429-178.286 171.429h-73.714c-81.143 0-156.571-24-232-50.286-16.571-5.714-62.857-22.857-78.857-22.857h-164.571c-40.571 0-73.143-32.571-73.143-73.143v-365.714c0-40.571 32.571-73.143 73.143-73.143h156.571c22.286-14.857 61.143-66.286 78.286-88.571 19.429-25.143 39.429-49.714 61.143-73.143 34.286-36.571 16-126.857 73.143-182.857 13.714-13.143 32-21.143 51.429-21.143 59.429 0 116.571 21.143 144.571 76.571 17.714 34.857 20 68 20 106.286 0 40-10.286 74.286-27.429 109.714h100.571c78.857 0 146.286 66.857 146.286 145.714z"></path>
           </svg>
-          <span className="home-text18">{videos?.stats?.likes}</span>
+          <span className="home-text18">{like?.likes}</span>
           <svg
             viewBox="0 0 877.7142857142857 1024"
             className="home-icon060"
@@ -115,13 +118,11 @@ const VideoBar = ({videos, id, like}) => {
       <FeatureCard></FeatureCard>
     </div>
     <div className="home-list1 music-list" >
-      <Music1></Music1>
-      <Music1></Music1>
-      <Music1></Music1>
-      <Music1></Music1>
-      <Music1></Music1>
-      <Music1></Music1>
-      <Music1></Music1>
+      {related.map((item, idx) => (
+        <div key={idx} style={{width: '100%' }}> 
+        {  <Music1 video={item} idx={idx}></Music1>}
+        </div>
+      ))};
     </div>
   </section>
   )

@@ -16,13 +16,12 @@ import FiltreBar from '../componentsHome/FiltreBar'
 import ChanelBar from '../componentsHome/ChanelBar'
 import SearchBar from '../componentsHome/SearchBar'
 import VideoBar from '../componentsHome/VideoBar'
-import { ApiYouTube3 } from '../utils/fetchAPI'
+import { ApiYouTube4 } from '../utils/fetchAPI'
 import Home from './home';
 import { Link } from 'react-router-dom';
 
 const Chanel = () => {
   const [statusChanelButton, setStatusChanelButtons] = React.useState(true);
-  const [statusVideoButton, setStatusVideoButtons] = React.useState(false);
 
   const [channelDetail, setchannelDetail] = React.useState(null);
   const [videos, setVideo] = React.useState([]);
@@ -30,12 +29,9 @@ const Chanel = () => {
   const {id} = useParams();
 
   console.log(channelDetail);
-  console.log(videos);
-  console.log(id);
 
   useEffect(() =>{
-    ApiYouTube3(`channel/details/?id=${id}`).then((data2) => setchannelDetail(data2));
-    ApiYouTube3(`channel/videos/?id=${id}`).then((data1) => setVideo(data1.contents));
+    ApiYouTube4(`channel?id=${id}`).then((data2) => setchannelDetail(data2));
   },[id])
 
   return ( 
@@ -178,8 +174,7 @@ const Chanel = () => {
             </svg>
           </Link>
         </section>
-            {statusChanelButton? <ChanelBar 
-                channelDetail={channelDetail} videos={videos}></ChanelBar> :null}
+          <ChanelBar channelDetail={channelDetail}></ChanelBar> 
       </div>
       <MusicBar></MusicBar>
     </div>

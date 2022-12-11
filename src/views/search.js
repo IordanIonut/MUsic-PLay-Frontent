@@ -18,7 +18,7 @@ const Search = () => {
     useEffect(() =>{
       ApiYouTube1(`search?query=${searchTerm}`).then((data) => setVideo(data.data));
     },[searchTerm]);
-  
+
     return ( 
         <div className="home-container">
         <Helmet>

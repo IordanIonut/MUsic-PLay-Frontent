@@ -6,20 +6,22 @@ import {useParams} from 'react-router-dom';
 import MusicBar from '../componentsHome/MusicBar'
 import ChanelBar from '../componentsHome/ChanelBar'
 import VideoBar from '../componentsHome/VideoBar'
-import { ApiYouTube3, ApiYouTube5 } from '../utils/fetchAPI'
+import { ApiYouTube7, ApiYouTube5, ApiYouTube1 } from '../utils/fetchAPI'
 import { Link } from 'react-router-dom';
 import ReactPlayer from 'react-player';
 
 const video = () => {
     const [videos, setVideo] = React.useState([]);
-    const [like, setLike] = useState([])
+    const [related, setRelated] = useState([]);
+    const [like, setLike] = useState([]);
     const {id} = useParams();
   
     useEffect(() =>{
-      ApiYouTube3(`video/details/?id=${id}`).then((data1) => setVideo(data1));
+      ApiYouTube7(`dl?id=${id}`).then((data1) => setVideo(data1));
+      ApiYouTube1(`related?id=${id}`).then((data) => setRelated(data.data));
       ApiYouTube5(`votes?videoId=${id}`).then((data2) => setLike(data2));
     },[id]);
-    
+   
   return ( 
       <div className="home-container">
       <Helmet>
@@ -160,7 +162,7 @@ const video = () => {
             </svg>
           </Link>
         </section>
-             <VideoBar videos={videos} like={like}  id={id}></VideoBar> 
+             <VideoBar videos={videos} like={like} related={related}  id={id}></VideoBar> 
       </div>
       <MusicBar></MusicBar>
     </div>

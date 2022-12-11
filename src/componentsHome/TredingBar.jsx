@@ -7,7 +7,6 @@ import Home from "../views/home";
 import '../views/home.css'
 
 const TredingBar = ({trending})=>{
-    console.log(trending);
     return(
       <section className="home-treding"style={{display: 'flex'}}>
       <span className="home-text47 text">

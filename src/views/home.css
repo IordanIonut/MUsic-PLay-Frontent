@@ -606,10 +606,10 @@
 .home-text17 {
   fill: var(--dl-color-gray-700);
   color: var(--dl-color-gray-700);
-  width: 110px;
+  width: 70px;
   font-size: 17px;
   align-self: center;
-  text-align: left;
+  text-align: center;
 }
 .home-rating {
   width: auto;
@@ -740,7 +740,8 @@
   margin-right: 40px;
 }
 .home-text20:hover {
-  margin-left: 40px;
+  margin-left: 30px;
+  margin-right: 50px;
 }
 .home-view2 {
   width: auto;

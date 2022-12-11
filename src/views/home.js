@@ -15,9 +15,10 @@ import MusicBar from '../componentsHome/MusicBar'
 import FiltreBar from '../componentsHome/FiltreBar'
 import SearchBar from '../componentsHome/SearchBar'
 import VideoBar from '../componentsHome/VideoBar'
-import { ApiYouTube4, ApiYouTube2 } from '../utils/fetchAPI'
+import { ApiYouTube4, ApiYouTube2, ApiYouTube6 } from '../utils/fetchAPI'
 import { Link } from 'react-router-dom';
 import {useHistory} from 'react-router-dom';
+import { Autocomplete } from '@mui/material';
 
 const Home = () => {
   const [statusHomeButton, setStatusHomeButton] = React.useState(false);
@@ -40,6 +41,7 @@ const Home = () => {
 
   const {id} = useParams();
   const [seachText, setseachText] = useState('');
+  const [auto, setAuto] = useState([])
   const history = useHistory();
 
   const handleSubmit =(e) => {
@@ -60,12 +62,10 @@ const Home = () => {
     document.getElementById(idClass).lastElementChild.style.display='flex';
     document.getElementById(idClass).firstElementChild.style.display='none';
   })
-  console.log(videos);
+
   useEffect(() =>{
-    ApiYouTube4(`search?query=${selectedFiltre}`).then((data) => 
-        setvideos(data.data));
-    ApiYouTube2(`trending`).then((data2) => 
-       setTrending(data2));
+    ApiYouTube4(`search?query=${selectedFiltre}`).then((data) => setvideos(data.data));
+    ApiYouTube2(`trending`).then((data2) => setTrending(data2));
     if(id === 'home'){
       setStatusHomeButton(true);
       styleChangeOn('home');
@@ -105,6 +105,13 @@ const Home = () => {
       setStatusFiltreButtons(true);
   }
   },[selectedFiltre]);
+
+
+  useEffect(() =>{
+    ApiYouTube6(`auto-complete/?q=${auto}`).then((data) => setAuto(data.results));
+  },[auto]);
+
+  console.log(auto);
 
   return (
     <div className="home-container">
@@ -150,12 +157,13 @@ const Home = () => {
                             styleChangeOf('history');
                             styleChangeOf('live');
                             styleChangeOf('send');
-                            styleChangeOf('qr');    history.push(`/filtre`);
+                            styleChangeOf('qr');   
+                            history.push(`/filtre`);
 
                     }}
-            onChange={(e) => setseachText(e.target.value)}
+            onChange={(e) =>{ setseachText(e.target.value); setAuto(e.target.value)}}
             placeholder="Search..."
-            autoComplete="on"
+            autoComplete={auto}
             className="home-search-bar input search-bar"
           />
         </form>
