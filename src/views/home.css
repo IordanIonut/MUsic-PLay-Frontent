@@ -924,6 +924,19 @@
   opacity: 1;
   flex-direction: row;
 }
+.hoverType{
+  width: 32px;
+  height: 42px;
+  opacity: 1;
+  margin-left: 8px;
+  margin-right: 8px;
+}
+.suggestion{
+  cursor: pointer;
+  border-right: 1px #2c3e50;
+  border-left: 1px #2c3e50;
+  border-bottom: 1px #2c3e50;
+}
 .home-icon070 {
   fill: var(--dl-color-gray-700);
   width: 100%;

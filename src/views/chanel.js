@@ -3,36 +3,25 @@ import { Helmet } from 'react-helmet'
 import './home.css'
 import '../style.css'
 import {useParams} from 'react-router-dom';
-import HomeBar from '../componentsHome/HomeBar'
-import TredingBar from '../componentsHome/TredingBar'
-import FavoriteBar from '../componentsHome/FavoriteBar'
-import PlayListBar from '../componentsHome/PlayListBar'
-import HistoryBar from '../componentsHome/HistoryBar'
-import LiveBar from '../componentsHome/LiveBar'
-import {QrBar}  from '../componentsHome/QrBar'
-import SendBar from '../componentsHome/SendBar'
 import MusicBar from '../componentsHome/MusicBar'
-import FiltreBar from '../componentsHome/FiltreBar'
 import ChanelBar from '../componentsHome/ChanelBar'
-import SearchBar from '../componentsHome/SearchBar'
-import VideoBar from '../componentsHome/VideoBar'
-import { ApiYouTube4 } from '../utils/fetchAPI'
-import Home from './home';
+import { ApiYouTube8, ApiYouTube1 } from '../utils/fetchAPI'
 import { Link } from 'react-router-dom';
 
 const Chanel = () => {
-  const [statusChanelButton, setStatusChanelButtons] = React.useState(true);
-
-  const [channelDetail, setchannelDetail] = React.useState(null);
+  const [channelDetail, setchannelDetail] = React.useState([]);
   const [videos, setVideo] = React.useState([]);
 
   const {id} = useParams();
 
-  console.log(channelDetail);
-
   useEffect(() =>{
-    ApiYouTube4(`channel?id=${id}`).then((data2) => setchannelDetail(data2));
+    ApiYouTube8(`channels?id=${id}`).then((data1) => setchannelDetail(data1.items[0]));
+    ApiYouTube1(`channel?id=${id}`).then((data2) => setVideo(data2.data));
   },[id])
+
+  console.log(channelDetail);
+  console.log(videos);
+
 
   return ( 
       <div className="home-container">
@@ -174,7 +163,7 @@ const Chanel = () => {
             </svg>
           </Link>
         </section>
-          <ChanelBar channelDetail={channelDetail}></ChanelBar> 
+          <ChanelBar channelDetail={channelDetail} videos={videos}></ChanelBar> 
       </div>
       <MusicBar></MusicBar>
     </div>

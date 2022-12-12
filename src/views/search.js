@@ -1,24 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { Helmet } from 'react-helmet'
 import './home.css'
 import '../style.css'
-import {useParams} from 'react-router-dom';
 import MusicBar from '../componentsHome/MusicBar'
-import ChanelBar from '../componentsHome/ChanelBar'
-import VideoBar from '../componentsHome/VideoBar'
-import { ApiYouTube1 } from '../utils/fetchAPI'
 import { Link } from 'react-router-dom';
-import ChanelCard from '../components/chanel-card';
 import SearchBar from '../componentsHome/SearchBar';
+import {useParams} from 'react-router-dom';
 
 const Search = () => {
-    const [videos, setVideo] = React.useState([]);
-    const {searchTerm} = useParams();
-  
-    useEffect(() =>{
-      ApiYouTube1(`search?query=${searchTerm}`).then((data) => setVideo(data.data));
-    },[searchTerm]);
-
+  const {searchTerm} = useParams();
     return ( 
         <div className="home-container">
         <Helmet>
@@ -72,7 +62,6 @@ const Search = () => {
               id="account"
               name="account"
               type="button"
-              disabled
               autoFocus
               className="home-button03 button account"
             >
@@ -159,7 +148,7 @@ const Search = () => {
               </svg>
             </Link>
           </section>
-            <SearchBar videos={videos}></SearchBar>
+            <SearchBar selectedFiltre={searchTerm}></SearchBar>
         </div>
         <MusicBar></MusicBar>
       </div>

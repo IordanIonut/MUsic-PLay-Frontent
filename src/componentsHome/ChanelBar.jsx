@@ -1,37 +1,32 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import Music from "../components/music";
 import '../views/home.css'
-import {useParams} from 'react-router-dom';
-import { ApiYouTube1 } from '../utils/fetchAPI'
-import FeatureCard from '../components/feature-card';
-import  ChanelCard from '../components/chanel-card';
 import '../style.css'
 
-const ChanelBar = ({channelDetail}) => {
-
+const ChanelBar = ({channelDetail,videos}) => {
   return ( 
     <section className="home-chanel"style={{display: 'flex'}}>    
     <div className="home-artist1">
       <img
         alt="image"
-        src={ channelDetail ? channelDetail?.meta?.image?.banner[5]?.url : null}
+        src={channelDetail?.brandingSettings?.image?.bannerExternalUrl}
         loading="lazy"
         className="home-image5"
       />
       <div className="home-container3">
         <img
           alt="image"
-          src={channelDetail ? channelDetail?.meta?.thumbnail[2]?.url : null}
+          src={ channelDetail?.snippet?.thumbnails?.high?.url}
           loading="eager"
           className="home-image6"
         />
-        <span className="home-text20 text">{channelDetail?.meta?.title}</span>
+        <span className="home-text20 text">{channelDetail?.snippet?.title}</span>
         <div className="home-view2 posibili" >
           <svg viewBox="0 0 1024 1024" className="home-icon062">
             <path d="M512 192c-223.318 0-416.882 130.042-512 320 95.118 189.958 288.682 320 512 320 223.312 0 416.876-130.042 512-320-95.116-189.958-288.688-320-512-320zM764.45 361.704c60.162 38.374 111.142 89.774 149.434 150.296-38.292 60.522-89.274 111.922-149.436 150.296-75.594 48.218-162.89 73.704-252.448 73.704-89.56 0-176.858-25.486-252.452-73.704-60.158-38.372-111.138-89.772-149.432-150.296 38.292-60.524 89.274-111.924 149.434-150.296 3.918-2.5 7.876-4.922 11.86-7.3-9.96 27.328-15.41 56.822-15.41 87.596 0 141.382 114.616 256 256 256 141.382 0 256-114.618 256-256 0-30.774-5.452-60.268-15.408-87.598 3.978 2.378 7.938 4.802 11.858 7.302v0zM512 416c0 53.020-42.98 96-96 96s-96-42.98-96-96 42.98-96 96-96 96 42.982 96 96z"></path>
           </svg>
           <span className="home-text21">
-            <span>{channelDetail?.meta?.subscriberCount}</span>
+            <span>{channelDetail?.statistics?.subscriberCount}</span>
             <br></br>
           </span>
         </div>
@@ -59,20 +54,12 @@ const ChanelBar = ({channelDetail}) => {
         </div>
       </div>
     </div>
-    <div className="home-play-list05 music-card">
-      <span className="home-text24 text">Playlist FeatureCard rootClassName="feature-card-root-class-name4"</span>
-    </div>
-  
     <div className="home-list2 music-list">
-      <span className="home-text25 text">
-        <br></br>
-        <br></br>
-      </span> 
-      {channelDetail?.data.map((item, idx) => (
+      {videos.map((item, idx) => (
       <div key={idx} style={{width: '100%' }}> 
       {  <Music video={item} idx={idx}></Music>}
       </div>
-    ))}
+    ))} 
     </div>
   </section>
   )

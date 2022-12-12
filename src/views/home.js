@@ -18,7 +18,6 @@ import VideoBar from '../componentsHome/VideoBar'
 import { ApiYouTube4, ApiYouTube2, ApiYouTube6 } from '../utils/fetchAPI'
 import { Link } from 'react-router-dom';
 import {useHistory} from 'react-router-dom';
-import { Autocomplete } from '@mui/material';
 
 const Home = () => {
   const [statusHomeButton, setStatusHomeButton] = React.useState(false);
@@ -36,12 +35,11 @@ const Home = () => {
 
   //API YOUTUBE
   const [selectedFiltre, setSelectedFiltre] = React.useState(' ');
-  const [videos, setvideos] = React.useState([]);
   const [trending, setTrending] = React.useState([]);
 
   const {id} = useParams();
   const [seachText, setseachText] = useState('');
-  const [auto, setAuto] = useState([])
+  const [auto, setAuto] = useState([]);
   const history = useHistory();
 
   const handleSubmit =(e) => {
@@ -52,20 +50,21 @@ const Home = () => {
       setseachText('');
     }
   };
+
   const styleChangeOn=((idClass)=>{
     document.getElementById(idClass).classList.add("hover");
     document.getElementById(idClass).firstElementChild.style.display='block';
     document.getElementById(idClass).lastElementChild.style.display='none';
-  })
+  });
   const styleChangeOf=((idClass)=>{
     document.getElementById(idClass).classList.remove("hover");
     document.getElementById(idClass).lastElementChild.style.display='flex';
     document.getElementById(idClass).firstElementChild.style.display='none';
-  })
+  });
 
   useEffect(() =>{
-    ApiYouTube4(`search?query=${selectedFiltre}`).then((data) => setvideos(data.data));
     ApiYouTube2(`trending`).then((data2) => setTrending(data2));
+    //ApiYouTube2(`sugestions?q=${seachText}`).then((data) => setAuto(data));
     if(id === 'home'){
       setStatusHomeButton(true);
       styleChangeOn('home');
@@ -104,14 +103,7 @@ const Home = () => {
     else if(id === 'filtre' && selectedFiltre === ' '){
       setStatusFiltreButtons(true);
   }
-  },[selectedFiltre]);
-
-
-  useEffect(() =>{
-    ApiYouTube6(`auto-complete/?q=${auto}`).then((data) => setAuto(data.results));
-  },[auto]);
-
-  console.log(auto);
+  },[selectedFiltre,seachText]);
 
   return (
     <div className="home-container">
@@ -135,7 +127,6 @@ const Home = () => {
             style={{width: '90vh'}}
             type="text"
             id="search"
-            required
             value={seachText}
             onClick={() =>{
                             setStatusHomeButton(false);
@@ -163,9 +154,12 @@ const Home = () => {
                     }}
             onChange={(e) =>{ setseachText(e.target.value); setAuto(e.target.value)}}
             placeholder="Search..."
-            autoComplete={auto}
             className="home-search-bar input search-bar"
           />
+          {Array.isArray(auto) ? (auto  && auto.map((item, id) => (
+            <button  key={id} style={{width: '90vh'}} className=" home-search-bar input search-bar suggestion" 
+              onClick={() => setseachText(item)}>{item}</button>
+          ))) : null}
         </form>
         <div className="home-posibili posibili">
           <button className="home-button button account">
@@ -475,8 +469,7 @@ const Home = () => {
                     setStatusFiltreButtons={setStatusFiltreButtons}
                     setSelectedFiltre={setSelectedFiltre}>
                     </FiltreBar> :null}
-            {statusSearcheButton? <SearchBar
-                      videos={videos}></SearchBar> :null}
+            {statusSearcheButton? <SearchBar selectedFiltre={selectedFiltre}></SearchBar> :null}
             {statusVideoButton? <VideoBar></VideoBar> :null}
 
       </div>

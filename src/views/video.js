@@ -6,7 +6,7 @@ import {useParams} from 'react-router-dom';
 import MusicBar from '../componentsHome/MusicBar'
 import ChanelBar from '../componentsHome/ChanelBar'
 import VideoBar from '../componentsHome/VideoBar'
-import { ApiYouTube7, ApiYouTube5, ApiYouTube1 } from '../utils/fetchAPI'
+import { ApiYouTube7, ApiYouTube5, ApiYouTube1, ApiYouTube8 } from '../utils/fetchAPI'
 import { Link } from 'react-router-dom';
 import ReactPlayer from 'react-player';
 
@@ -20,8 +20,10 @@ const video = () => {
       ApiYouTube7(`dl?id=${id}`).then((data1) => setVideo(data1));
       ApiYouTube1(`related?id=${id}`).then((data) => setRelated(data.data));
       ApiYouTube5(`votes?videoId=${id}`).then((data2) => setLike(data2));
+      if(videos === null)
+        ApiYouTube8(`playlistItems?playlistId=${id}`).then((data) => setVideo(data));
     },[id]);
-   
+
   return ( 
       <div className="home-container">
       <Helmet>

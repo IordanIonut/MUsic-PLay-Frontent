@@ -3,12 +3,14 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import './feature-card.css'
+import { Link } from 'react-router-dom'
 
-const FeatureCard = (props) => {
+const FeatureCard = ({playlist}) => {
   return (
-    <div
-      className={`feature-card-feature-card card-music ${props.rootClassName} `}
+    <div 
+      className={`feature-card-feature-card card-music`}
     >
+      <Link to={playlist ? `/video/${playlist?.playlistId}` : null}>
       <button
         id="card-play"
         name="card-play"
@@ -19,21 +21,21 @@ const FeatureCard = (props) => {
           <path d="M342 214l468 298-468 298v-596z" className=""></path>
         </svg>
       </button>
+      </Link>
       <img
-        alt={props.image_alt}
-        src={props.image_src}
+        alt='{props.image_alt}'
+        src={playlist?.thumbnail[0]?.url}
         className="feature-card-image"
       />
-      <div className="text-card">
-        <span className="feature-card-text1">{props.Text}</span>
+      <div className="text-card" style={{ overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis'}}>
+        <span className="feature-card-text1">{playlist?.title}</span>
         <span id="artist" className="feature-card-text2">
-          {props.Text1}
+          {playlist?.channelTitle}
         </span>
       </div>
-      <span className="feature-card-text3">
-        <span className="">26 song</span>
-        <br className=""></br>
-        <br className=""></br>
+      <span className="feature-card-text3" style={{paddingTop: '30px'}}>
+        <span className="">{playlist?.videoCount} Videos</span>
+       
       </span>
     </div>
   )
