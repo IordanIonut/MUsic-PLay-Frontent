@@ -4,11 +4,12 @@ import '../views/home.css'
 import ReactPlayer from 'react-player';
 import FeatureCard from "../components/feature-card";
 import { Link } from 'react-router-dom';
-import { ApiYouTube5 } from '../utils/fetchAPI'
+import { ApiYouTube5, ApiYouTube3 } from '../utils/fetchAPI'
 import Cookies from 'js-cookie';
 
 const VideoBar = ({videos, id, related, playlist, views}) => {
   const [like, setLike] = useState([]);
+  const [icon, setIcon] = useState([]);
   const idSearch=id;
 
   const  idSongPlayList = Cookies.get('idSongPlayList') || '';
@@ -18,14 +19,16 @@ const VideoBar = ({videos, id, related, playlist, views}) => {
   useEffect(() =>{
     if(idSongPlayList === '' && playlist === 1){
       ApiYouTube5(`votes?videoId=${idFirst}`).then((data2) => setLike(data2));
+      ApiYouTube3(`video?search=https://www.youtube.com/watch?v=${idFirst}`).then((data) => setIcon(data.result));
     }else if(idSongPlayList === ''){
       ApiYouTube5(`votes?videoId=${idSearch}`).then((data2) => setLike(data2));
     }else{
       ApiYouTube5(`votes?videoId=${views?.id}`).then((data2) => setLike(data2));
+      ApiYouTube3(`video?search=https://www.youtube.com/watch?v=${views?.id}`).then((data) => setIcon(data.result));
     }
   },[idSearch, idFirst, views]);
 
-  
+
   return (
     <section className="home-video" style={{display: 'flex'}}>
     <div className="home-video1 video">
@@ -33,7 +36,7 @@ const VideoBar = ({videos, id, related, playlist, views}) => {
         <ReactPlayer className="home-iframe react-player" autoFocus volume pip stopOnUnmount fallback playIcon controls youtube width='100%' height='100%' 
               playing  loaded style={{display: 'flex'}} 
               url={playlist === 0 ? `https://www.youtube.com/watch?v=${id}` :  null || 
-                (idSongPlayList === '' && playlist === 1) ? `https://www.youtube.com/watch?v=${related?.videos?.[0]?.id}` : 
+                (idSongPlayList === '' && playlist === 1) ? `https://www.youtube.com/watch?v=${idFirst}` : 
                                               `https://www.youtube.com/watch?v=${idSong[0]}`}>
         </ReactPlayer>
         <img style={{display: 'none'}} 
@@ -43,8 +46,7 @@ const VideoBar = ({videos, id, related, playlist, views}) => {
         />
       </div>
       <div className="home-test">
-        <span className="home-text08">
-          { playlist === 0 ? videos?.title : related?.videos?.author || idSongPlayList === '' && playlist === 1 ? related?.videos?.[0]?.title : views?.title}
+        <span className="home-text08">{playlist === 0 ? videos?.title : related?.videos?.author || idSongPlayList === '' && playlist === 1 ? related?.videos?.[0]?.title : views?.title}
           <span>
           </span>
           <br></br>
@@ -80,12 +82,14 @@ const VideoBar = ({videos, id, related, playlist, views}) => {
       </div>
       <figure className="home-artist artist">
         <div className="home-container2">
-          <Link to={videos?.channelid ? `/channel/${videos?.channelid}` : `/channel/${views?.channel?.id}`}>
+          <Link to={playlist === 0 ? `/channel/${videos?.channelid}` : null  || playlist === 1 && related ? 
+                      `/channel/${related?.videos?.[0]?.channel?.id}` : `/channel/${views?.channel?.id}`}>
           <div className="home-button19 button">
             <img
               alt="image"
-              src={idSongPlayList === '' && playlist === 1 && related?.video  ?  related?.videos?.[0]?.channel?.icon : views?.channel?.icon || playlist === 0  ?  related?.channel?.icon : null }
+              src={playlist === 1  ?  icon?.channel?.icon : null || playlist === 0 && views  ? views?.channel?.icon : null }
               className="home-image4"
+              loading="lazy"
             />
           </div>
           </Link>

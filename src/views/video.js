@@ -18,6 +18,8 @@ const video = () => {
     
     const playlistActivate = Cookies.get('playlistActivate');
     const idChannel = Cookies.get('idChannel');
+    const [playAnimation, setPlayAnimation] = useState(false);
+
 
     useEffect(() =>{
       if(id.length  <= 11 && !playlistActivate){
@@ -34,13 +36,10 @@ const video = () => {
     },[id, idChannel]);
 
 
-    console.log( related );
-    console.log( related );
-    
-      return ( 
-      <div className="home-container">
+  return (  
+    <div className="home-container">
       <Helmet>
-        <title>MusicPLay</title>
+        <title>MusicPLay</title>  
         <meta property="og:title" content="MusicPLay" />
       </Helmet>
       <div className="home-up up">
