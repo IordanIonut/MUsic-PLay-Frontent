@@ -2,8 +2,6 @@ import React from 'react'
 import '../views/home.css'
 import { Link } from 'react-router-dom'
 
-const demoURL='/video/GDa8kZLNhJ4';
-
 
 const ChanelCard = ({channelDetail, idx}) => {
     return(
@@ -12,12 +10,11 @@ const ChanelCard = ({channelDetail, idx}) => {
       <div className="button music-line"><span>{idx}</span>
         <img style={{marginLeft: '50px'}}
               alt='11111111111111111111111111111111111111111111111111111111'
-              src={channelDetail?.thumbnail[0]?.url}
+              src={channelDetail ? channelDetail?.thumbnail[0]?.url : channelDetail?.thumbnail[1]?.url}
               className="music-image">
           </img>
         <span className="home-text12" style={{marginLeft: '50px'}}>{channelDetail?.channelTitle}</span>
-        <span className="home-text12" style={{marginLeft: '50px'}}>{channelDetail?.videoCount} views</span>
-          <br className=""></br>
+        <span className="home-text12" style={{marginLeft: '50px'}}>{channelDetail?.subscriberCount}</span>
         </div>
         </Link>
       </div>

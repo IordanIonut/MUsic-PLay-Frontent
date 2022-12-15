@@ -1,18 +1,40 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import Music1 from "../components/music1";
 import '../views/home.css'
 import ReactPlayer from 'react-player';
 import FeatureCard from "../components/feature-card";
 import { Link } from 'react-router-dom';
+import { ApiYouTube5 } from '../utils/fetchAPI'
+import Cookies from 'js-cookie';
 
-const VideoBar = ({videos, id, like, related}) => {
+const VideoBar = ({videos, id, related, playlist, views}) => {
+  const [like, setLike] = useState([]);
+  const idSearch=id;
+
+  const  idSongPlayList = Cookies.get('idSongPlayList') || '';
+  const idFirst = related?.videos?.[0]?.id;
+  const idSong = idSongPlayList.split(',');
+
+  useEffect(() =>{
+    if(idSongPlayList === '' && playlist === 1){
+      ApiYouTube5(`votes?videoId=${idFirst}`).then((data2) => setLike(data2));
+    }else if(idSongPlayList === ''){
+      ApiYouTube5(`votes?videoId=${idSearch}`).then((data2) => setLike(data2));
+    }else{
+      ApiYouTube5(`votes?videoId=${views?.id}`).then((data2) => setLike(data2));
+    }
+  },[idSearch, idFirst, views]);
+
+  
   return (
     <section className="home-video" style={{display: 'flex'}}>
     <div className="home-video1 video">
       <div className="home-container1">
-        <ReactPlayer className="home-iframe react-player" volume pip stopOnUnmount fallback playIcon controls youtube width='100%' height='100%' 
+        <ReactPlayer className="home-iframe react-player" autoFocus volume pip stopOnUnmount fallback playIcon controls youtube width='100%' height='100%' 
               playing  loaded style={{display: 'flex'}} 
-              url={`https://www.youtube.com/watch?v=${id}`}>
+              url={playlist === 0 ? `https://www.youtube.com/watch?v=${id}` :  null || 
+                (idSongPlayList === '' && playlist === 1) ? `https://www.youtube.com/watch?v=${related?.videos?.[0]?.id}` : 
+                                              `https://www.youtube.com/watch?v=${idSong[0]}`}>
         </ReactPlayer>
         <img style={{display: 'none'}} 
           alt="image"
@@ -22,13 +44,8 @@ const VideoBar = ({videos, id, like, related}) => {
       </div>
       <div className="home-test">
         <span className="home-text08">
-          {videos?.title}
+          { playlist === 0 ? videos?.title : related?.videos?.author || idSongPlayList === '' && playlist === 1 ? related?.videos?.[0]?.title : views?.title}
           <span>
-            <span
-              dangerouslySetInnerHTML={{
-                __html: ' ',
-              }}
-            />
           </span>
           <br></br>
         </span>
@@ -63,18 +80,20 @@ const VideoBar = ({videos, id, like, related}) => {
       </div>
       <figure className="home-artist artist">
         <div className="home-container2">
-          <Link to={videos?.channelid ? `/channel/${videos?.channelid}` : null }>
+          <Link to={videos?.channelid ? `/channel/${videos?.channelid}` : `/channel/${views?.channel?.id}`}>
           <div className="home-button19 button">
             <img
               alt="image"
-              src={videos ? videos?.thumb : null}
+              src={idSongPlayList === '' && playlist === 1 && related?.video  ?  related?.videos?.[0]?.channel?.icon : views?.channel?.icon || playlist === 0  ?  related?.channel?.icon : null }
               className="home-image4"
             />
           </div>
           </Link>
           <div className="home-text11">
-            <span className="home-text12">{videos?.author}</span>
-            <span className="home-text13">{videos?.author?.stats?.subscribersText}</span>
+            <span className="home-text12">{ playlist === 0 && videos ? videos?.author : videos?.channelTitle || 
+                  idSongPlayList === '' && playlist === 1 ? related?.videos?.[0]?.channel?.name : views?.channel?.name }</span>
+            <span className="home-text13">{videos ? videos?.author?.stats?.subscribersText : null || views ? views?.statistics?.subscriberCount : null} 
+            </span>
           </div>
         </div>
         <div className="home-view1 posibili">
@@ -82,7 +101,7 @@ const VideoBar = ({videos, id, like, related}) => {
             <path d="M512 192c-223.318 0-416.882 130.042-512 320 95.118 189.958 288.682 320 512 320 223.312 0 416.876-130.042 512-320-95.116-189.958-288.688-320-512-320zM764.45 361.704c60.162 38.374 111.142 89.774 149.434 150.296-38.292 60.522-89.274 111.922-149.436 150.296-75.594 48.218-162.89 73.704-252.448 73.704-89.56 0-176.858-25.486-252.452-73.704-60.158-38.372-111.138-89.772-149.432-150.296 38.292-60.524 89.274-111.924 149.434-150.296 3.918-2.5 7.876-4.922 11.86-7.3-9.96 27.328-15.41 56.822-15.41 87.596 0 141.382 114.616 256 256 256 141.382 0 256-114.618 256-256 0-30.774-5.452-60.268-15.408-87.598 3.978 2.378 7.938 4.802 11.858 7.302v0zM512 416c0 53.020-42.98 96-96 96s-96-42.98-96-96 42.98-96 96-96 96 42.982 96 96z"></path>
           </svg>
           <span className="home-text14">
-            <span>{videos?.view_count}</span>
+            <span>{like?.viewCount}</span>
             <br></br>
           </span>
         </div>
@@ -90,7 +109,8 @@ const VideoBar = ({videos, id, like, related}) => {
           <svg viewBox="0 0 1024 1024" className="home-icon056">
             <path d="M534 298v224l192 114-32 54-224-136v-256h64zM512 854q140 0 241-101t101-241-101-241-241-101-241 101-101 241 101 241 241 101zM512 86q176 0 301 125t125 301-125 301-301 125-301-125-125-301 125-301 301-125z"></path>
           </svg>
-          <span className="home-text17">{videos?.length}</span>
+          <span className="home-text17">{playlist === 0 ? videos?.length : null ||
+          idSongPlayList === '' && playlist === 1 ? related?.videos?.[0]?.duration_formatted : views?.duration_formatted}</span>
         </div>
         <div className="home-rating posibili">
           <svg
@@ -111,6 +131,11 @@ const VideoBar = ({videos, id, like, related}) => {
       </figure>
     </div>
     <div className="home-play-list02 music-card" style={{display: 'flex'}}>
+      {playlist === 1 && <FeatureCard playlist={videos}></FeatureCard>}
+      <FeatureCard></FeatureCard>
+      <FeatureCard></FeatureCard>
+      <FeatureCard></FeatureCard>
+      <FeatureCard></FeatureCard>
       <FeatureCard></FeatureCard>
       <FeatureCard></FeatureCard>
       <FeatureCard></FeatureCard>
@@ -118,11 +143,16 @@ const VideoBar = ({videos, id, like, related}) => {
       <FeatureCard></FeatureCard>
     </div>
     <div className="home-list1 music-list" >
-      {related.map((item, idx) => (
+    {playlist === 0 && <Music1 video={videos} idx={-1} ></Music1>}
+      {playlist === 0 ? Array.isArray(related) && related.map((item, idx) => (
         <div key={idx} style={{width: '100%' }}> 
         {  <Music1 video={item} idx={idx}></Music1>}
         </div>
-      ))};
+      )) : Array.isArray(related.videos) && related.videos.map((item, idx) => (
+        <div key={idx} style={{width: '100%' }}> 
+        {  <Music1 video={item} idx={idx} idSearch={idSearch}></Music1>}
+        </div>
+      ))}
     </div>
   </section>
   )

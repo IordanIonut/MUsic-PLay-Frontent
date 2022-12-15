@@ -4,27 +4,40 @@ import './home.css'
 import '../style.css'
 import {useParams} from 'react-router-dom';
 import MusicBar from '../componentsHome/MusicBar'
-import ChanelBar from '../componentsHome/ChanelBar'
 import VideoBar from '../componentsHome/VideoBar'
-import { ApiYouTube7, ApiYouTube5, ApiYouTube1, ApiYouTube8 } from '../utils/fetchAPI'
+import { ApiYouTube7, ApiYouTube3, ApiYouTube1, ApiYouTube8} from '../utils/fetchAPI'
 import { Link } from 'react-router-dom';
-import ReactPlayer from 'react-player';
+import Cookies from 'js-cookie';
 
 const video = () => {
     const [videos, setVideo] = React.useState([]);
     const [related, setRelated] = useState([]);
-    const [like, setLike] = useState([]);
+    const [views, setviews] = useState([])
+    const [playlist, setPlaylist] = useState(0);
     const {id} = useParams();
-  
-    useEffect(() =>{
-      ApiYouTube7(`dl?id=${id}`).then((data1) => setVideo(data1));
-      ApiYouTube1(`related?id=${id}`).then((data) => setRelated(data.data));
-      ApiYouTube5(`votes?videoId=${id}`).then((data2) => setLike(data2));
-      if(videos === null)
-        ApiYouTube8(`playlistItems?playlistId=${id}`).then((data) => setVideo(data));
-    },[id]);
+    
+    const playlistActivate = Cookies.get('playlistActivate');
+    const idChannel = Cookies.get('idChannel');
 
-  return ( 
+    useEffect(() =>{
+      if(id.length  <= 11 && !playlistActivate){
+        setPlaylist(0);
+        ApiYouTube7(`dl?id=${id}`).then((data1) => setVideo(data1));
+        ApiYouTube1(`related?id=${id}`).then((data) => setRelated(data.data));
+        ApiYouTube3(`video?search=https://www.youtube.com/watch?v=${id}`).then((data) => setviews(data.result));
+      }else {
+        setPlaylist(1);
+        ApiYouTube3(`playlist?list=${id}`).then((data) => setVideo(data.result));
+        ApiYouTube3(`playlist?list=${id}`).then((data) => setRelated(data.result));
+        ApiYouTube3(`video?search=https://www.youtube.com/watch?v=${idChannel}`).then((data) => setviews(data.result));
+      }
+    },[id, idChannel]);
+
+
+    console.log( related );
+    console.log( related );
+    
+      return ( 
       <div className="home-container">
       <Helmet>
         <title>MusicPLay</title>
@@ -164,7 +177,7 @@ const video = () => {
             </svg>
           </Link>
         </section>
-             <VideoBar videos={videos} like={like} related={related}  id={id}></VideoBar> 
+             <VideoBar videos={videos} views={views} related={related} id={id} playlist={playlist}></VideoBar> 
       </div>
       <MusicBar></MusicBar>
     </div>

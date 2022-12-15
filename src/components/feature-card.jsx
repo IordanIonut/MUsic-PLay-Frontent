@@ -7,10 +7,8 @@ import { Link } from 'react-router-dom'
 
 const FeatureCard = ({playlist}) => {
   return (
-    <div 
-      className={`feature-card-feature-card card-music`}
-    >
-      <Link to={playlist ? `/video/${playlist?.playlistId}` : null}>
+    <div className={`feature-card-feature-card card-music`} style={playlist?.id ?{opacity: '0.6', transform: 'scale(1.02)'}: null}>
+      <Link to={ `/video/${playlist?.playlistId}` || `/video/${playlist?.id}`}>
       <button
         id="card-play"
         name="card-play"
@@ -23,18 +21,18 @@ const FeatureCard = ({playlist}) => {
       </button>
       </Link>
       <img
-        alt='{props.image_alt}'
-        src={playlist?.thumbnail[0]?.url}
+        alt='imageaaaaaaaaaaaaaaaaaa'
+        src={playlist?.thumbnail ? playlist?.thumbnail[0]?.url : null || playlist?.thumbnail ?  playlist?.thumbnail?.url : null}
         className="feature-card-image"
       />
       <div className="text-card" style={{ overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis'}}>
         <span className="feature-card-text1">{playlist?.title}</span>
         <span id="artist" className="feature-card-text2">
-          {playlist?.channelTitle}
+          {playlist?.channelTitle || playlist?.channel?.name}
         </span>
       </div>
       <span className="feature-card-text3" style={{paddingTop: '30px'}}>
-        <span className="">{playlist?.videoCount} Videos</span>
+        <span className="">{playlist?.videoCount || playlist?.video_count} Videos</span>
        
       </span>
     </div>

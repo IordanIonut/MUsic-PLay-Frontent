@@ -28,12 +28,13 @@ const Music = ({video,idx},page) => {
         />
         <span id="song" className="music-text01">
           <span className="">
-            {video?.video ? video?.video?.title : null || video?.author ? video?.author : video?.channelTitle || video?.channelTitle ? video?.channelTitle : null
-             || video?.snippet ? video?.snippet?.title : null || video?.publishedText ? video?.publishedText : null}
+            {video?.video ? video?.video?.title.slice(0,50) : null || video?.author ? video?.author.slice(0,50) : video?.channelTitle || 
+            video?.channelTitle ? video?.channelTitle.slice(0,50) : null
+             || video?.snippet ? video?.snippet?.title.slice(0,50) : null || video?.publishedText ? video?.publishedText.slice(0,50) : null}
           </span>
         </span>
         <span className="music-text04">
-          <span className="">{video?.video ? video?.video?.title : null || 
+          <span className="">{video?.video ? video?.video?.title.slice(0,50) : null || 
           video?.title ? video?.title.slice(0,50) : null ||  video?.snippet ? null : null}</span>
           <br className=""></br>
         </span>
@@ -76,22 +77,4 @@ const Music = ({video,idx},page) => {
     </div>
   )
 }
-/*
-Music.defaultProps = {
-  text: '#11',
-  image_alt: 'image',
-  image_src:
-    'https://images.unsplash.com/photo-1665909142548-aa76f94b3175?ixid=Mnw5MTMyMXwwfDF8YWxsfDEzfHx8fHx8Mnx8MTY2NjAyNjUyMA&ixlib=rb-1.2.1&w=200',
-  rootClassName: '',
-  text1: '12131,12312',
-}
-
-Music.propTypes = {
-  text: PropTypes.string,
-  image_alt: PropTypes.string,
-  image_src: PropTypes.string,
-  rootClassName: PropTypes.string,
-  text1: PropTypes.string,
-}
-*/
 export default Music

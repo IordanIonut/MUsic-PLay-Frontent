@@ -18,6 +18,7 @@ import VideoBar from '../componentsHome/VideoBar'
 import { ApiYouTube4, ApiYouTube2, ApiYouTube6 } from '../utils/fetchAPI'
 import { Link } from 'react-router-dom';
 import {useHistory} from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 const Home = () => {
   const [statusHomeButton, setStatusHomeButton] = React.useState(false);
@@ -40,7 +41,13 @@ const Home = () => {
   const {id} = useParams();
   const [seachText, setseachText] = useState('');
   const [auto, setAuto] = useState([]);
+  const [activate, setactivate] = useState(false);
   const history = useHistory();
+
+  
+  Cookies.remove("idSongPlayList");
+  Cookies.remove("playlistActivate");
+  Cookies.remove("idChannel");
 
   const handleSubmit =(e) => {
     e.preventDefault();
@@ -150,15 +157,14 @@ const Home = () => {
                             styleChangeOf('send');
                             styleChangeOf('qr');   
                             history.push(`/filtre`);
-
                     }}
-            onChange={(e) =>{ setseachText(e.target.value); setAuto(e.target.value)}}
+            onChange={(e) =>{ setseachText(e.target.value); setAuto(e.target.value); setactivate(true); }}
             placeholder="Search..."
-            className="home-search-bar input search-bar"
+            className="home-search-bar input search-bar"   
           />
-          {Array.isArray(auto) ? (auto  && auto.map((item, id) => (
-            <button  key={id} style={{width: '90vh'}} className=" home-search-bar input search-bar suggestion" 
-              onClick={() => setseachText(item)}>{item}</button>
+       {(Array.isArray(auto)  && activate===true )? (auto  && auto.map((item, id) => (
+            <button name='suggestion' key={id} style={{width: '90vh', paddingLeft: '20px'}} className=" home-search-bar search-bar suggestion" 
+              onClick={() => seachText ? setseachText(item) : null}>{item}</button>
           ))) : null}
         </form>
         <div className="home-posibili posibili">

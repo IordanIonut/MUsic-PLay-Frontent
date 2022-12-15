@@ -9,6 +9,7 @@ import PopUp from './views/pop-up'
 import Chanel from './views/chanel'
 import Search from './views/search'
 import Video from './views/video'
+import { CookiesProvider } from "react-cookie";
 
 const App = () => {
   return (

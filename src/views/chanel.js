@@ -7,21 +7,22 @@ import MusicBar from '../componentsHome/MusicBar'
 import ChanelBar from '../componentsHome/ChanelBar'
 import { ApiYouTube8, ApiYouTube1 } from '../utils/fetchAPI'
 import { Link } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 const Chanel = () => {
   const [channelDetail, setchannelDetail] = React.useState([]);
   const [videos, setVideo] = React.useState([]);
+
+  Cookies.remove("idSongPlayList");
+  Cookies.remove("playlistActivate");
+  Cookies.remove("idChannel");
 
   const {id} = useParams();
 
   useEffect(() =>{
     ApiYouTube8(`channels?id=${id}`).then((data1) => setchannelDetail(data1.items[0]));
     ApiYouTube1(`channel?id=${id}`).then((data2) => setVideo(data2.data));
-  },[id])
-
-  console.log(channelDetail);
-  console.log(videos);
-
+  },[id]);
 
   return ( 
       <div className="home-container">

@@ -59,7 +59,8 @@ const apiYouTube7 = {
 
 const apiYouTube8 = {
   params: {
-    maxResults: '40'
+    maxResults: '40',
+    part: 'snippet,statistics',
   },
   headers: {
     'X-RapidAPI-Key': process.env.REACT_APP_RAPID_API_KEY,

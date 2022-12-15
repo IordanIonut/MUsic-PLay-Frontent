@@ -6,9 +6,14 @@ import MusicBar from '../componentsHome/MusicBar'
 import { Link } from 'react-router-dom';
 import SearchBar from '../componentsHome/SearchBar';
 import {useParams} from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 const Search = () => {
   const {searchTerm} = useParams();
+  Cookies.remove("idSongPlayList");
+  Cookies.remove("playlistActivate");
+  Cookies.remove("idChannel");
+
     return ( 
         <div className="home-container">
         <Helmet>

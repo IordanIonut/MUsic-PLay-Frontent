@@ -357,6 +357,11 @@
   opacity: 0.6;
   transform: scale(1.02);
 }
+
+.card-music-video{
+  opacity: 0.6;
+  transform: scale(1.02);
+}
 .text-card {
   top: 166px;
   left: 16px;
