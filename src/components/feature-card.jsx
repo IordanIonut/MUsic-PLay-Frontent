@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom'
 
 const FeatureCard = ({playlist}) => {
   return (
-    <div className={`feature-card-feature-card card-music`} style={playlist?.id ?{opacity: '0.6', transform: 'scale(1.02)'}: null}>
+    <div className={`feature-card-feature-card card-music`} style={playlist?.id ?{opacity: '0.6', transform: 'scale(1.02)', pointerEvents: 'none'}: null}>
       <Link to={ `/video/${playlist?.playlistId}` || `/video/${playlist?.id}`}>
       <button
         id="card-play"

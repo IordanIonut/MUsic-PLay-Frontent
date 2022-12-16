@@ -3,11 +3,10 @@ import { Link } from 'react-router-dom';
 import './music1.css'
 import Cookies from 'js-cookie'
 
-const Music1 = ({video, idx, idSearch}) => {
-
+const Music1 = ({video, idx, idSearch,pointerEvents}) => {
 
   return (
-    <div className="music1-music" style={video?.videoId ? {opacity: '0.6', marginLeft: '0px', marginRight: '0px'} : null}>
+    <div className="music1-music" style={video?.videoId ? {opacity: '0.6', marginLeft: '0px', marginRight: '0px'} : null || {pointerEvents}}>
       <Link to={video?.videoId ? `/video/${video?.videoId}` : null || video?.id ? `/video/${idSearch}` : null}
       className="button music-line music1-line"
            onClick={() => { !video?.videoId  ?  (Cookies.set('idSongPlayList',  [video?.id]),Cookies.set('idChannel', video?.id),

@@ -25,7 +25,7 @@ const Chanel = () => {
   },[id]);
 
   return ( 
-      <div className="home-container">
+      <div className="home-container" style={{transitionDelay: '4s'}}>
       <Helmet>
         <title>MusicPLay</title>
         <meta property="og:title" content="MusicPLay" />

@@ -12,9 +12,9 @@ const VideoBar = ({videos, id, related, playlist, views}) => {
   const [icon, setIcon] = useState([]);
   const idSearch=id;
 
-  const  idSongPlayList = Cookies.get('idSongPlayList') || '';
-  const idFirst = related?.videos?.[0]?.id;
+  const idSongPlayList = Cookies.get('idSongPlayList') || '';
   const idSong = idSongPlayList.split(',');
+  const idFirst = related?.videos?.[0]?.id;
 
   useEffect(() =>{
     if(idSongPlayList === '' && playlist === 1){
@@ -33,11 +33,12 @@ const VideoBar = ({videos, id, related, playlist, views}) => {
     <section className="home-video" style={{display: 'flex'}}>
     <div className="home-video1 video">
       <div className="home-container1">
-        <ReactPlayer className="home-iframe react-player" autoFocus volume pip stopOnUnmount fallback playIcon controls youtube width='100%' height='100%' 
-              playing  loaded style={{display: 'flex'}} 
-              url={playlist === 0 ? `https://www.youtube.com/watch?v=${id}` :  null || 
+        <ReactPlayer className="home-iframe react-player" autoFocus volume on config={{ file: { attributes: {autoPlay: true,muted: true}}}}   
+            playsInline frameBorder='0' handleOnReady = {() => setTimeout(() => this.setState({ playing: true }), 100)}
+        allow='autoplay; encrypted-media' controls youtube width='100%' height='100%' playing  loaded style={{display: 'flex', transitionDelay: '3s'}} 
+              url={(playlist === 0 ? `https://www.youtube.com/watch?v=${id}` :  undefined || 
                 (idSongPlayList === '' && playlist === 1) ? `https://www.youtube.com/watch?v=${idFirst}` : 
-                                              `https://www.youtube.com/watch?v=${idSong[0]}`}>
+                                  `https://www.youtube.com/watch?v=${idSong[0]}`)}>
         </ReactPlayer>
         <img style={{display: 'none'}} 
           alt="image"
@@ -82,8 +83,8 @@ const VideoBar = ({videos, id, related, playlist, views}) => {
       </div>
       <figure className="home-artist artist">
         <div className="home-container2">
-          <Link to={playlist === 0 ? `/channel/${videos?.channelid}` : null  || playlist === 1 && related ? 
-                      `/channel/${related?.videos?.[0]?.channel?.id}` : `/channel/${views?.channel?.id}`}>
+          <Link to={playlist === 0 ? `/channel/${videos?.channelid}` : null  || playlist === 1 ? 
+                      `/channel/${icon?.channel?.id}`: null }>
           <div className="home-button19 button">
             <img
               alt="image"
@@ -147,7 +148,7 @@ const VideoBar = ({videos, id, related, playlist, views}) => {
       <FeatureCard></FeatureCard>
     </div>
     <div className="home-list1 music-list" >
-    {playlist === 0 && <Music1 video={videos} idx={-1} ></Music1>}
+    {playlist === 0 && <Music1 video={videos} idx={-1} pointerEvents='none'></Music1>}
       {playlist === 0 ? Array.isArray(related) && related.map((item, idx) => (
         <div key={idx} style={{width: '100%' }}> 
         {  <Music1 video={item} idx={idx}></Music1>}

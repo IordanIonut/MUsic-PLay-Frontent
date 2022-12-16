@@ -22,6 +22,9 @@ const video = () => {
 
 
     useEffect(() =>{
+      const onPageLoad = () => {
+        setPlayAnimation(true);
+      };
       if(id.length  <= 11 && !playlistActivate){
         setPlaylist(0);
         ApiYouTube7(`dl?id=${id}`).then((data1) => setVideo(data1));
@@ -33,11 +36,17 @@ const video = () => {
         ApiYouTube3(`playlist?list=${id}`).then((data) => setRelated(data.result));
         ApiYouTube3(`video?search=https://www.youtube.com/watch?v=${idChannel}`).then((data) => setviews(data.result));
       }
+      if (document.readyState === 'complete') {
+        onPageLoad();
+      } else {
+        window.addEventListener('load', onPageLoad);
+        return () => window.removeEventListener('load', onPageLoad);
+      }
     },[id, idChannel]);
 
 
   return (  
-    <div className="home-container">
+    <div className="home-container"style={{transitionDelay: '4s'}}>
       <Helmet>
         <title>MusicPLay</title>  
         <meta property="og:title" content="MusicPLay" />
