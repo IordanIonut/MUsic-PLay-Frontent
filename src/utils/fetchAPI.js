@@ -8,6 +8,7 @@ const BASE_URL5='https://returnyoutubedislikeapi.com';
 const BASE_URL7='https://youtube-video-download-info.p.rapidapi.com'
 const BASE_URL8='https://youtube-v31.p.rapidapi.com'
 const BASE_URL9='https://youtube-search-and-download.p.rapidapi.com';
+const BASE_URL10='https://youtube-classification-api.p.rapidapi.com';
 
 const apiYouTube1 = {
     params: {
@@ -78,6 +79,14 @@ const apiYouTube9 = {
   }
 };
 
+
+const apiYouTube10 = {
+  headers: {
+    'X-RapidAPI-Key':  process.env.REACT_APP_RAPID_API_KEY,
+    'X-RapidAPI-Host': 'youtube-classification-api.p.rapidapi.com'
+  }
+};
+
 export const ApiYouTube1 = async(url) =>{
   const {data} = await axios.get(`${BASE_URL1}/${url}`,apiYouTube1);
   return data;
@@ -115,6 +124,11 @@ export const ApiYouTube8 = async(url) =>{
 
 export const ApiYouTube9 = async(url) =>{
   const {data} = await axios.get(`${BASE_URL9}/${url}`,apiYouTube9);
+  return data;
+}
+
+export const ApiYouTube10 = async(url) =>{
+  const {data} = await axios.get(`${BASE_URL10}/${url}`,apiYouTube10);
   return data;
 }
 

@@ -15,7 +15,7 @@ import MusicBar from '../componentsHome/MusicBar'
 import FiltreBar from '../componentsHome/FiltreBar'
 import SearchBar from '../componentsHome/SearchBar'
 import VideoBar from '../componentsHome/VideoBar'
-import { ApiYouTube4, ApiYouTube2, ApiYouTube6 } from '../utils/fetchAPI'
+import { ApiYouTube4, ApiYouTube2, ApiYouTube10 } from '../utils/fetchAPI'
 import { Link } from 'react-router-dom';
 import {useHistory} from 'react-router-dom';
 import Cookies from 'js-cookie';
@@ -37,7 +37,7 @@ const Home = () => {
   //API YOUTUBE
   const [selectedFiltre, setSelectedFiltre] = React.useState(' ');
   const [trending, setTrending] = React.useState([]);
-
+  const [home, sethome] = useState([])
   const {id} = useParams();
   const [seachText, setseachText] = useState('');
   const [auto, setAuto] = useState([]);
@@ -71,6 +71,7 @@ const Home = () => {
 
   useEffect(() =>{
     ApiYouTube2(`trending`).then((data2) => setTrending(data2));
+    ApiYouTube10(``).then((data2) => sethome(data2));
     //ApiYouTube2(`sugestions?q=${seachText}`).then((data) => setAuto(data));
     if(id === 'home'){
       setStatusHomeButton(true);
@@ -111,6 +112,9 @@ const Home = () => {
       setStatusFiltreButtons(true);
   }
   },[selectedFiltre,seachText]);
+
+
+  console.log(home);
 
   return (
     <div className="home-container">
