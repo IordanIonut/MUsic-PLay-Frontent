@@ -13,7 +13,7 @@ const SearchBar = ({selectedFiltre}) => {
 
     useEffect(() =>{
       if(type === "video" || type === "playlist" || type === "channel")
-        ApiYouTube4(`search?query=${selectedFiltre}&type=${type}&features&sort_by=relevance`).then((data) => setVideo(data.data));
+        ApiYouTube4(`search?query=${selectedFiltre}&type=${type}`).then((data) => setVideo(data.data));
       else
         ApiYouTube2(`search-live?q=${selectedFiltre}`).then((data) => setVideo(data));
     },[selectedFiltre,type]);
@@ -66,10 +66,10 @@ const SearchBar = ({selectedFiltre}) => {
             </button>
           </div>
           {videos.map((item, id) => (
-            <section key={id} style={type === 'video' ? {width: '100%'}: null ||
+            <section key={id} style={{transitionDelay: '4s'} && (type === 'video' ? {width: '100%'}: null ||
                        type === 'live' ? {width: '100%'}: null ||
                        type === 'channel' ? {width: '100%'}: null ||
-                       type === 'playlist' ? {marginLeft: ''} : null}> 
+                       type === 'playlist' ? {marginLeft: ''} : null)}> 
             {type==='video' && <Music video={item} idx={id} page='0'></Music>}
             {type==='live' && <Music video={item} idx={id} page='1'></Music>}
             {type==='channel' && <ChanelCard channelDetail={item} idx={id} ></ChanelCard>}

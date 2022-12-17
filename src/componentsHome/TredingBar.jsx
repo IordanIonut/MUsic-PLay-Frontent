@@ -13,7 +13,7 @@ const TredingBar = ({trending})=>{
         <span>Trending Now</span>
         <br></br>
       </span>
-      <div className="home-list5 music-list">
+      <div className="home-list5 music-list" style={{width: '100%' }}>
       {trending.map((item, idx) => (
             <section key={idx} style={{width: '100%' }}> 
             {<Music video={item} idx={idx}></Music>}

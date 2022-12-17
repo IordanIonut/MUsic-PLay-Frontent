@@ -28,7 +28,7 @@ const Music = ({video,idx,page}) => {
       <span id="number" className="music-text" >#{++idx}</span>
         <img
            alt='imageeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' 
-           src={video?.video ?  video?.video?.thumbnails[1]?.url : null || 
+           src={video?.video?.thumbnails ?  video?.video?.thumbnails[1]?.url : null || 
                 video?.videoThumbnails ? video?.videoThumbnails[1]?.url : null || 
                 video?.thumbnail && page=== '1' ? video?.thumbnail  : null || 
                 video?.thumbnail ? video?.thumbnail[1]?.url : null}

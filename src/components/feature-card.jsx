@@ -36,22 +36,5 @@ const FeatureCard = ({playlist}) => {
     </div>
   )
 }
-/*
-FeatureCard.defaultProps = {
-  Text1: 'asdadasdsadsa',
-  rootClassName: '',
-  Text: 'asdadasdsadsa',
-  image_alt: 'image',
-  image_src:
-    'https://images.unsplash.com/photo-1665912210382-47b3b8b73466?ixid=Mnw5MTMyMXwwfDF8YWxsfDJ8fHx8fHwyfHwxNjY1OTg2MDEx&ixlib=rb-1.2.1&w=200',
-}
 
-FeatureCard.propTypes = {
-  Text1: PropTypes.string,
-  rootClassName: PropTypes.string,
-  Text: PropTypes.string,
-  image_alt: PropTypes.string,
-  image_src: PropTypes.string,
-}
-*/
 export default FeatureCard
