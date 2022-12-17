@@ -22,7 +22,7 @@ const FeatureCard = ({playlist}) => {
       </Link>
       <img
         alt='imageaaaaaaaaaaaaaaaaaa'
-        src={playlist?.thumbnail ? playlist?.thumbnail[0]?.url : null || playlist?.thumbnail ?  playlist?.thumbnail?.url : null}
+        src={playlist?.thumbnail ? playlist?.thumbnail[1]?.url : null || playlist?.thumbnail ?  playlist?.thumbnail?.url : null}
         className="feature-card-image"
       />
       <div className="text-card" style={{ overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis'}}>

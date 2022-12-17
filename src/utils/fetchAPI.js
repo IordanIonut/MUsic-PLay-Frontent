@@ -7,6 +7,7 @@ const BASE_URL4='https://youtube-v3-alternative.p.rapidapi.com';
 const BASE_URL5='https://returnyoutubedislikeapi.com';
 const BASE_URL7='https://youtube-video-download-info.p.rapidapi.com'
 const BASE_URL8='https://youtube-v31.p.rapidapi.com'
+const BASE_URL9='https://youtube-search-and-download.p.rapidapi.com';
 
 const apiYouTube1 = {
     params: {
@@ -22,6 +23,7 @@ const apiYouTube2 = {
   params: {
     location: 'RO', 
     type: 'default',
+    max: '20',
   },
   headers: {
     'X-RapidAPI-Key': process.env.REACT_APP_RAPID_API_KEY,
@@ -39,7 +41,8 @@ const apiYouTube3 = {
 const apiYouTube4 = {
   params: {
     geo: 'RO', 
-    lang: 'ro',
+    lang: 'en',
+    sort_by: 'relevance'
   },
   headers: {
     'X-RapidAPI-Key': process.env.REACT_APP_RAPID_API_KEY,
@@ -68,6 +71,12 @@ const apiYouTube8 = {
   }
 };
 
+const apiYouTube9 = {
+  headers: {
+    'X-RapidAPI-Key': process.env.REACT_APP_RAPID_API_KEY,
+    'X-RapidAPI-Host': 'youtube-search-and-download.p.rapidapi.com'
+  }
+};
 
 export const ApiYouTube1 = async(url) =>{
   const {data} = await axios.get(`${BASE_URL1}/${url}`,apiYouTube1);
@@ -103,4 +112,10 @@ export const ApiYouTube8 = async(url) =>{
   const {data} = await axios.get(`${BASE_URL8}/${url}`,apiYouTube8);
   return data;
 }
+
+export const ApiYouTube9 = async(url) =>{
+  const {data} = await axios.get(`${BASE_URL9}/${url}`,apiYouTube9);
+  return data;
+}
+
 

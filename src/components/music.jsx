@@ -1,16 +1,23 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
+import { ApiYouTube9 } from '../utils/fetchAPI'
 
 import './music.css'
 
-const Music = ({video,idx},page) => {
+const Music = ({video,idx,page}) => {
+  const [like, setLike] = useState([]);
 
   function toTime(seconds) {
     var date = new Date(null);
     date.setSeconds(seconds);
     return date.toISOString().substr(11, 8);
  }
+
+  useEffect(() =>{
+    if(page)
+      ApiYouTube9(`video?id=${video?.id}`).then((data2) => setLike(data2));
+  },[video?.id]);
 
   return (
     <div className={`music-music `} style={{display: 'flex'}}>
@@ -21,15 +28,16 @@ const Music = ({video,idx},page) => {
       <span id="number" className="music-text" >#{++idx}</span>
         <img
            alt='imageeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' 
-           src={video?.video ?  video?.video?.thumbnails[0]?.url : null || 
+           src={video?.video ?  video?.video?.thumbnails[1]?.url : null || 
                 video?.videoThumbnails ? video?.videoThumbnails[1]?.url : null || 
-                video?.thumbnail ?  video?.thumbnail[0]?.url : null}
+                video?.thumbnail && page=== '1' ? video?.thumbnail  : null || 
+                video?.thumbnail ? video?.thumbnail[1]?.url : null}
           className="music-image"
         />
         <span id="song" className="music-text01">
           <span className="">
             {video?.video ? video?.video?.title.slice(0,50) : null || video?.author ? video?.author.slice(0,50) : video?.channelTitle || 
-            video?.channelTitle ? video?.channelTitle.slice(0,50) : null
+            video?.channelTitle ? video?.channelTitle.slice(0,50) : null || like && page=== '1' ? like?.videoDetails?.author : null
              || video?.snippet ? video?.snippet?.title.slice(0,50) : null || video?.publishedText ? video?.publishedText.slice(0,50) : null}
           </span>
         </span>
@@ -44,7 +52,7 @@ const Music = ({video,idx},page) => {
             className=""
           ></path>
         </svg>
-        <span className="music-text07">{video?.video ? video?.video?.stats?.views : video?.viewCount}</span>
+        <span className="music-text07">{video?.video ? video?.video?.stats?.views : video?.viewCount || like?.videoDetails?.viewCount}</span>
         <svg viewBox="0 0 1024 1024" className="music-icon2">
           <path
             d="M658.744 749.256l-210.744-210.746v-282.51h128v229.49l173.256 173.254zM512 0c-282.77 0-512 229.23-512 512s229.23 512 512 512 512-229.23 512-512-229.23-512-512-512zM512 896c-212.078 0-384-171.922-384-384s171.922-384 384-384c212.078 0 384 171.922 384 384s-171.922 384-384 384z"
@@ -53,7 +61,7 @@ const Music = ({video,idx},page) => {
         </svg>
         <span className="music-text08">
           <span className="">{video?.video ? toTime(video?.video?.lengthSeconds) : null ||
-                 video?.timeText ? video?.timeText: video?.lengthText}</span>
+                 video?.timeText ? video?.timeText: video?.lengthText || 'Live'}</span>
           <br className=""></br>
         </span>
       </div>

@@ -32,10 +32,10 @@ const VideoBar = ({videos, id, related, playlist, views}) => {
   return (
     <section className="home-video" style={{display: 'flex'}}>
     <div className="home-video1 video">
-      <div className="home-container1">
-        <ReactPlayer className="home-iframe react-player" autoFocus volume on config={{ file: { attributes: {autoPlay: true,muted: true}}}}   
+      <div className="home-container1" style ={{transitionDelay: '4s'}}>
+        <ReactPlayer className="home-iframe react-player" autoFocus volume on 
             playsInline frameBorder='0' handleOnReady = {() => setTimeout(() => this.setState({ playing: true }), 100)}
-        allow='autoplay; encrypted-media' controls youtube width='100%' height='100%' playing  loaded style={{display: 'flex', transitionDelay: '3s'}} 
+        allow='autoplay; encrypted-media' controls youtube width='100%' height='100%' playing  loaded style={{display: 'flex'}} 
               url={(playlist === 0 ? `https://www.youtube.com/watch?v=${id}` :  undefined || 
                 (idSongPlayList === '' && playlist === 1) ? `https://www.youtube.com/watch?v=${idFirst}` : 
                                   `https://www.youtube.com/watch?v=${idSong[0]}`)}>
@@ -48,9 +48,7 @@ const VideoBar = ({videos, id, related, playlist, views}) => {
       </div>
       <div className="home-test">
         <span className="home-text08">{playlist === 0 ? videos?.title : related?.videos?.author || idSongPlayList === '' && playlist === 1 ? related?.videos?.[0]?.title : views?.title}
-          <span>
-          </span>
-          <br></br>
+        <br /><br />
         </span>
         <div className="home-share1 posibili buttonChange">
           <button className="home-button15 button account">
@@ -68,8 +66,9 @@ const VideoBar = ({videos, id, related, playlist, views}) => {
         </div>
         <div className="home-like1 posibili buttonChange">
           <button className="home-button17 button account">
-            <svg viewBox="0 0 1024 1024" className="home-icon050">
-              <path d="M755.188 64c-107.63 0-200.258 87.554-243.164 179-42.938-91.444-135.578-179-243.216-179-148.382 0-268.808 120.44-268.808 268.832 0 301.846 304.5 380.994 512.022 679.418 196.154-296.576 511.978-387.206 511.978-679.418 0-148.392-120.43-268.832-268.812-268.832z"></path>
+            <svg xmlns="http://www.w3.org/2000/svg" className="home-icon050" viewBox="0 0 16 16">
+              <path d="M5 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+              <path d="m2.165 15.803.02-.004c1.83-.363 2.948-.842 3.468-1.105A9.06 9.06 0 0 0 8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6a10.437 10.437 0 0 1-.524 2.318l-.003.011a10.722 10.722 0 0 1-.244.637c-.079.186.074.394.273.362a21.673 21.673 0 0 0 .693-.125zm.8-3.108a1 1 0 0 0-.287-.801C1.618 10.83 1 9.468 1 8c0-3.192 3.004-6 7-6s7 2.808 7 6c0 3.193-3.004 6-7 6a8.06 8.06 0 0 1-2.088-.272 1 1 0 0 0-.711.074c-.387.196-1.24.57-2.634.893a10.97 10.97 0 0 0 .398-2z"/>
             </svg>
           </button>
         </div>
@@ -82,7 +81,7 @@ const VideoBar = ({videos, id, related, playlist, views}) => {
         </div>
       </div>
       <figure className="home-artist artist">
-        <div className="home-container2">
+        <div className="home-container2" style ={{transitionDelay: '4s'}}>
           <Link to={playlist === 0 ? `/channel/${videos?.channelid}` : null  || playlist === 1 ? 
                       `/channel/${icon?.channel?.id}`: null }>
           <div className="home-button19 button">
@@ -94,10 +93,10 @@ const VideoBar = ({videos, id, related, playlist, views}) => {
             />
           </div>
           </Link>
-          <div className="home-text11">
+          <div className="home-text11" >
             <span className="home-text12">{ playlist === 0 && videos ? videos?.author : videos?.channelTitle || 
                   idSongPlayList === '' && playlist === 1 ? related?.videos?.[0]?.channel?.name : views?.channel?.name }</span>
-            <span className="home-text13">{videos ? videos?.author?.stats?.subscribersText : null || views ? views?.statistics?.subscriberCount : null} 
+            <span className="home-text13">{videos ? videos?.author?.stats?.subscribersText : null || views ? views?.statistics?.subscriberCount : null} 121221
             </span>
           </div>
         </div>

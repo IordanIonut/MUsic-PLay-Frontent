@@ -5,7 +5,7 @@ import '../style.css'
 
 const ChanelBar = ({channelDetail,videos}) => {
   return ( 
-    <section className="home-chanel"style={{display: 'flex'}}>    
+    <section className="home-chanel"style={{display: 'flex', transitionDelay: '4s'}}>    
     <div className="home-artist1">
       <img
         alt="image"
@@ -13,17 +13,19 @@ const ChanelBar = ({channelDetail,videos}) => {
         loading="lazy"
         className="home-image5"
       />
-      <div className="home-container3">
-        <img
-          alt="image"
-          src={ channelDetail?.snippet?.thumbnails?.high?.url}
-          loading="eager"
-          className="home-image6"
-        />
-        <span className="home-text20 text">{channelDetail?.snippet?.title}</span>
+      <div className="home-container3" style={{display: 'flex'}}>
+        <div style={{display: 'flex',alignItems: 'center'}}>
+          <img
+            alt="image"
+            src={ channelDetail?.snippet?.thumbnails?.high?.url}
+            loading="eager"
+            className="home-image6"
+          />
+          <span className="home-text20 text">{channelDetail?.snippet?.title}</span>
+        </div>
         <div className="home-view2 posibili" >
-          <svg viewBox="0 0 1024 1024" className="home-icon062">
-            <path d="M512 192c-223.318 0-416.882 130.042-512 320 95.118 189.958 288.682 320 512 320 223.312 0 416.876-130.042 512-320-95.116-189.958-288.688-320-512-320zM764.45 361.704c60.162 38.374 111.142 89.774 149.434 150.296-38.292 60.522-89.274 111.922-149.436 150.296-75.594 48.218-162.89 73.704-252.448 73.704-89.56 0-176.858-25.486-252.452-73.704-60.158-38.372-111.138-89.772-149.432-150.296 38.292-60.524 89.274-111.924 149.434-150.296 3.918-2.5 7.876-4.922 11.86-7.3-9.96 27.328-15.41 56.822-15.41 87.596 0 141.382 114.616 256 256 256 141.382 0 256-114.618 256-256 0-30.774-5.452-60.268-15.408-87.598 3.978 2.378 7.938 4.802 11.858 7.302v0zM512 416c0 53.020-42.98 96-96 96s-96-42.98-96-96 42.98-96 96-96 96 42.982 96 96z"></path>
+          <svg xmlns="http://www.w3.org/2000/svg" className="home-icon062" viewBox="0 0 16 16">
+            <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zM8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z"/>
           </svg>
           <span className="home-text21">
             <span>{channelDetail?.statistics?.subscriberCount}</span>

@@ -4,8 +4,7 @@ import '../views/home.css'
 import '../components/music.css'
 import '../componentsHome/VideoBar'
 import ChanelCard from '../components/chanel-card';
-import {useParams} from 'react-router-dom';
-import { ApiYouTube4 } from '../utils/fetchAPI'
+import { ApiYouTube4, ApiYouTube2, ApiYouTube7 } from '../utils/fetchAPI'
 import FeatureCard from '../components/feature-card';
 
 const SearchBar = ({selectedFiltre}) => {
@@ -14,11 +13,11 @@ const SearchBar = ({selectedFiltre}) => {
 
     useEffect(() =>{
       if(type === "video" || type === "playlist" || type === "channel")
-        ApiYouTube4(`search?query=${selectedFiltre}&type=${type}`).then((data) => setVideo(data.data));
+        ApiYouTube4(`search?query=${selectedFiltre}&type=${type}&features&sort_by=relevance`).then((data) => setVideo(data.data));
       else
-        ApiYouTube4(`search?query=${selectedFiltre}&type=video&features=${type}`).then((data) => setVideo(data.data));
+        ApiYouTube2(`search-live?q=${selectedFiltre}`).then((data) => setVideo(data));
     },[selectedFiltre,type]);
-
+   
     const styleChangeOn=((idClass)=>{
       document.getElementById(idClass).classList.add("hoverType");
     });
@@ -28,10 +27,10 @@ const SearchBar = ({selectedFiltre}) => {
 
   return (
     <section className="home-seach music-list"style={{display: 'flex'}}>
-    <span className="home-text62 text">
-      <br></br>
-      <br></br>
-    </span>
+      <span className="home-text62 text">
+        <br></br>
+        <br></br>
+      </span>
          <div className="home-share2 posibili buttonChange" name="music">
             <button id="video" className="home-button22 button account hoverType" onClick={() => {setType('video');
             styleChangeOn('video'); styleChangeOf('playlist'); styleChangeOf('channel');styleChangeOf('live1');}}>
@@ -71,8 +70,8 @@ const SearchBar = ({selectedFiltre}) => {
                        type === 'live' ? {width: '100%'}: null ||
                        type === 'channel' ? {width: '100%'}: null ||
                        type === 'playlist' ? {marginLeft: ''} : null}> 
-            {type==='video' && <Music video={item} idx={id}></Music>}
-            {type==='live' && <Music video={item} idx={id}></Music>}
+            {type==='video' && <Music video={item} idx={id} page='0'></Music>}
+            {type==='live' && <Music video={item} idx={id} page='1'></Music>}
             {type==='channel' && <ChanelCard channelDetail={item} idx={id} ></ChanelCard>}
             {type==='playlist'&& <FeatureCard playlist={item} idx={id} ></FeatureCard>}
             </section>
