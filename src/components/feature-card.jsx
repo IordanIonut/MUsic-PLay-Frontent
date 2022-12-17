@@ -1,11 +1,9 @@
 import React from 'react'
-
-import PropTypes from 'prop-types'
-
 import './feature-card.css'
 import { Link } from 'react-router-dom'
 
 const FeatureCard = ({playlist}) => {
+
   return (
     <div className={`feature-card-feature-card card-music`} style={playlist?.id ?{opacity: '0.6', transform: 'scale(1.02)', pointerEvents: 'none'}: null}>
       <Link to={ `/video/${playlist?.playlistId}` || `/video/${playlist?.id}`}>
@@ -22,7 +20,7 @@ const FeatureCard = ({playlist}) => {
       </Link>
       <img
         alt='imageaaaaaaaaaaaaaaaaaa'
-        src={playlist?.thumbnail ? playlist?.thumbnail[1]?.url : null || playlist?.thumbnail ?  playlist?.thumbnail?.url : null}
+        src={playlist?.thumbnail?.url  ?  playlist?.thumbnail?.url : null || playlist?.thumbnail  ? playlist?.thumbnail[1]?.url : null}
         className="feature-card-image"
       />
       <div className="text-card" style={{ overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis'}}>

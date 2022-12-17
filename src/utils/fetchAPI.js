@@ -23,7 +23,7 @@ const apiYouTube2 = {
   params: {
     location: 'RO', 
     type: 'default',
-    max: '20',
+    max: '50',
   },
   headers: {
     'X-RapidAPI-Key': process.env.REACT_APP_RAPID_API_KEY,
@@ -62,7 +62,7 @@ const apiYouTube7 = {
 
 const apiYouTube8 = {
   params: {
-    maxResults: '40',
+    maxResults: '50',
     part: 'snippet,statistics',
   },
   headers: {

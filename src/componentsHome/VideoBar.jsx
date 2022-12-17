@@ -81,7 +81,7 @@ const VideoBar = ({videos, id, related, playlist, views}) => {
         </div>
       </div>
       <figure className="home-artist artist">
-        <div className="home-container2" style ={{transitionDelay: '4s'}}>
+        <div className="home-container2" style ={{transitionDelay: '2s'}}>
           <Link to={playlist === 0 ? `/channel/${videos?.channelid}` : null  || playlist === 1 ? 
                       `/channel/${icon?.channel?.id}`: null }>
           <div className="home-button19 button">
@@ -96,7 +96,7 @@ const VideoBar = ({videos, id, related, playlist, views}) => {
           <div className="home-text11" >
             <span className="home-text12">{ playlist === 0 && videos ? videos?.author : videos?.channelTitle || 
                   idSongPlayList === '' && playlist === 1 ? related?.videos?.[0]?.channel?.name : views?.channel?.name }</span>
-            <span className="home-text13">{videos ? videos?.author?.stats?.subscribersText : null || views ? views?.statistics?.subscriberCount : null} 121221
+            <span className="home-text13">{videos ? videos?.author?.stats?.subscribersText : null || views ? views?.statistics?.subscriberCount : null}
             </span>
           </div>
         </div>
@@ -135,7 +135,7 @@ const VideoBar = ({videos, id, related, playlist, views}) => {
       </figure>
     </div>
     <div className="home-play-list02 music-card" style={{display: 'flex'}}>
-      {playlist === 1 && <FeatureCard playlist={videos}></FeatureCard>}
+      {playlist === 1 && <FeatureCard playlist={videos} ></FeatureCard>}
       <FeatureCard></FeatureCard>
       <FeatureCard></FeatureCard>
       <FeatureCard></FeatureCard>

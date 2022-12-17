@@ -23,6 +23,7 @@ const Chanel = () => {
     ApiYouTube8(`channels?id=${id}`).then((data1) => setchannelDetail(data1.items[0]));
     ApiYouTube1(`channel?id=${id}`).then((data2) => setVideo(data2.data));
   },[id]);
+  
 
   return ( 
       <div className="home-container">
