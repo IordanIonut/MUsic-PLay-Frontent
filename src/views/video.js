@@ -5,7 +5,7 @@ import '../style.css'
 import {useParams} from 'react-router-dom';
 import MusicBar from '../componentsHome/MusicBar'
 import VideoBar from '../componentsHome/VideoBar'
-import { ApiYouTube7, ApiYouTube3, ApiYouTube1, ApiYouTube8} from '../utils/fetchAPI'
+import { ApiYouTube7, ApiYouTube3, ApiYouTube1} from '../utils/fetchAPI'
 import { Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
@@ -20,7 +20,38 @@ const video = () => {
     const idChannel = Cookies.get('idChannel');
     const [playAnimation, setPlayAnimation] = useState(false);
 
+    let storeDataVideo = () => {
+      const datas = [{id: videos}]
+      var localDatas = localStorage.getItem('video');
+      if(!localDatas) {
+          localStorage.setItem('video',JSON.stringify(datas));
+      } else {
+          var items = [];
+          items = JSON.parse(localStorage.getItem('video'));
+          var string=JSON.stringify(items[0]);
+          string = string.slice(13);
+          string = string.slice(0,string.length-3);
+          if(string !==  datas[0].idArray)
+            items.unshift(datas);
+          localStorage.setItem('video',JSON.stringify(items));
+      }
+    }
 
+    let storeDataPlayList= () => {
+      const datas = [{id: videos}]
+      var localDatas = localStorage.getItem('playlist');
+      if(!localDatas) {
+            localStorage.setItem('playlist',JSON.stringify(datas));
+      } else{
+          var items = [];
+          items = JSON.parse(localStorage.getItem('playlist')) || [];
+          if(items[0]?.[0]?.id?.id !==  datas[0]?.id?.id)
+            items.unshift(datas);
+          localStorage.setItem('playlist',JSON.stringify(items));
+      }
+      
+  }
+  
     useEffect(() =>{
       const onPageLoad = () => {
         setPlayAnimation(true);
@@ -29,12 +60,12 @@ const video = () => {
         setPlaylist(0);
         ApiYouTube7(`dl?id=${id}`).then((data1) => setVideo(data1));
         ApiYouTube1(`related?id=${id}`).then((data) => setRelated(data.data));
-        ApiYouTube3(`video?search=https://www.youtube.com/watch?v=${id}`).then((data) => setviews(data.result));
+        //storeDataVideo();
       }else {
         setPlaylist(1);
         ApiYouTube3(`playlist?list=${id}`).then((data) => setVideo(data.result));
         ApiYouTube3(`playlist?list=${id}`).then((data) => setRelated(data.result));
-        ApiYouTube3(`video?search=https://www.youtube.com/watch?v=${idChannel}`).then((data) => setviews(data.result));
+        //storeDataPlayList();
       }
       if (document.readyState === 'complete') {
         onPageLoad();
@@ -44,8 +75,7 @@ const video = () => {
       }
     },[id, idChannel]);
 
-
-  return (  
+    return (  
     <div className="home-container"style={{transitionDelay: '4s'}}>
       <Helmet>
         <title>MusicPLay</title>  

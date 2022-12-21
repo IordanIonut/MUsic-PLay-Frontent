@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import PropTypes from 'prop-types'
 import { ApiYouTube9 } from '../utils/fetchAPI'
 
 import './music.css'
@@ -15,7 +14,7 @@ const Music = ({video,idx,page}) => {
  }
 
   useEffect(() =>{
-    if(page)
+    if(like && page=== '1')
       ApiYouTube9(`video?id=${video?.id}`).then((data2) => setLike(data2));
   },[video?.id]);
 

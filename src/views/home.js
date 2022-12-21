@@ -15,7 +15,7 @@ import MusicBar from '../componentsHome/MusicBar'
 import FiltreBar from '../componentsHome/FiltreBar'
 import SearchBar from '../componentsHome/SearchBar'
 import VideoBar from '../componentsHome/VideoBar'
-import { ApiYouTube4, ApiYouTube2, ApiYouTube10 } from '../utils/fetchAPI'
+import { ApiYouTube2, ApiYouTube10 } from '../utils/fetchAPI'
 import { Link } from 'react-router-dom';
 import {useHistory} from 'react-router-dom';
 import Cookies from 'js-cookie';
@@ -48,6 +48,7 @@ const Home = () => {
   Cookies.remove("idSongPlayList");
   Cookies.remove("playlistActivate");
   Cookies.remove("idChannel");
+  localStorage.removeItem("check");
 
   const handleSubmit =(e) => {
     e.preventDefault();
@@ -113,8 +114,6 @@ const Home = () => {
   }
   },[selectedFiltre,seachText]);
 
-
-  console.log(home);
 
   return (
     <div className="home-container">

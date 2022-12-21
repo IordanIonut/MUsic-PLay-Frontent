@@ -4,7 +4,7 @@ import '../views/home.css'
 import '../components/music.css'
 import '../componentsHome/VideoBar'
 import ChanelCard from '../components/chanel-card';
-import { ApiYouTube4, ApiYouTube2, ApiYouTube7 } from '../utils/fetchAPI'
+import { ApiYouTube4, ApiYouTube2 } from '../utils/fetchAPI'
 import FeatureCard from '../components/feature-card';
 
 const SearchBar = ({selectedFiltre}) => {

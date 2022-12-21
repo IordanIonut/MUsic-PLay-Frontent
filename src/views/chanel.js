@@ -19,9 +19,27 @@ const Chanel = () => {
 
   const {id} = useParams();
 
+  let storeDataChannel = () => {
+    const datas = [{channelDetail}]
+    var localDatas = localStorage.getItem('channel');
+    if(!localDatas) {
+        localStorage.setItem('channel',JSON.stringify(datas));
+    } else {
+        var items = [];
+        items = JSON.parse(localStorage.getItem('channel'));
+        var string=JSON.stringify(items[0]);
+        string = string.slice(13);
+        string = string.slice(0,string.length-3);
+        if(string !==  datas[0].idArray)
+          items.unshift(datas);
+        localStorage.setItem('channel',JSON.stringify(items));
+    }
+  }
+
   useEffect(() =>{
     ApiYouTube8(`channels?id=${id}`).then((data1) => setchannelDetail(data1.items[0]));
     ApiYouTube1(`channel?id=${id}`).then((data2) => setVideo(data2.data));
+    storeDataChannel();
   },[id]);
   
 

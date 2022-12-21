@@ -13,6 +13,7 @@ const Search = () => {
   Cookies.remove("idSongPlayList");
   Cookies.remove("playlistActivate");
   Cookies.remove("idChannel");
+  localStorage.removeItem("check");
 
     return ( 
         <div className="home-container">
