@@ -56,7 +56,7 @@ const ChanelBar = ({channelDetail,videos}) => {
         </div>
       </div>
     </div>
-    <div className="home-list2 music-list">
+    <div className="home-card2 music-card">
       {videos.map((item, idx) => (
       <div key={idx} style={{width: '100%' }}> 
       {  <Music video={item} idx={idx}></Music>}

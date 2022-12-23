@@ -65,8 +65,9 @@ const SearchBar = ({selectedFiltre}) => {
               </svg>
             </button>
           </div>
+          <div className="home-card2 music-card">
           {videos.map((item, id) => (
-            <section key={id} style={{transitionDelay: '4s'} && (type === 'video' ? {width: '100%'}: null ||
+            <section key={id} style={{transitionDelay: '1s'} && (type === 'video' ? {width: '100%'}: null ||
                        type === 'live' ? {width: '100%'}: null ||
                        type === 'channel' ? {width: '100%'}: null ||
                        type === 'playlist' ? {marginLeft: ''} : null)}> 
@@ -75,7 +76,7 @@ const SearchBar = ({selectedFiltre}) => {
             {type==='channel' && <ChanelCard channelDetail={item} idx={id} ></ChanelCard>}
             {type==='playlist'&& <FeatureCard playlist={item} idx={id} ></FeatureCard>}
             </section>
-          ))}
+          ))}</div>
   </section>
   )
 }

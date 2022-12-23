@@ -9,23 +9,21 @@ import Cookies from 'js-cookie';
 
 const VideoBar = ({videos, id, related, playlist, views}) => {
   const [like, setLike] = useState([]);
-  const [icon, setIcon] = useState([]);
   const idSearch=id;
 
   const idSongPlayList = Cookies.get('idSongPlayList') || '';
   const idSong = idSongPlayList.split(',');
 
   useEffect(() =>{
-   /* if(idSongPlayList === '' && playlist === 1){
+    if(idSongPlayList === '' && playlist === 1){
       ApiYouTube5(`votes?videoId=${related?.videos?.[0]?.id}`).then((data2) => setLike(data2));
     }else if(idSongPlayList === ''){
       ApiYouTube5(`votes?videoId=${idSearch}`).then((data2) => setLike(data2));
     }else{
       ApiYouTube5(`votes?videoId=${idSong[0]}`).then((data2) => setLike(data2));
-    }*/
+    }
   },[idSearch,idSong,related]);
 
-  console.log(idSong[1]);
   return (
     <section className="home-video" style={{display: 'flex'}}>
     <div className="home-video1 video">
@@ -79,8 +77,8 @@ const VideoBar = ({videos, id, related, playlist, views}) => {
       </div>
       <figure className="home-artist artist">
         <div className="home-container2" style ={{transitionDelay: '4s'}}>
-          <Link to={playlist === 0 ? `/channel/${videos?.channelid}` : null  || playlist === 1 ? 
-                      `/channel/${idSong[5]}`: null }>
+          <Link to={playlist === 0 ? `/channel/${videos?.channelid}` : null  ||idSongPlayList === '' && playlist === 1 ?
+           `/channel/${related?.videos?.[0]?.channel?.id}`  :`/channel/${idSong[5]}` }>
           <div className="home-button19 button">
             <img
               alt="image"
@@ -132,7 +130,7 @@ const VideoBar = ({videos, id, related, playlist, views}) => {
         </div>
       </figure>
     </div>
-    <div className="home-play-list02 music-card" style={{display: 'flex'}}>
+    <div className="home-card2 music-card" style={{display: 'flex'}}>
       {playlist === 1 && <FeatureCard playlist={videos} ></FeatureCard>}
       <FeatureCard></FeatureCard>
       <FeatureCard></FeatureCard>
@@ -144,7 +142,7 @@ const VideoBar = ({videos, id, related, playlist, views}) => {
       <FeatureCard></FeatureCard>
       <FeatureCard></FeatureCard>
     </div>
-    <div className="home-list1 music-list" >
+    <div className="home-card2 music-card">
     {playlist === 0 && <Music1 video={videos} idx={-1} pointerEvents='none'></Music1>}
       {playlist === 0 ? Array.isArray(related) && related.map((item, idx) => (
         <div key={idx} style={{width: '100%' }}> 

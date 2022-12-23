@@ -20,20 +20,19 @@ const Chanel = () => {
   const {id} = useParams();
 
   let storeDataChannel = () => {
-    const datas = [{channelDetail}]
+    const datas = [{id: channelDetail}]
     var localDatas = localStorage.getItem('channel');
     if(!localDatas) {
         localStorage.setItem('channel',JSON.stringify(datas));
     } else {
-        var items = [];
-        items = JSON.parse(localStorage.getItem('channel'));
-        var string=JSON.stringify(items[0]);
-        string = string.slice(13);
-        string = string.slice(0,string.length-3);
-        if(string !==  datas[0].idArray)
-          items.unshift(datas);
-        localStorage.setItem('channel',JSON.stringify(items));
+      var items = [];
+          items = JSON.parse(localStorage.getItem('channel'));
+          var arrayUniqueByKey = [...new Map(items.map(item => [item[0]?.id?.id, item])).values()];
+          //if(items[0]?.id?.id !== datas[0]?.id?.id)
+            arrayUniqueByKey.unshift(datas);
+          localStorage.setItem('channel',JSON.stringify(arrayUniqueByKey)); 
     }
+    //console.log(arrayUniqueByKey);
   }
 
   useEffect(() =>{
@@ -42,7 +41,6 @@ const Chanel = () => {
     storeDataChannel();
   },[id]);
   
-
   return ( 
       <div className="home-container">
       <Helmet>

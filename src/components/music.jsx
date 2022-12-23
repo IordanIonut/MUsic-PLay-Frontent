@@ -21,8 +21,10 @@ const Music = ({video,idx,page}) => {
   return (
     <div className={`music-music `} style={{display: 'flex'}}>
       <Link to={video?.video?.videoId ? `/video/${video?.video?.videoId}` : null ||
-          video?.id ? `/video/${video?.id}` : `/video/${video?.id?.videoId}` || 
-          video?.videoId ? `/video/${video?.videoId}` : null}>
+          video?.id ? `/video/${video?.id}` : null ||
+          video?.id?.videoId ? `/video/${video?.id?.videoId}` : null ||
+          video?.videoId ? `/video/${video?.videoId}` : null ||
+          video?.[0]?.id?.id ? `/video/${video?.[0]?.id?.id}` : null}>
       <div className="button music-line">
       <span id="number" className="music-text" >#{++idx}</span>
         <img
@@ -30,19 +32,21 @@ const Music = ({video,idx,page}) => {
            src={video?.video?.thumbnails ?  video?.video?.thumbnails[1]?.url : null || 
                 video?.videoThumbnails ? video?.videoThumbnails[1]?.url : null || 
                 video?.thumbnail && page=== '1' ? video?.thumbnail  : null || 
-                video?.thumbnail ? video?.thumbnail[1]?.url : null}
+                video?.thumbnail ? video?.thumbnail[1]?.url : null ||
+                video?.[0]?.id?.thumb ? video?.[0]?.id?.thumb : null}
           className="music-image"
         />
         <span id="song" className="music-text01">
           <span className="">
             {video?.video ? video?.video?.title.slice(0,50) : null || video?.author ? video?.author.slice(0,50) : video?.channelTitle || 
             video?.channelTitle ? video?.channelTitle.slice(0,50) : null || like && page=== '1' ? like?.videoDetails?.author : null
-             || video?.snippet ? video?.snippet?.title.slice(0,50) : null || video?.publishedText ? video?.publishedText.slice(0,50) : null}
+             || video?.snippet ? video?.snippet?.title.slice(0,50) : null || video?.publishedText ? video?.publishedText.slice(0,50) : null ||
+             video?.[0]?.id?.author ? video?.[0]?.id?.author : null }
           </span>
         </span>
         <span className="music-text04">
           <span className="">{video?.video ? video?.video?.title.slice(0,50) : null || 
-          video?.title ? video?.title.slice(0,50) : null ||  video?.snippet ? null : null}</span>
+          video?.title ? video?.title.slice(0,50) : null ||  video?.snippet ? null : null || video?.[0]?.id?.title ? video?.[0]?.id?.title : null}</span>
           <br className=""></br>
         </span>
         <svg viewBox="0 0 1024 1024" className="music-icon">
@@ -51,7 +55,7 @@ const Music = ({video,idx,page}) => {
             className=""
           ></path>
         </svg>
-        <span className="music-text07">{video?.video ? video?.video?.stats?.views : video?.viewCount || like?.videoDetails?.viewCount}</span>
+        <span className="music-text07">{video?.video ? video?.video?.stats?.views : video?.viewCount || like?.videoDetails?.viewCount || video?.[0]?.id?.view_count}</span>
         <svg viewBox="0 0 1024 1024" className="music-icon2">
           <path
             d="M658.744 749.256l-210.744-210.746v-282.51h128v229.49l173.256 173.254zM512 0c-282.77 0-512 229.23-512 512s229.23 512 512 512 512-229.23 512-512-229.23-512-512-512zM512 896c-212.078 0-384-171.922-384-384s171.922-384 384-384c212.078 0 384 171.922 384 384s-171.922 384-384 384z"
@@ -59,7 +63,7 @@ const Music = ({video,idx,page}) => {
           ></path>
         </svg>
         <span className="music-text08">
-          <span className="">{video?.video ? toTime(video?.video?.lengthSeconds) : null ||
+          <span className="">{video?.video ? toTime(video?.video?.lengthSeconds) : null || video?.[0]?.id?.length ? video?.[0]?.id?.length : 'Live' ||
                  video?.timeText ? video?.timeText: video?.lengthText || 'Live'}</span>
           <br className=""></br>
         </span>

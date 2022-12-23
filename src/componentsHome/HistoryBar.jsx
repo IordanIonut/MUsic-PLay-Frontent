@@ -3,17 +3,16 @@ import '../views/home.css'
 import '../views/home.css'
 import '../components/music.css'
 import '../componentsHome/VideoBar'
-import { ApiYouTube3 } from '../utils/fetchAPI'
+import Music from "../components/music";
+import FeatureCard from "../components/feature-card";
+import ChanelCard from "../components/chanel-card";
 
 const HistoryBar = ()=>{
   const [type, setType] = React.useState("video");
   const video=JSON.parse(localStorage.getItem('video'));
   const playlist=JSON.parse(localStorage.getItem('playlist'));
   const channel = JSON.parse(localStorage.getItem('channel'));
-  const [localVideo, setLocalVideo] = useState([]);
-  const [localPlaylist, setLocalPlaylist] = useState([]);
-  const [localChannel, setLocalChannel] = useState([]);
-
+ 
   const styleChangeOn=((idClass)=>{
     document.getElementById(idClass).classList.add("hoverType");
   });
@@ -21,12 +20,9 @@ const HistoryBar = ()=>{
     document.getElementById(idClass).classList.remove("hoverType");
   });
 
-  useEffect(()=>{
-    video.forEach((el)=> ApiYouTube3(`video?search=https://www.youtube.com/watch?v=${el}`).then((data2) => setLocalVideo(localVideo => [...localVideo, data2])));
-  },[video,playlist,channel]);
-     console.log(video);
-    console.log(localPlaylist);
-    console.log(localChannel);
+    console.log(video);
+    console.log(playlist);
+    console.log(channel);
   return(
         <section className="home-history"style={{display: 'flex'}}>
           <span className="home-text29 text"></span>
@@ -56,25 +52,22 @@ const HistoryBar = ()=>{
             </button>
           </div>
           <div className="home-card2 music-card">
-            FeatureCard rootClassName="feature-card-root-class-name9"
+          {type === 'video' && Array.isArray(video) && video.map((item, idx) => (
+            <section  key={idx} style={{width: '100%', transitionDelay: '1s' }}> 
+            {  <Music video={item} idx={idx}></Music>}
+            </section>
+          ))}
+          {type === 'playlist' && Array.isArray(playlist) && playlist.map((item, idx) => (
+            <section key={idx} style={{marginLeft: '', transitionDelay: '1s'}}> 
+            {  <FeatureCard playlist={item} idx={idx}></FeatureCard>}
+            </section>
+          ))}
+          {type === 'channel' && Array.isArray(channel) && channel.map((item, idx) => (
+            <section key={idx} style={{width: '100%' , transitionDelay: '1s'}}> 
+            {  <ChanelCard channelDetail={item} idx={idx}></ChanelCard>}
+            </section>
+          ))}
           
-          </div>
-          <span className="home-text30 text">
-            <span>Last View</span>
-            <br></br>
-            <br></br>
-          </span>
-          <div className="home-list3 music-list">
-            Music rootClassName="music-root-class-name9"
-  
-          </div>
-          <span className="home-text34 text">
-            <span>Last Filtre</span>
-            <br></br>
-            <br></br>
-          </span>
-          <div className="home-card3 music-card">
-            FilreCard rootClassName="filre-card-root-class-name"
           </div>
         </section>
     )

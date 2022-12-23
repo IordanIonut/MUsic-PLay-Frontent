@@ -10,7 +10,7 @@ import SearchBar from './SearchBar';
 const FiltreBar = ({selectedFiltre, setSelectedFiltre,setStatusFiltreButtons,setStatusSearchButtons})=>{
   return(
     <section className="home-filtre" style={{display: 'block', overflowY: 'scroll'}}>
-          <div className="home-card6 music-card">
+        <div className="home-card2 music-card">
             {genres.map((genrey) =>(
                   <div
                   className={`filre-card-filre-card filtre-card  `}>

@@ -27,14 +27,20 @@ const video = () => {
           localStorage.setItem('video',JSON.stringify(datas));
       } else {
           var items = [];
-          items = JSON.parse(localStorage.getItem('video'));
-          var string=JSON.stringify(items[0]);
+          /*var string=JSON.stringify(items[0]);
           string = string.slice(13);
           string = string.slice(0,string.length-3);
           if(string !==  datas[0].idArray)
-            items.unshift(datas);
+            items.unshift(datas);        
           localStorage.setItem('video',JSON.stringify(items));
+          */
+          items = JSON.parse(localStorage.getItem('video'));
+          var arrayUniqueByKey = [...new Map(items.map(item => [item?.[0]?.id?.id, item])).values()];
+          //if(items[0]?.[0]?.id?.id !== datas[0]?.id?.id)
+            arrayUniqueByKey.unshift(datas);
+          localStorage.setItem('video',JSON.stringify(arrayUniqueByKey));
       }
+      //console.log(arrayUniqueByKey)
     }
 
     let storeDataPlayList= () => {
@@ -44,12 +50,13 @@ const video = () => {
             localStorage.setItem('playlist',JSON.stringify(datas));
       } else{
           var items = [];
-          items = JSON.parse(localStorage.getItem('playlist')) || [];
+          items = JSON.parse(localStorage.getItem('playlist'));
+          var arrayUniqueByKey = [...new Map(items.map(item => [item?.[0]?.id?.id, item])).values()];
           if(items[0]?.[0]?.id?.id !==  datas[0]?.id?.id)
-            items.unshift(datas);
-          localStorage.setItem('playlist',JSON.stringify(items));
+            arrayUniqueByKey.unshift(datas);
+          localStorage.setItem('playlist',JSON.stringify(arrayUniqueByKey));
       }
-      
+      //console.log(arrayUniqueByKey);
   }
   
     useEffect(() =>{
@@ -60,12 +67,12 @@ const video = () => {
         setPlaylist(0);
         ApiYouTube7(`dl?id=${id}`).then((data1) => setVideo(data1));
         ApiYouTube1(`related?id=${id}`).then((data) => setRelated(data.data));
-        //storeDataVideo();
+        storeDataVideo();
       }else {
         setPlaylist(1);
         ApiYouTube3(`playlist?list=${id}`).then((data) => setVideo(data.result));
         ApiYouTube3(`playlist?list=${id}`).then((data) => setRelated(data.result));
-        //storeDataPlayList();
+        storeDataPlayList();
       }
       if (document.readyState === 'complete') {
         onPageLoad();
