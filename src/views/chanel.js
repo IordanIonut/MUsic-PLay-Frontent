@@ -19,27 +19,30 @@ const Chanel = () => {
 
   const {id} = useParams();
 
-  let storeDataChannel = () => {
-    const datas = [{id: channelDetail}]
-    var localDatas = localStorage.getItem('channel');
+  const storeData = ((video, text) => {
+    const datas = [{id: video}]
+    var localDatas = localStorage.getItem(text);
     if(!localDatas) {
-        localStorage.setItem('channel',JSON.stringify(datas));
+        localStorage.setItem(text,JSON.stringify(datas));
     } else {
-      var items = [];
-          items = JSON.parse(localStorage.getItem('channel'));
-          var arrayUniqueByKey = [...new Map(items.map(item => [item[0]?.id?.id, item])).values()];
-          //if(items[0]?.id?.id !== datas[0]?.id?.id)
-            arrayUniqueByKey.unshift(datas);
-          localStorage.setItem('channel',JSON.stringify(arrayUniqueByKey)); 
+        var items = [];
+        items = JSON.parse(localStorage.getItem(text));
+        items.unshift(datas);
+        var arrayUniqueByKey = [...new Map(items.map(item => [item?.[0]?.id?.id, item])).values()];
+        arrayUniqueByKey = arrayUniqueByKey.filter(item => item?.[0]?.id?.length != 0);
+        arrayUniqueByKey = arrayUniqueByKey.filter(item => item?.id?.length != 0);
+        localStorage.setItem(text,JSON.stringify(arrayUniqueByKey));
     }
-    //console.log(arrayUniqueByKey);
-  }
+  });
 
   useEffect(() =>{
     ApiYouTube8(`channels?id=${id}`).then((data1) => setchannelDetail(data1.items[0]));
     ApiYouTube1(`channel?id=${id}`).then((data2) => setVideo(data2.data));
-    storeDataChannel();
   },[id]);
+  
+  useEffect(() =>{
+    storeData(channelDetail,'channel');
+  },[channelDetail]);
   
   return ( 
       <div className="home-container">

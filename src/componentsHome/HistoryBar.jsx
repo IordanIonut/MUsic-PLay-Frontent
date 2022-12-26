@@ -20,11 +20,9 @@ const HistoryBar = ()=>{
     document.getElementById(idClass).classList.remove("hoverType");
   });
 
-    console.log(video);
-    console.log(playlist);
-    console.log(channel);
+console.log(channel)
   return(
-        <section className="home-history"style={{display: 'flex'}}>
+        <section className="home-history"style={{display: 'flex', alignContent: 'baseline'}}>
           <span className="home-text29 text"></span>
           <div className="home-share2 posibili buttonChange" name="music">
             <button id="video" className="home-button22 button account hoverType" onClick={() => {setType('video');
@@ -42,7 +40,7 @@ const HistoryBar = ()=>{
               </svg>
             </button>
           </div>
-          <div className="home-like2 posibili buttonChange" name="channel" style={{marginRight: '50vh'}} >
+          <div className="home-like2 posibili buttonChange" name="channel" style={{marginRight: '20vh'}} >
             <button id="channel"  className="home-button24 button account" onClick={() => {setType('channel');
           styleChangeOn('channel'); styleChangeOf('video'); styleChangeOf('playlist');}}>
               <svg xmlns="http://www.w3.org/2000/svg"className="home-icon074" viewBox="0 0 16 16">
@@ -53,18 +51,18 @@ const HistoryBar = ()=>{
           </div>
           <div className="home-card2 music-card">
           {type === 'video' && Array.isArray(video) && video.map((item, idx) => (
-            <section  key={idx} style={{width: '100%', transitionDelay: '1s' }}> 
-            {  <Music video={item} idx={idx}></Music>}
+            <section  key={idx} style={{width: '99%', transitionDelay: '1s' }}> 
+            { Array.isArray(video?.[idx])&&  <Music video={item} idx={idx}></Music> }
             </section>
           ))}
           {type === 'playlist' && Array.isArray(playlist) && playlist.map((item, idx) => (
             <section key={idx} style={{marginLeft: '', transitionDelay: '1s'}}> 
-            {  <FeatureCard playlist={item} idx={idx}></FeatureCard>}
+            {Array.isArray(playlist?.[idx])&&  <FeatureCard playlist={item} idx={idx}></FeatureCard> }
             </section>
           ))}
           {type === 'channel' && Array.isArray(channel) && channel.map((item, idx) => (
-            <section key={idx} style={{width: '100%' , transitionDelay: '1s'}}> 
-            {  <ChanelCard channelDetail={item} idx={idx}></ChanelCard>}
+            <section key={idx} style={{width: '99%' , transitionDelay: '1s' }}> 
+            {Array.isArray(channel?.[idx])&&  <ChanelCard channelDetail={item} idx={idx}></ChanelCard> }
             </section>
           ))}
           

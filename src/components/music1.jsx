@@ -16,7 +16,7 @@ const Music1 = ({video, idx, idSearch,pointerEvents}) => {
         </span>
         <img
           alt='sadasda'
-          src={video?.authorThumbnail?.[0]?.url || video?.thumbnail?.url  || video?.thumb}
+          src={video?.thumbnail?.[0]?.url || video?.thumbnail?.url  || video?.thumb}
           className="music1-image"
         />
         <span id="song" className="music1-text01">

@@ -5,7 +5,7 @@ import '../style.css'
 
 const ChanelBar = ({channelDetail,videos}) => {
   return ( 
-    <section className="home-chanel"style={{display: 'flex', transitionDelay: '4s'}}>    
+    <section className="home-chanel"style={{display: 'flex', transitionDelay: '4s', alignContent: 'baseline'}}>    
     <div className="home-artist1">
       <img
         alt="image"

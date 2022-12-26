@@ -55,7 +55,9 @@ const Music = ({video,idx,page}) => {
             className=""
           ></path>
         </svg>
-        <span className="music-text07">{video?.video ? video?.video?.stats?.views : video?.viewCount || like?.videoDetails?.viewCount || video?.[0]?.id?.view_count}</span>
+        <span className="music-text07">{video?.video?.stats?.views ? video?.video?.stats?.views : null ||  
+              video?.viewCount ?  video?.viewCount : null 
+                || like?.videoDetails?.viewCount || video?.[0]?.id?.view_count}</span>     
         <svg viewBox="0 0 1024 1024" className="music-icon2">
           <path
             d="M658.744 749.256l-210.744-210.746v-282.51h128v229.49l173.256 173.254zM512 0c-282.77 0-512 229.23-512 512s229.23 512 512 512 512-229.23 512-512-229.23-512-512-512zM512 896c-212.078 0-384-171.922-384-384s171.922-384 384-384c212.078 0 384 171.922 384 384s-171.922 384-384 384z"
@@ -63,8 +65,10 @@ const Music = ({video,idx,page}) => {
           ></path>
         </svg>
         <span className="music-text08">
-          <span className="">{video?.video ? toTime(video?.video?.lengthSeconds) : null || video?.[0]?.id?.length ? video?.[0]?.id?.length : 'Live' ||
-                 video?.timeText ? video?.timeText: video?.lengthText || 'Live'}</span>
+          <span className="">{video?.video?.lengthSeconds ? toTime(video?.video?.lengthSeconds) : null ||
+               video?.[0]?.id?.length ? video?.[0]?.id?.length : null ||
+                video?.lengthText ? video?.lengthText || 'Live' : null ||
+                 video?.timeText ? video?.timeText : 'Live'}</span>
           <br className=""></br>
         </span>
       </div>

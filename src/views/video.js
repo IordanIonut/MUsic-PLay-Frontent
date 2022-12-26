@@ -9,78 +9,51 @@ import { ApiYouTube7, ApiYouTube3, ApiYouTube1} from '../utils/fetchAPI'
 import { Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
-const video = () => {
+const Video = () => {
     const [videos, setVideo] = React.useState([]);
     const [related, setRelated] = useState([]);
     const [views, setviews] = useState([])
     const [playlist, setPlaylist] = useState(0);
     const {id} = useParams();
-    
+
     const playlistActivate = Cookies.get('playlistActivate');
     const idChannel = Cookies.get('idChannel');
-    const [playAnimation, setPlayAnimation] = useState(false);
-
-    let storeDataVideo = () => {
-      const datas = [{id: videos}]
-      var localDatas = localStorage.getItem('video');
+    
+    const storeData = ((video, text) => {
+      const datas = [{id: video}]
+      var localDatas = localStorage.getItem(text);
       if(!localDatas) {
-          localStorage.setItem('video',JSON.stringify(datas));
+          localStorage.setItem(text,JSON.stringify(datas));
       } else {
           var items = [];
-          /*var string=JSON.stringify(items[0]);
-          string = string.slice(13);
-          string = string.slice(0,string.length-3);
-          if(string !==  datas[0].idArray)
-            items.unshift(datas);        
-          localStorage.setItem('video',JSON.stringify(items));
-          */
-          items = JSON.parse(localStorage.getItem('video'));
+          items = JSON.parse(localStorage.getItem(text));
+          items.unshift(datas);
           var arrayUniqueByKey = [...new Map(items.map(item => [item?.[0]?.id?.id, item])).values()];
-          //if(items[0]?.[0]?.id?.id !== datas[0]?.id?.id)
-            arrayUniqueByKey.unshift(datas);
-          localStorage.setItem('video',JSON.stringify(arrayUniqueByKey));
+          arrayUniqueByKey = arrayUniqueByKey.filter(item => item?.[0]?.id?.length != 0);
+          arrayUniqueByKey = arrayUniqueByKey.filter(item => item?.id?.length != 0);
+          localStorage.setItem(text,JSON.stringify(arrayUniqueByKey));
       }
-      //console.log(arrayUniqueByKey)
-    }
-
-    let storeDataPlayList= () => {
-      const datas = [{id: videos}]
-      var localDatas = localStorage.getItem('playlist');
-      if(!localDatas) {
-            localStorage.setItem('playlist',JSON.stringify(datas));
-      } else{
-          var items = [];
-          items = JSON.parse(localStorage.getItem('playlist'));
-          var arrayUniqueByKey = [...new Map(items.map(item => [item?.[0]?.id?.id, item])).values()];
-          if(items[0]?.[0]?.id?.id !==  datas[0]?.id?.id)
-            arrayUniqueByKey.unshift(datas);
-          localStorage.setItem('playlist',JSON.stringify(arrayUniqueByKey));
-      }
-      //console.log(arrayUniqueByKey);
-  }
-  
+    });
+    
     useEffect(() =>{
-      const onPageLoad = () => {
-        setPlayAnimation(true);
-      };
       if(id.length  <= 11 && !playlistActivate){
         setPlaylist(0);
         ApiYouTube7(`dl?id=${id}`).then((data1) => setVideo(data1));
         ApiYouTube1(`related?id=${id}`).then((data) => setRelated(data.data));
-        storeDataVideo();
       }else {
         setPlaylist(1);
         ApiYouTube3(`playlist?list=${id}`).then((data) => setVideo(data.result));
         ApiYouTube3(`playlist?list=${id}`).then((data) => setRelated(data.result));
-        storeDataPlayList();
-      }
-      if (document.readyState === 'complete') {
-        onPageLoad();
-      } else {
-        window.addEventListener('load', onPageLoad);
-        return () => window.removeEventListener('load', onPageLoad);
       }
     },[id, idChannel]);
+
+    useEffect(() =>{
+      if(id.length  <= 11 && !playlistActivate){
+        storeData(videos,'video');
+      }else {
+        storeData(videos,'playlist');
+      }
+    },[videos]);
 
     return (  
     <div className="home-container"style={{transitionDelay: '4s'}}>
@@ -229,4 +202,4 @@ const video = () => {
   )
 }
 
-export default video
+export default Video

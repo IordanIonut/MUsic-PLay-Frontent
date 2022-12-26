@@ -977,7 +977,8 @@
   height: 100%;
 }
 .home-card2 {
-  display: flex;
+  display: block;
+  padding-left: 10px;
 }
 .home-text30 {
   color: var(--dl-color-gray-500);

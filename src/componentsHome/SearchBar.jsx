@@ -26,7 +26,7 @@ const SearchBar = ({selectedFiltre}) => {
     });
 
   return (
-    <section className="home-seach music-list"style={{display: 'flex'}}>
+    <section className="home-seach music-list"style={{display: 'flex', alignContent: 'baseline'}}>
       <span className="home-text62 text">
         <br></br>
         <br></br>
@@ -56,7 +56,7 @@ const SearchBar = ({selectedFiltre}) => {
               </svg>
             </button>
           </div>
-          <div className="home-like2 posibili buttonChange" name="channel" style={{marginRight: '50vh'}} >
+          <div className="home-like2 posibili buttonChange" name="channel" style={{marginRight: '20vh'}} >
             <button id="channel"  className="home-button24 button account" onClick={() => {setType('channel');
           styleChangeOn('channel'); styleChangeOf('video'); styleChangeOf('playlist');styleChangeOf('live1');}}>
               <svg xmlns="http://www.w3.org/2000/svg"className="home-icon074" viewBox="0 0 16 16">

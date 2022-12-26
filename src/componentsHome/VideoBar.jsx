@@ -130,7 +130,7 @@ const VideoBar = ({videos, id, related, playlist, views}) => {
         </div>
       </figure>
     </div>
-    <div className="home-card2 music-card" style={{display: 'flex'}}>
+    <div className="home-play-list02 music-card" style={{display: 'flex'}}>
       {playlist === 1 && <FeatureCard playlist={videos} ></FeatureCard>}
       <FeatureCard></FeatureCard>
       <FeatureCard></FeatureCard>
@@ -142,7 +142,7 @@ const VideoBar = ({videos, id, related, playlist, views}) => {
       <FeatureCard></FeatureCard>
       <FeatureCard></FeatureCard>
     </div>
-    <div className="home-card2 music-card">
+    <div className="home-list1 music-list" >
     {playlist === 0 && <Music1 video={videos} idx={-1} pointerEvents='none'></Music1>}
       {playlist === 0 ? Array.isArray(related) && related.map((item, idx) => (
         <div key={idx} style={{width: '100%' }}> 
