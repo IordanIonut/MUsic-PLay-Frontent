@@ -10,7 +10,9 @@ const ChanelCard = ({channelDetail, idx}) => {
       <div className="button music-line"><span>{idx}</span>
         <img style={{marginLeft: '50px'}}
               alt='11111111111111111111111111111111111111111111111111111111'
-              src={channelDetail?.[0]?.id?.snippet?.thumbnails?.high?.url ? channelDetail?.[0]?.id?.snippet?.thumbnails?.high?.url  : null || channelDetail?.thumbnail?.[1]?.url || channelDetail?.thumbnail?.[0]?.url }
+              src={channelDetail?.[0]?.id?.snippet?.thumbnails?.high?.url ? channelDetail?.[0]?.id?.snippet?.thumbnails?.high?.url  : null ||
+                channelDetail?.thumbnail?.[1]?.url ? channelDetail?.thumbnail?.[1]?.url : null || 
+                channelDetail?.thumbnail?.[0]?.url  ? channelDetail?.thumbnail?.[0]?.url  : null}
               className="music-image">
           </img>
         <span className="home-text12" style={{marginLeft: '50px'}}>{channelDetail?.channelTitle || channelDetail?.[0]?.id?.snippet?.title}</span>

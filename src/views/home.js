@@ -73,7 +73,6 @@ const Home = () => {
   useEffect(() =>{
     ApiYouTube2(`trending`).then((data2) => setTrending(data2));
     ApiYouTube10(``).then((data2) => sethome(data2));
-    //ApiYouTube2(`sugestions?q=${seachText}`).then((data) => setAuto(data));
     if(id === 'home'){
       setStatusHomeButton(true);
       styleChangeOn('home');
@@ -112,7 +111,11 @@ const Home = () => {
     else if(id === 'filtre' && selectedFiltre === ' '){
       setStatusFiltreButtons(true);
   }
-  },[selectedFiltre,seachText]);
+  },[selectedFiltre]);
+
+  useEffect(() =>{
+   // ApiYouTube2(`sugestions?q=${seachText}`).then((data) => setAuto(data));
+  },[seachText]);
 
 
   return (
@@ -163,12 +166,13 @@ const Home = () => {
                     }}
             onChange={(e) =>{ setseachText(e.target.value); setAuto(e.target.value); setactivate(true); }}
             placeholder="Search..."
+            autoComplete='off'
             className="home-search-bar input search-bar"   
           />
        {(Array.isArray(auto)  && activate===true )? (auto  && auto.map((item, id) => (
             <button name='suggestion' key={id} style={{width: '90vh', paddingLeft: '20px'}} className=" home-search-bar search-bar suggestion" 
               onClick={() => seachText ? setseachText(item) : null}>{item}</button>
-          ))) : null}
+          ))) : activate === false}
         </form>
         <div className="home-posibili posibili">
           <button className="home-button button account">

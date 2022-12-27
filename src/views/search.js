@@ -41,7 +41,7 @@ const Search = () => {
             name="search-bar"
             required
             placeholder="Search..."
-            autoComplete="on"
+            autoComplete='off'
             className="home-search-bar input search-bar"
           />
           </Link>

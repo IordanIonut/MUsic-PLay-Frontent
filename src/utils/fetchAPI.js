@@ -8,7 +8,7 @@ const BASE_URL5='https://returnyoutubedislikeapi.com';
 const BASE_URL7='https://youtube-video-download-info.p.rapidapi.com'
 const BASE_URL8='https://youtube-v31.p.rapidapi.com'
 const BASE_URL9='https://youtube-search-and-download.p.rapidapi.com';
-const BASE_URL10='https://youtube-classification-api.p.rapidapi.com';
+const BASE_URL10='https://youtube-media-downloader.p.rapidapi.com/v2/video';
 
 const apiYouTube1 = {
     params: {
@@ -81,9 +81,12 @@ const apiYouTube9 = {
 
 
 const apiYouTube10 = {
+  params: {
+    lang: 'en-RO',
+  },
   headers: {
     'X-RapidAPI-Key':  process.env.REACT_APP_RAPID_API_KEY,
-    'X-RapidAPI-Host': 'youtube-classification-api.p.rapidapi.com'
+    'X-RapidAPI-Host': 'youtube-media-downloader.p.rapidapi.com'
   }
 };
 

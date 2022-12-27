@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import { ApiYouTube5, ApiYouTube3 } from '../utils/fetchAPI'
 import Cookies from 'js-cookie';
 
-const VideoBar = ({videos, id, related, playlist, views}) => {
+const VideoBar = ({videos, id, related, playlist, views, relatedPlayList}) => {
   const [like, setLike] = useState([]);
   const idSearch=id;
 
@@ -74,6 +74,13 @@ const VideoBar = ({videos, id, related, playlist, views}) => {
             </svg>
           </button>
         </div>
+        <div className="home-description posibili buttonChange">
+          <button className="home-button18 button account">
+            <svg className="home-icon052" viewBox="0 0 16 16">
+              <path d="m2.244 13.081.943-2.803H6.66l.944 2.803H8.86L5.54 3.75H4.322L1 13.081h1.244zm2.7-7.923L6.34 9.314H3.51l1.4-4.156h.034zm9.146 7.027h.035v.896h1.128V8.125c0-1.51-1.114-2.345-2.646-2.345-1.736 0-2.59.916-2.666 2.174h1.108c.068-.718.595-1.19 1.517-1.19.971 0 1.518.52 1.518 1.464v.731H12.19c-1.647.007-2.522.8-2.522 2.058 0 1.319.957 2.18 2.345 2.18 1.06 0 1.716-.43 2.078-1.011zm-1.763.035c-.752 0-1.456-.397-1.456-1.244 0-.65.424-1.115 1.408-1.115h1.805v.834c0 .896-.752 1.525-1.757 1.525z"/>
+            </svg>
+          </button>
+        </div>
       </div>
       <figure className="home-artist artist">
         <div className="home-container2" style ={{transitionDelay: '4s'}}>
@@ -131,16 +138,12 @@ const VideoBar = ({videos, id, related, playlist, views}) => {
       </figure>
     </div>
     <div className="home-play-list02 music-card" style={{display: 'flex'}}>
-      {playlist === 1 && <FeatureCard playlist={videos} ></FeatureCard>}
-      <FeatureCard></FeatureCard>
-      <FeatureCard></FeatureCard>
-      <FeatureCard></FeatureCard>
-      <FeatureCard></FeatureCard>
-      <FeatureCard></FeatureCard>
-      <FeatureCard></FeatureCard>
-      <FeatureCard></FeatureCard>
-      <FeatureCard></FeatureCard>
-      <FeatureCard></FeatureCard>
+      {playlist === 1 && <FeatureCard playlist={videos} text='0'></FeatureCard>}
+      {playlist === 0 && Array.isArray(relatedPlayList) && relatedPlayList.map((item, idx) => (
+        <div key={idx} style={{width: '100%' }}> 
+        {relatedPlayList?.[idx]?.type === 'playlist' && <FeatureCard playlist={item} text='1' idx={idx}></FeatureCard>}
+        </div>
+      ))}
     </div>
     <div className="home-list1 music-list" >
     {playlist === 0 && <Music1 video={videos} idx={-1} pointerEvents='none'></Music1>}

@@ -91,7 +91,7 @@
   width: 40px;
   opacity: 0.4;
   margin-left: 4px;
-  margin-right: 18px;
+  margin-right: 20px;
 }
 .home-button03 {
   align-self: center;
@@ -504,7 +504,6 @@
 .home-container2 {
   height: 100%;
   display: flex;
-  opacity: 0.3;
   transition: 0.3s;
   margin-right: 30px;
 }
@@ -521,8 +520,12 @@
 .home-image4 {
   width: 70px;
   height: 70px;
+  opacity: 0.3;
   object-fit: cover;
   border-radius: 20px;
+}
+.home-image4:hover {
+  opacity: 0.6;
 }
 .home-text11 {
   width: 230px;
@@ -540,7 +543,7 @@
 .home-text12 {
   color: var(--dl-color-gray-700);
   width: 100%;
-  opacity: 0.6;
+  opacity: 0.3;
   font-size: 21px;
   align-self: flex-start;
   margin-top: 5px;
@@ -550,6 +553,7 @@
 }
 .home-text12:hover {
   font-size: 22px;
+  opacity: 0.6;
 }
 .home-text13 {
   color: var(--dl-color-gray-700);
