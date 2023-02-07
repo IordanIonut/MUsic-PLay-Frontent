@@ -33,7 +33,8 @@ const Video = () => {
           arrayUniqueByKey = arrayUniqueByKey.filter(item => item?.[0]?.id?.length != 0);
           arrayUniqueByKey = arrayUniqueByKey.filter(item => item?.id?.length != 0);
           localStorage.setItem(text,JSON.stringify(arrayUniqueByKey));
-      }
+          console.log(items);
+        }
     });
     
     useEffect(() =>{
@@ -41,7 +42,7 @@ const Video = () => {
         setPlaylist(0);
         ApiYouTube7(`dl?id=${id}`).then((data1) => setVideo(data1));
         ApiYouTube1(`related?id=${id}`).then((data) => setRelated(data.data));
-        ApiYouTube10(`related?videoId=${id}`).then((data) => setRelatedPlayList(data.items))
+        //ApiYouTube10(`related?videoId=${id}`).then((data) => setRelatedPlayList(data.items))
       }else {
         setPlaylist(1);
         ApiYouTube3(`playlist?list=${id}`).then((data) => setVideo(data.result));

@@ -32,7 +32,7 @@ const FeatureCard = ({playlist, text}) => {
       </div>
       <span className="feature-card-text3" style={{paddingTop: '30px'}}>
         <span className="">{playlist?.videoCount ? playlist?.videoCount : null || playlist?.video_count ? playlist?.video_count : null || 
-        playlist?.[0]?.id?.video_count ? playlist?.[0]?.id?.video_count :  null ||
+        playlist?.[0]?.id?.video_count ? playlist?.[0]?.id?.video_count :  null || 
          playlist?.videoCountText ? playlist?.videoCountText.replace('videos','') : null} Videos</span>
        
       </span>

@@ -34,7 +34,6 @@ const Home = () => {
   const [statusSearcheButton, setStatusSearchButtons] = React.useState(false);
   const [statusVideoButton, setStatusVideoButtons] = React.useState(false);
 
-  //API YOUTUBE
   const [selectedFiltre, setSelectedFiltre] = React.useState(' ');
   const [trending, setTrending] = React.useState([]);
   const [home, sethome] = useState([])
@@ -64,6 +63,7 @@ const Home = () => {
     document.getElementById(idClass).firstElementChild.style.display='block';
     document.getElementById(idClass).lastElementChild.style.display='none';
   });
+
   const styleChangeOf=((idClass)=>{
     document.getElementById(idClass).classList.remove("hover");
     document.getElementById(idClass).lastElementChild.style.display='flex';
@@ -116,7 +116,6 @@ const Home = () => {
   useEffect(() =>{
    // ApiYouTube2(`sugestions?q=${seachText}`).then((data) => setAuto(data));
   },[seachText]);
-
 
   return (
     <div className="home-container">

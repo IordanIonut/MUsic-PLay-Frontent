@@ -4,13 +4,16 @@ import '../views/home.css'
 import ReactPlayer from 'react-player';
 import FeatureCard from "../components/feature-card";
 import { Link } from 'react-router-dom';
-import { ApiYouTube5, ApiYouTube3 } from '../utils/fetchAPI'
+import { ApiYouTube5, ApiYouTube8, ApiYouTube4, ApiYouTube11} from '../utils/fetchAPI'
 import Cookies from 'js-cookie';
+import Swal from 'sweetalert2';
 
 const VideoBar = ({videos, id, related, playlist, views, relatedPlayList}) => {
   const [like, setLike] = useState([]);
   const idSearch=id;
-
+  const [comments, setComments] = useState([]);
+  const [description, setDescription] = useState([]);
+  const [mp3, setmp3] = useState([]);
   const idSongPlayList = Cookies.get('idSongPlayList') || '';
   const idSong = idSongPlayList.split(',');
 
@@ -23,6 +26,128 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList}) => {
       ApiYouTube5(`votes?videoId=${idSong[0]}`).then((data2) => setLike(data2));
     }
   },[idSearch,idSong,related]);
+  
+  useEffect(() =>{
+          if(idSongPlayList === '' && playlist === 1){
+            ApiYouTube8(`commentThreads?videoId=${related?.videos?.[0]?.id}`).then((data2) => setComments(data2.items));
+          }else if(idSongPlayList === ''){
+            ApiYouTube8(`commentThreads?videoId=${idSearch}`).then((data2) => setComments(data2.items));
+          }else{
+            ApiYouTube8(`commentThreads?videoId=${idSong[0]}`).then((data2) => setComments(data2.items));
+          }
+      },[idSearch]);
+
+      useEffect(() =>{
+              if(idSongPlayList === '' && playlist === 1){
+                ApiYouTube4(`video?id=${related?.videos?.[0]?.id}`).then((data2) => setDescription(data2));
+              }else if(idSongPlayList === ''){
+                ApiYouTube4(`video?id=${idSearch}`).then((data2) => setDescription(data2));
+              }else{
+                ApiYouTube4(`video?id=${idSong[0]}`).then((data2) => setDescription(data2));
+              }
+          },[idSearch]);
+
+          useEffect(() => {
+            if(idSongPlayList === '' && playlist === 1){
+              ApiYouTube11(`dl?id=${related?.videos?.[0]?.id}`).then((data2) => setmp3(data2));
+            }else if(idSongPlayList === ''){
+              ApiYouTube11(`dl?id=${idSearch}`).then((data2) => setmp3(data2));
+            }else{
+              ApiYouTube11(`dl?id=${idSong[0]}`).then((data2) => setmp3(data2));
+            }
+          },[idSearch]);
+
+          
+        
+  function copyToClipboard(text) {
+    const dummy = document.createElement("textarea");
+    document.body.appendChild(dummy);
+    dummy.value = text;
+    dummy.select();
+    document.execCommand("copy");
+    document.body.removeChild(dummy);
+  }
+
+    const shareClick = () => {
+      if(idSongPlayList === '' && playlist === 1){
+        copyToClipboard("https://www.youtube.com/watch?v="+related?.videos?.[0]?.id);
+        var text = 'https://www.youtube.com/watch?v=' + related?.videos?.[0]?.id;
+      }else if(idSongPlayList === ''){
+        copyToClipboard("https://www.youtube.com/watch?v="+idSearch);
+        var text = 'https://www.youtube.com/watch?v=' + idSearch;
+      }else{
+        copyToClipboard("https://www.youtube.com/watch?v="+idSong[0]);
+        var text = 'https://www.youtube.com/watch?v=' + idSong[0];
+      }
+      Swal.fire({
+        title: 'Autosaved link',
+        html: `<br><br><div style="text-align: center;">`+text+'<br>'+`</div>` ,
+        showConfirmButton: false,
+        customClass: {
+          container: 'blur-background popup'
+        },
+        timer: 2000,
+        buttons: false
+      });
+    };
+    const commentClick = () => {
+      Swal.fire({
+        title: 'Comment',
+        html: `<div class="antialiased mx-auto max-w-screen-sm">
+        <div class="space-y-4">
+        ${comments.map(item => `
+        <div class="flex">
+          <div class="flex-shrink-0 mr-3">
+            <img class="mt-2 rounded-full w-8 h-8 sm:w-10 sm:h-10" 
+            src=${item.snippet.topLevelComment.snippet.authorProfileImageUrl}
+            alt="">
+          </div>
+          <div class="flex-1 border rounded-lg px-4 py-2 sm:px-6 sm:py-4 leading-relaxed" style="background-color:var(--dl-color-gray-700)">
+            <strong>${item.snippet.topLevelComment.snippet.authorDisplayName}          </strong> 
+            <span class="text-xs ">${item.snippet.topLevelComment.snippet.publishedAt.substring(0, 10)} </span>
+            <p class="text-sm" style="text-align:left">${item.snippet.topLevelComment.snippet.textOriginal} </p>
+            <div class="mt-4 flex items-center">
+              <div class="text-sm font-semibold" style="text-align:right">${item.snippet.topLevelComment.snippet.likeCount} Likes</div>
+            </div>
+          </div>
+        </div>
+        `).join('')}
+        </div></div>` ,
+        showConfirmButton: false,
+        customClass: {
+          container: 'blur-background popup'
+        },
+        buttons: false
+      });
+    };
+
+    const descriptionClick = () => {
+      Swal.fire({
+        title: 'Description',
+        html: `<p class="text-sm" style="text-align:left">${description.description}</p>` ,
+        showConfirmButton: false,
+        customClass: {
+          container: 'blur-background popup'
+        },
+        buttons: false
+      });
+    };
+
+    const dowloadClick = () => {
+      Swal.fire({
+        title: 'Unload',
+        html: mp3.title ,
+        showCancelButton: true,
+        confirmButtonText: 'Yes, upload!',
+        cancelButtonText: 'No, cancel!',
+        confirmButtonClass: 'pop-up-button',
+        cancelButtonClass: 'pop-up-button',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.open(mp3.link, '_blank');
+        }
+      });
+    };
 
   return (
     <section className="home-video" style={{display: 'flex'}}>
@@ -45,39 +170,40 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList}) => {
         idSongPlayList === '' && playlist === 1 ? related?.videos?.[0]?.title : views?.title || idSong[2]}
         <br /><br />
         </span>
-        <div className="home-share1 posibili buttonChange">
-          <button className="home-button15 button account">
+        <div className="home-share1 posibili buttonChange" onClick={shareClick}>
+          <button className="home-button15 button account" id="share" >
             <svg viewBox="0 0 1024 1024" className="home-icon046">
               <path d="M691.797 772.181c1.067-1.408 2.048-2.859 2.987-4.437 0.853-1.493 1.621-3.029 2.304-4.565 3.115-4.608 6.656-8.917 10.581-12.843 15.488-15.488 36.736-25.003 60.331-25.003s44.843 9.515 60.331 25.003 25.003 36.736 25.003 60.331-9.515 44.843-25.003 60.331-36.736 25.003-60.331 25.003-44.843-9.515-60.331-25.003-25.003-36.736-25.003-60.331c0-13.867 3.285-26.923 9.131-38.485zM695.509 258.389c-0.384-0.725-0.768-1.451-1.195-2.176s-0.853-1.451-1.323-2.133c-6.571-12.075-10.325-25.941-10.325-40.747 0-23.595 9.515-44.843 25.003-60.331s36.736-25.003 60.331-25.003 44.843 9.515 60.331 25.003 25.003 36.736 25.003 60.331-9.515 44.843-25.003 60.331-36.736 25.003-60.331 25.003-44.843-9.515-60.331-25.003c-4.608-4.608-8.704-9.728-12.16-15.275zM328.491 466.944c0.384 0.725 0.768 1.451 1.195 2.176s0.853 1.451 1.323 2.133c6.571 12.075 10.325 25.941 10.325 40.747s-3.755 28.672-10.368 40.789c-0.469 0.683-0.896 1.408-1.323 2.133s-0.811 1.408-1.152 2.133c-3.456 5.547-7.552 10.667-12.16 15.275-15.488 15.488-36.736 25.003-60.331 25.003s-44.843-9.515-60.331-25.003-25.003-36.736-25.003-60.331 9.515-44.843 25.003-60.331 36.736-25.003 60.331-25.003 44.843 9.515 60.331 25.003c4.608 4.608 8.704 9.728 12.16 15.275zM603.733 259.755l-226.475 132.139c-0.171-0.213-0.384-0.384-0.597-0.597-30.805-30.805-73.557-49.963-120.661-49.963s-89.856 19.157-120.661 50.005-50.005 73.557-50.005 120.661 19.157 89.856 50.005 120.661 73.557 50.005 120.661 50.005 89.856-19.157 120.661-50.005c0.213-0.213 0.384-0.384 0.597-0.597l226.517 132.011c-4.181 14.805-6.443 30.464-6.443 46.592 0 47.104 19.157 89.856 50.005 120.661s73.557 50.005 120.661 50.005 89.856-19.157 120.661-50.005 50.005-73.557 50.005-120.661-19.157-89.856-50.005-120.661-73.557-50.005-120.661-50.005-89.856 19.157-120.661 50.005c-0.128 0.128-0.299 0.299-0.427 0.427l-226.645-132.053c4.181-14.763 6.4-30.293 6.4-46.379s-2.219-31.659-6.4-46.421l226.475-132.181c0.171 0.213 0.384 0.384 0.597 0.597 30.805 30.848 73.557 50.005 120.661 50.005s89.856-19.157 120.661-50.005 50.005-73.557 50.005-120.661-19.157-89.856-50.005-120.661-73.557-50.005-120.661-50.005-89.856 19.157-120.661 50.005-50.005 73.557-50.005 120.661c0 16.085 2.219 31.659 6.4 46.421z"></path>
             </svg>
           </button>
         </div>
         <div className="home-play-list01 posibili buttonChange">
-          <button className="home-button16 button account">
+          <button className="home-button16 button account" id="addPlaylist">
             <svg viewBox="0 0 1024 1024" className="home-icon048">
               <path d="M86 682v-84h340v84h-340zM768 598h170v84h-170v172h-86v-172h-170v-84h170v-172h86v172zM598 256v86h-512v-86h512zM598 426v86h-512v-86h512z"></path>
             </svg>
           </button>
         </div>
-        <div className="home-like1 posibili buttonChange">
-          <button className="home-button17 button account">
+        <div className="home-like1 posibili buttonChange" onClick={commentClick}>
+          <button className="home-button17 button account" id="comments">
             <svg xmlns="http://www.w3.org/2000/svg" className="home-icon050" viewBox="0 0 16 16">
               <path d="M5 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
               <path d="m2.165 15.803.02-.004c1.83-.363 2.948-.842 3.468-1.105A9.06 9.06 0 0 0 8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6a10.437 10.437 0 0 1-.524 2.318l-.003.011a10.722 10.722 0 0 1-.244.637c-.079.186.074.394.273.362a21.673 21.673 0 0 0 .693-.125zm.8-3.108a1 1 0 0 0-.287-.801C1.618 10.83 1 9.468 1 8c0-3.192 3.004-6 7-6s7 2.808 7 6c0 3.193-3.004 6-7 6a8.06 8.06 0 0 1-2.088-.272 1 1 0 0 0-.711.074c-.387.196-1.24.57-2.634.893a10.97 10.97 0 0 0 .398-2z"/>
             </svg>
           </button>
         </div>
-        <div className="home-description posibili buttonChange">
-          <button className="home-button18 button account">
+        <div className="home-description posibili buttonChange" onClick={descriptionClick}>
+          <button className="home-button18 button account" id="description">
             <svg viewBox="0 0 1024 1024" className="home-icon052">
               <path d="M554 384h236l-236-234v234zM682 598v-86h-340v86h340zM682 768v-86h-340v86h340zM598 86l256 256v512q0 34-26 59t-60 25h-512q-34 0-60-25t-26-59l2-684q0-34 25-59t59-25h342z"></path>
             </svg>
           </button>
         </div>
-        <div className="home-description posibili buttonChange">
-          <button className="home-button18 button account">
-            <svg className="home-icon052" viewBox="0 0 16 16">
-              <path d="m2.244 13.081.943-2.803H6.66l.944 2.803H8.86L5.54 3.75H4.322L1 13.081h1.244zm2.7-7.923L6.34 9.314H3.51l1.4-4.156h.034zm9.146 7.027h.035v.896h1.128V8.125c0-1.51-1.114-2.345-2.646-2.345-1.736 0-2.59.916-2.666 2.174h1.108c.068-.718.595-1.19 1.517-1.19.971 0 1.518.52 1.518 1.464v.731H12.19c-1.647.007-2.522.8-2.522 2.058 0 1.319.957 2.18 2.345 2.18 1.06 0 1.716-.43 2.078-1.011zm-1.763.035c-.752 0-1.456-.397-1.456-1.244 0-.65.424-1.115 1.408-1.115h1.805v.834c0 .896-.752 1.525-1.757 1.525z"/>
+        <div className="home-description posibili buttonChange" onClick={dowloadClick}>
+          <button className="home-button18 button account" id="dowload">
+            <svg xmlns="http://www.w3.org/2000/svg" className="home-icon052" viewBox="0 0 16 16">
+              <path d="M8 5a.5.5 0 0 1 .5.5v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 1 1 .708-.708L7.5 9.293V5.5A.5.5 0 0 1 8 5z"/>
+              <path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H4zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z"/>
             </svg>
           </button>
         </div>

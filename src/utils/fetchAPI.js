@@ -9,6 +9,7 @@ const BASE_URL7='https://youtube-video-download-info.p.rapidapi.com'
 const BASE_URL8='https://youtube-v31.p.rapidapi.com'
 const BASE_URL9='https://youtube-search-and-download.p.rapidapi.com';
 const BASE_URL10='https://youtube-media-downloader.p.rapidapi.com/v2/video';
+const BASE_URL11='https://youtube-mp3-download1.p.rapidapi.com';
 
 const apiYouTube1 = {
     params: {
@@ -90,6 +91,13 @@ const apiYouTube10 = {
   }
 };
 
+const apiYouTube11 = {
+    headers: {
+      'X-RapidAPI-Key': process.env.REACT_APP_RAPID_API_KEY,
+      'X-RapidAPI-Host': 'youtube-mp3-download1.p.rapidapi.com'
+    }
+};
+
 export const ApiYouTube1 = async(url) =>{
   const {data} = await axios.get(`${BASE_URL1}/${url}`,apiYouTube1);
   return data;
@@ -135,4 +143,7 @@ export const ApiYouTube10 = async(url) =>{
   return data;
 }
 
-
+export const ApiYouTube11 = async(url) =>{
+  const {data} = await axios.get(`${BASE_URL11}/${url}`,apiYouTube11);
+  return data;
+}
