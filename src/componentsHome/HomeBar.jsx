@@ -25,11 +25,11 @@ const HomeBar = ()=>{
       let coverage = 0;
       let number = original2.length / 5 - 1;
       while (count < 30){
-        const newRandomNumber = Math.floor(Math.random() * 2);
+        let newRandomNumber = Math.floor(Math.random() * 2);
         if(newRandomNumber === 0) {
           if (!original1.length) continue;
-          const randomIndex = Math.floor(Math.random() * original1.length);
-          const randomElement = original1[randomIndex];
+          let randomIndex = Math.floor(Math.random() * original1.length);
+          let randomElement = original1[randomIndex];
           result.push(randomElement);
           original1.splice(randomIndex, 1);
         }
@@ -38,8 +38,8 @@ const HomeBar = ()=>{
           if (number > coverage)
             coverage++;
           else continue;
-          const randomIndex = Math.floor(Math.random() * original2.length);
-          const randomElement = original2[randomIndex];
+          let randomIndex = Math.floor(Math.random() * original2.length);
+          let randomElement = original2[randomIndex];
           result.push(randomElement);
           original2.splice(randomIndex, 1);
         }
@@ -48,13 +48,66 @@ const HomeBar = ()=>{
               setHomeSong(result);
     }
 
+    function handleGetRandomNumbers1(aaa, bbb) {
+      const result = [];
+      const set = new Set();
+      let original1 = aaa;
+      let original2 = bbb;
+      let coverage = 0;
+      let count = 0; 
+      if(original2?.length === null){
+        original2 = original1.splice();
+      }
+      const number = original2?.length / 5 - 1;
+      const randomNumbers = [];
+      console.log(original2);
+     
+      for (let i = 0; i < 300; i++) {
+        randomNumbers.push(Math.floor(Math.random() * 3));
+      }
+      console.log(randomNumbers);
+      for (let i = 0; i < 150; i++) {
+        if(randomNumbers[i]  === 0) {
+          if (!original1.length) continue;
+          const randomIndex = Math.floor(Math.random() * original1.length);
+          const randomElement = original1[randomIndex];
+          if (!set.has(randomElement)) {
+            result.push(randomElement);
+            set.add(randomElement);
+            count++;
+          }
+       
+        }
+        else if(randomNumbers[i] === 1 || randomNumbers[i] === 2) {
+          if (!original2?.length) continue;
+          if (coverage < number) {
+            coverage++;
+            const randomIndex = Math.floor(Math.random() * original2.length);
+            const randomElement = original2[randomIndex];
+            if (!set.has(randomElement)) {
+              result.push(randomElement);
+              set.add(randomElement);
+              count++;
+            }
+          }
+        }
+        if(count === 30)
+          break;
+      }
+      console.log(result.length+ "11111111111111111111111111111");
+      //console.log(original1.length+"     "+original2.length);
+      setHomeSong(result);
+    }
+
+    useEffect(() =>{
+      handleGetRandomNumbers1(songStart, video);
+     },[]);  
   const styleChangeOn=((idClass)=>{
-    console.log(idClass);
     if(idClass === 'video'){
-      handleGetRandomNumbers(songStart, video);
+      handleGetRandomNumbers1(songStart, video);
     }
     else if(idClass === 'playlist'){
-      handleGetRandomNumbers(playlistStart, playlist);
+      handleGetRandomNumbers1(playlistStart, playlist);
     }
     document.getElementById(idClass).classList.add("hoverType1");
   });
@@ -64,7 +117,7 @@ const HomeBar = ()=>{
   });
 
     return(
-        <section className="home-home scroll scroll5" style={{display: 'flex'}}>
+      <section className="home-seach music-list"style={{display: 'flex', alignContent: 'baseline'}}>
        <span className="home-text62 text">
         <br></br>
         <br></br>
@@ -77,20 +130,11 @@ const HomeBar = ()=>{
               </svg>
             </button>
           </div>
-          <div className="home-play-list06 posibili buttonChange" name="playlist"  onClick={() => {setType('playlist');
+          <div className="home-play-list06 posibili buttonChange" name="playlist" style={{marginRight: '20vh'}}  onClick={() => {setType('playlist');
           styleChangeOn('playlist'); styleChangeOf('video'); styleChangeOf('live1');}}>
             <button id="playlist"  className="home-button23 button account">
               <svg viewBox="0 0 1024 1024" className="home-icon070">
                 <path d="M86 682v-84h340v84h-340zM768 598h170v84h-170v172h-86v-172h-170v-84h170v-172h86v172zM598 256v86h-512v-86h512zM598 426v86h-512v-86h512z"></path>
-              </svg>
-            </button>
-          </div>
-          <div className="home-play-list06 posibili buttonChange" name="live1" style={{marginRight: '20vh'}} onClick={() => {setType('live');
-          styleChangeOn('live1'); styleChangeOf('playlist'); styleChangeOf('video'); }}>
-            <button id="live1"  className="home-button23 button account">
-              <svg xmlns="http://www.w3.org/2000/svg" className="home-icon072" viewBox="0 0 16 16">
-                <path d="M0 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H9.269c.144.162.33.324.531.475a6.785 6.785 0 0 0 .907.57l.014.006.003.002A.5.5 0 0 1 10.5 13h-5a.5.5 0 0 1-.224-.947l.003-.002.014-.007a4.473 4.473 0 0 0 .268-.148 6.75 6.75 0 0 0 .639-.421c.2-.15.387-.313.531-.475H2a2 2 0 0 1-2-2V6Zm2-1a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H2Z"/>
-                <path d="M8 6.5a1 1 0 1 0 0 2 1 1 0 0 0 0-2Zm-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0Zm7 0a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0Z"/>
               </svg>
             </button>
           </div>
@@ -101,7 +145,6 @@ const HomeBar = ()=>{
                        type === 'channel' ? {width: '100%'}: null ||
                        type === 'playlist' ? {marginLeft: ''} : null)}> 
             {type==='video' && <Music video={item} idx={id} page='0'></Music>}
-            {type==='channel' && <ChanelCard channelDetail={item} idx={id} ></ChanelCard>}
             {type==='playlist'&& <FeatureCard playlist={item} idx={id} ></FeatureCard>}
             </section>
           ))}
