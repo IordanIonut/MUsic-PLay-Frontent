@@ -3,30 +3,37 @@ import { Link } from 'react-router-dom';
 import './music1.css'
 import Cookies from 'js-cookie'
 
-const Music1 = ({video, idx, idSearch,pointerEvents}) => {
- 
+const Music1 = ({video, idx, idSearch,pointerEvents, mood, albums, playlist}) => {
+  function millisToMinutesAndSeconds(millis) {
+    var minutes = Math?.floor(millis / 60000);
+    var seconds = ((millis % 60000) / 1000)?.toFixed(0);
+    return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
+  }
   return (
     <div className="music1-music" style={video?.videoId ? {opacity: '0.6', marginLeft: '0px', marginRight: '0px'} : null || {pointerEvents}}>
-      <Link to={video?.videoId ? `/video/${video?.videoId}` : null || video?.id ? `/video/${idSearch}` : null}
+      <Link to={ mood === 'youtube' ? (video?.videoId ? `/video/${video?.videoId}` : null || video?.id ? `/video/${idSearch}` : null) : null || 
+        mood === 'spotify' ? (video?.id && playlist === '0'  ? `/video/${video?.id}` : `/video/${idSearch}`) : null}
       className="button music-line music1-line"
-           onClick={() => { !video?.videoId  ?  (Cookies.set('idSongPlayList',[video?.id, video?.thumbnail?.url, video?.title, video?.channel?.name, 
-                                                                video?.duration_formatted, video?.channel?.id]),Cookies.set('idChannel', video?.id),
-                   Cookies.set('playlistActivate', '1')) : null}}>
+           onClick={() => { mood==='youtube' ?  (!video?.videoId  ? (Cookies.set('idSongPlayList',[video?.id, video?.thumbnail?.url, video?.title, 
+              video?.channel?.name, video?.duration_formatted, video?.channel?.id]),Cookies.set('idChannel', video?.id), Cookies.set('playlistActivate', '1')) : null) : null||
+                  mood === 'spotify' ? (playlist === '0' && video?.id ?  Cookies.set('spotifyType', '123:'+video?.type+":"+video?.id) :
+                   (Cookies.set('idSongPlayList',[video?.id, video?.album?.images?.[0]?.url, video?.name, video?.artists?.[0]?.name, 
+                        video?.duration_ms, video?.album?.artists?.[0]?.id]),Cookies.set('idChannel', video?.album?.artists?.[0]?.id), Cookies.set('playlistActivate', '1'))) : null}}>
         <span id="number" className="music1-text">#{++idx }
         </span>
         <img
           alt='sadasda'
-          src={video?.thumbnail?.[0]?.url || video?.thumbnail?.url  || video?.thumb}
+          src={video?.thumbnail?.[0]?.url || video?.thumbnail?.url  || video?.thumb || albums || video?.album?.images?.[0]?.url}
           className="music1-image"
         />
         <span id="song" className="music1-text01">
           <span>
-          {video?.channelTitle || video?.author || video?.channel?.name}
+          {video?.channelTitle || video?.author || video?.channel?.name || video?.artists?.[0]?.name || video?.[0]?.artists?.[0]?.name}
           </span>
           <br></br>
         </span>
         <span className="music1-text04">
-          <span >{ video?.title ? video?.title.slice(0,50) : null}</span>
+          <span >{ video?.title ? video?.title.slice(0,50) : null || video?.name || video?.[0]?.name}</span>
           <br></br>
         </span>
         <svg viewBox="0 0 1024 1024" className="music1-icon">
@@ -37,7 +44,9 @@ const Music1 = ({video, idx, idSearch,pointerEvents}) => {
           <path d="M658.744 749.256l-210.744-210.746v-282.51h128v229.49l173.256 173.254zM512 0c-282.77 0-512 229.23-512 512s229.23 512 512 512 512-229.23 512-512-229.23-512-512-512zM512 896c-212.078 0-384-171.922-384-384s171.922-384 384-384c212.078 0 384 171.922 384 384s-171.922 384-384 384z"></path>
         </svg>
         <span className="music1-text08">
-          <span>{ video?.lengthText || video?.length  || video?.duration_formatted || video?.view_count}</span>
+          <span>{ mood === 'youtube' ? (video?.lengthText || video?.length  || video?.duration_formatted || video?.view_count) : null ||
+            mood === 'spotify' ?  (video?.[0]?.duration_ms ? millisToMinutesAndSeconds(video?.[0]?.duration_ms) : null || 
+            video?.duration_ms ? millisToMinutesAndSeconds(video?.duration_ms) : null) : null}</span>
           <br></br>
         </span>
       </Link>

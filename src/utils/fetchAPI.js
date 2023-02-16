@@ -10,6 +10,13 @@ const BASE_URL8='https://youtube-v31.p.rapidapi.com'
 const BASE_URL9='https://youtube-search-and-download.p.rapidapi.com';
 const BASE_URL10='https://youtube-media-downloader.p.rapidapi.com/v2/video';
 const BASE_URL11='https://youtube-mp3-download1.p.rapidapi.com';
+const BASE_URL12='https://spotify81.p.rapidapi.com';
+const BASE_URL13='https://spotify-scraper.p.rapidapi.com/v1';
+const BASE_URL14='https://spotify81.p.rapidapi.com';
+const BASE_URL15='https://spotify117.p.rapidapi.com';
+const BASE_URL16='https://spotify23.p.rapidapi.com';
+const BASE_URL17='https://spotify-data.p.rapidapi.com';
+const BASE_URL18='https://shazam-song-recognizer.p.rapidapi.com'
 
 const apiYouTube1 = {
     params: {
@@ -98,6 +105,66 @@ const apiYouTube11 = {
     }
 };
 
+const apiSpotify1 = {
+  params: {
+    offset: '0',
+    limit: '30',
+    numberOfTopResults: '20',},
+  headers: {
+    'X-RapidAPI-Key': process.env.REACT_APP_RAPID_API_KEY,
+    'X-RapidAPI-Host': 'spotify-data.p.rapidapi.com'
+  }
+};
+
+const apiSpotify2 = {
+  params: {
+    limit: '30',},
+  headers: {
+    'X-RapidAPI-Key': process.env.REACT_APP_RAPID_API_KEY,
+    'X-RapidAPI-Host': 'spotify-scraper.p.rapidapi.com'
+  }
+};
+
+const apiSpotify3 = {
+  headers: {
+    'X-RapidAPI-Key': process.env.REACT_APP_RAPID_API_KEY,
+    'X-RapidAPI-Host': 'spotify81.p.rapidapi.com'
+  }
+};
+
+const apiSpotify4 = {
+  headers: {
+    'X-RapidAPI-Key': process.env.REACT_APP_RAPID_API_KEY,
+    'X-RapidAPI-Host': 'spotify117.p.rapidapi.com'
+  }
+};
+
+const apiSpotify5 = {
+  headers: {
+    'X-RapidAPI-Key':  process.env.REACT_APP_RAPID_API_KEY,
+    'X-RapidAPI-Host': 'spotify23.p.rapidapi.com'
+  }
+};
+
+const apiSpotify6 = {
+  headers: {
+    'X-RapidAPI-Key':  process.env.REACT_APP_RAPID_API_KEY,
+    'X-RapidAPI-Host': 'spotify23.p.rapidapi.com'
+  }
+};
+
+const apiShazam1 = {
+  params: {
+    country_code: 'RO', 
+    limit: '40', 
+    start_from: '0'
+  },
+  headers: {
+    'X-RapidAPI-Key':  process.env.REACT_APP_RAPID_API_KEY,
+    'X-RapidAPI-Host': 'shazam-song-recognizer.p.rapidapi.com'
+  }
+};
+
 export const ApiYouTube1 = async(url) =>{
   const {data} = await axios.get(`${BASE_URL1}/${url}`,apiYouTube1);
   return data;
@@ -145,5 +212,40 @@ export const ApiYouTube10 = async(url) =>{
 
 export const ApiYouTube11 = async(url) =>{
   const {data} = await axios.get(`${BASE_URL11}/${url}`,apiYouTube11);
+  return data;
+}
+
+export const ApiSpotify1 = async(url) =>{
+  const {data} = await axios.get(`${BASE_URL12}/${url}`,apiSpotify1);
+  return data;
+}
+
+export const ApiSpotify2 = async(url) =>{
+  const {data} = await axios.get(`${BASE_URL13}/${url}`,apiSpotify2);
+  return data;
+}
+
+export const ApiSpotify3 = async(url) =>{
+  const {data} = await axios.get(`${BASE_URL14}/${url}`,apiSpotify3);
+  return data;
+}
+
+export const ApiSpotify4 = async(url) =>{
+  const {data} = await axios.get(`${BASE_URL15}/${url}`,apiSpotify4);
+  return data;
+}
+
+export const ApiSpotify5 = async(url) =>{
+  const {data} = await axios.get(`${BASE_URL16}/${url}`,apiSpotify5);
+  return data;
+}
+
+export const ApiSpotify6 = async(url) =>{
+  const {data} = await axios.get(`${BASE_URL17}/${url}`,apiSpotify6);
+  return data;
+}
+
+export const ApiShazam1 = async(url) =>{
+  const {data} = await axios.get(`${BASE_URL18}/${url}`,apiShazam1);
   return data;
 }

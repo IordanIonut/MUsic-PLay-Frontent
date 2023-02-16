@@ -4,25 +4,40 @@ import '../views/home.css'
 import '../components/music.css'
 import '../componentsHome/VideoBar'
 import ChanelCard from '../components/chanel-card';
-import { ApiYouTube4, ApiYouTube2 } from '../utils/fetchAPI'
+import { ApiYouTube4, ApiYouTube2, ApiSpotify1, ApiSpotify2 } from '../utils/fetchAPI'
 import FeatureCard from '../components/feature-card';
 
-const SearchBar = ({selectedFiltre}) => {
+const SearchBar = ({selectedFiltre,mood}) => {
   const [videos, setVideo] = React.useState([]);
   const [type, setType] = React.useState("video");
 
     useEffect(() =>{
-      if(type === "video" || type === "playlist" || type === "channel")
-        ApiYouTube4(`search?query=${selectedFiltre}&type=${type}`).then((data) => setVideo(data.data));
-      else
-        ApiYouTube2(`search-live?q=${selectedFiltre}`).then((data) => setVideo(data));
-    },[selectedFiltre,type]);
+      if(mood === 'youtube'){
+        if(type === "video" || type === "playlist" || type === "channel")
+          ApiYouTube4(`search?query=${selectedFiltre}&type=${type}`).then((data) => setVideo(data.data));
+        else
+          ApiYouTube2(`search-live?q=${selectedFiltre}`).then((data) => setVideo(data));
+      }else if(mood === 'spotify'){
+        let ex;
+        if(type === "video")
+          ex = 'track';
+        if(type === 'playlist')
+          ex = 'playlists';
+        if(type === 'channel')
+          ex = 'artists';
+        if(type === 'live')
+          ex = 'episode';
+        if(type === 'playlist' || type === 'channel') 
+          ApiSpotify1(`search/?q=${selectedFiltre}&type=${ex}`).then((data) => setVideo(data));
+        else
+          ApiSpotify2(`search/?term=${selectedFiltre}&type=${ex}`).then((data) => setVideo(data));
+      } 
+    },[selectedFiltre,type, mood]);
 
-    console.log(videos);
-   
     const styleChangeOn=((idClass)=>{
       document.getElementById(idClass).classList.add("hoverType");
     });
+
     const styleChangeOf=((idClass)=>{
       document.getElementById(idClass).classList.remove("hoverType");
     });
@@ -68,7 +83,7 @@ const SearchBar = ({selectedFiltre}) => {
             </button>
           </div>
           <div className="home-card2 music-card">
-          {videos.map((item, id) => (
+          {mood === 'youtube'  && Array.isArray(videos)  && videos.map((item, id) => (
             <section key={id} style={{transitionDelay: '1s'} && (type === 'video' ? {width: '100%'}: null ||
                        type === 'live' ? {width: '100%'}: null ||
                        type === 'channel' ? {width: '100%'}: null ||
@@ -78,7 +93,28 @@ const SearchBar = ({selectedFiltre}) => {
             {type==='channel' && <ChanelCard channelDetail={item} idx={id} ></ChanelCard>}
             {type==='playlist'&& <FeatureCard playlist={item} idx={id} ></FeatureCard>}
             </section>
-          ))}</div>
+          ))}
+          {mood === 'spotify' &&  Array.isArray(videos?.playlists?.items) && videos?.playlists?.items.map((item, id) => (
+            <section key={id} style={{transitionDelay: '1s'} && type === 'playlist' ? {marginLeft: ''} : null}> 
+              {type==='playlist'&& <FeatureCard playlist={item} idx={id} mood={mood}></FeatureCard>}
+            </section>
+          ))}
+          {mood === 'spotify' && Array.isArray(videos?.tracks?.items) && videos?.tracks?.items.map((item, id) => (
+            <section key={id} style={{transitionDelay: '1s'} && (type === 'video' ? {width: '100%'}: null)}> 
+              {type==='video' && <Music video={item} idx={id} page='0' mood={mood}></Music>}
+            </section>
+          ))}
+          {mood === 'spotify' && Array.isArray(videos?.episodes?.items) && videos?.episodes?.items.map((item, id) => (
+            <section key={id} style={{transitionDelay: '1s'} && type === 'live' ? {width: '100%'}: null }> 
+              {type==='live' && <Music video={item} idx={id} page='1' mood={mood}></Music>}
+            </section>
+          ))}
+          {mood === 'spotify' && Array.isArray(videos?.artists?.items) && videos?.artists?.items.map((item, id) => (
+            <section key={id} style={{transitionDelay: '1s'} && type === 'channel' ? {width: '100%'}: null }> 
+              {type==='channel' && <ChanelCard channelDetail={item} idx={id} mood={mood}></ChanelCard>}
+            </section>
+          ))}
+          </div>
   </section>
   )
 }

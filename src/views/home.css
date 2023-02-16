@@ -112,11 +112,29 @@
   height: 40px;
   transition: 0.3s;
 }
-
 .home-icon002 {
   fill: var(--dl-color-gray-700);
   width: 100%;
+  display:flex;
   height: auto;
+}
+.accoun1{
+  width: 32px;
+  height: 42px;
+  opacity: 1;
+  margin-left: 8px;
+}
+.accoun2{
+  fill: #FF0000;
+}
+.accoun3{
+  fill: #18D860;
+}
+.accoun4{
+  fill: #0698FF;
+}
+.accoun5{
+  fill: #FD4960;
 }
 .home-icon004 {
   fill: var(--dl-color-gray-700);
@@ -801,11 +819,13 @@
   opacity: 0.6;
   transition: 0.3s;
   margin-left: 150px;
-  margin-right: 0px;
+  margin-right: 154px;
   background-color: transparent;
 }
 .home-view2:hover {
   opacity: 0.6;
+  margin-left: 150px;
+  margin-right: 150px;
 }
 .home-icon062 {
   fill: var(--dl-color-gray-700);

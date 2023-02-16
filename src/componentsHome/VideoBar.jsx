@@ -4,11 +4,11 @@ import '../views/home.css'
 import ReactPlayer from 'react-player';
 import FeatureCard from "../components/feature-card";
 import { Link } from 'react-router-dom';
-import { ApiYouTube5, ApiYouTube8, ApiYouTube4, ApiYouTube11} from '../utils/fetchAPI'
+import { ApiYouTube5, ApiYouTube8, ApiYouTube4, ApiYouTube11, ApiSpotify4} from '../utils/fetchAPI'
 import Cookies from 'js-cookie';
 import Swal from 'sweetalert2';
 
-const VideoBar = ({videos, id, related, playlist, views, relatedPlayList}) => {
+const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, idxx}) => {
   const [like, setLike] = useState([]);
   const idSearch=id;
   const [comments, setComments] = useState([]);
@@ -16,49 +16,82 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList}) => {
   const [mp3, setmp3] = useState([]);
   const idSongPlayList = Cookies.get('idSongPlayList') || '';
   const idSong = idSongPlayList.split(',');
+  const [artist, setArtist] = useState([]);
+  const [channel, setChannel] = useState([]);
+  console.log(idSongPlayList);
+
+  function millisToMinutesAndSeconds(millis) {
+    var minutes = Math?.floor(millis / 60000);
+    var seconds = ((millis % 60000) / 1000)?.toFixed(0);
+    return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
+  }
 
   useEffect(() =>{
-    if(idSongPlayList === '' && playlist === 1){
-      ApiYouTube5(`votes?videoId=${related?.videos?.[0]?.id}`).then((data2) => setLike(data2));
-    }else if(idSongPlayList === ''){
-      ApiYouTube5(`votes?videoId=${idSearch}`).then((data2) => setLike(data2));
-    }else{
-      ApiYouTube5(`votes?videoId=${idSong[0]}`).then((data2) => setLike(data2));
+    if(mood === 'youtube'){
+      if(idSongPlayList === '' && playlist === 1){
+        ApiYouTube5(`votes?videoId=${related?.videos?.[0]?.id}`).then((data2) => setLike(data2)); 
+      }else if(idSongPlayList === ''){
+        ApiYouTube5(`votes?videoId=${idSearch}`).then((data2) => setLike(data2));
+      }else{
+        ApiYouTube5(`votes?videoId=${idSong[0]}`).then((data2) => setLike(data2));
+      }
     }
   },[idSearch,idSong,related]);
+  useEffect(() =>{
+    if(mood === 'youtube'){
+      if(idSongPlayList === '' && playlist === 1){
+        ApiYouTube4(`video?id=${related?.videos?.[0]?.id}`).then((data2) => setDescription(data2));
+      }else if(idSongPlayList === ''){
+          ApiYouTube4(`video?id=${idSearch}`).then((data2) => setDescription(data2));
+      }else{
+          ApiYouTube4(`video?id=${idSong[0]}`).then((data2) => setDescription(data2));
+      }
+    } 
+    if(mood === 'spotify'){
+      if(idSongPlayList === '' && playlist === 1){
+        setDescription(related?.tracks?.items?.[0]?.track);
+      }else if(idSongPlayList === ''){
+        setDescription(related?.tracks?.items?.[0]?.track);
+      }else{
+        setDescription(idSong);
+      }
+    } 
+  },[related]);
+
+  useEffect(() => {
+    if(idSongPlayList === '' && playlist === 1)
+      ApiSpotify4(`get_single_artist/?artist_id=${description?.artists?.[0]?.id}`).then((data2) => setChannel(data2));
+  },[])
+
+  useEffect(() => {
+    if(mood === 'youtube'){
+      if(idSongPlayList === '' && playlist === 1){
+        ApiYouTube11(`dl?id=${related?.videos?.[0]?.id}`).then((data2) => setmp3(data2));
+      }else if(idSongPlayList === ''){
+        ApiYouTube11(`dl?id=${idSearch}`).then((data2) => setmp3(data2));
+      }else{
+        ApiYouTube11(`dl?id=${idSong[0]}`).then((data2) => setmp3(data2));
+      }
+    }
+  },[related]);
   
   useEffect(() =>{
-          if(idSongPlayList === '' && playlist === 1){
-            ApiYouTube8(`commentThreads?videoId=${related?.videos?.[0]?.id}`).then((data2) => setComments(data2.items));
-          }else if(idSongPlayList === ''){
-            ApiYouTube8(`commentThreads?videoId=${idSearch}`).then((data2) => setComments(data2.items));
-          }else{
-            ApiYouTube8(`commentThreads?videoId=${idSong[0]}`).then((data2) => setComments(data2.items));
-          }
-      },[idSearch]);
+    if(mood === 'youtube'){
+      if(idSongPlayList === '' && playlist === 1){
+        ApiYouTube8(`commentThreads?videoId=${related?.videos?.[0]?.id}`).then((data2) => setComments(data2.items));
+      }else if(idSongPlayList === ''){
+        ApiYouTube8(`commentThreads?videoId=${idSearch}`).then((data2) => setComments(data2.items));
+      }else{
+        ApiYouTube8(`commentThreads?videoId=${idSong[0]}`).then((data2) => setComments(data2.items));
+      }
+    }
+  },[related]);
 
-      useEffect(() =>{
-              if(idSongPlayList === '' && playlist === 1){
-                ApiYouTube4(`video?id=${related?.videos?.[0]?.id}`).then((data2) => setDescription(data2));
-              }else if(idSongPlayList === ''){
-                ApiYouTube4(`video?id=${idSearch}`).then((data2) => setDescription(data2));
-              }else{
-                ApiYouTube4(`video?id=${idSong[0]}`).then((data2) => setDescription(data2));
-              }
-          },[idSearch]);
+  useEffect(() =>{
+    if(mood === 'spotify')
+      ApiSpotify4(`get_single_artist/?artist_id=${videos?.[0]?.artists?.[0]?.id}`).then((data) => setArtist(data));
+  },[videos?.[0]?.artists?.[0]?.id]);
 
-          useEffect(() => {
-            if(idSongPlayList === '' && playlist === 1){
-              ApiYouTube11(`dl?id=${related?.videos?.[0]?.id}`).then((data2) => setmp3(data2));
-            }else if(idSongPlayList === ''){
-              ApiYouTube11(`dl?id=${idSearch}`).then((data2) => setmp3(data2));
-            }else{
-              ApiYouTube11(`dl?id=${idSong[0]}`).then((data2) => setmp3(data2));
-            }
-          },[idSearch]);
-
-          
-        
   function copyToClipboard(text) {
     const dummy = document.createElement("textarea");
     document.body.appendChild(dummy);
@@ -149,25 +182,27 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList}) => {
       });
     };
 
-  return (
+    return (
     <section className="home-video" style={{display: 'flex'}}>
     <div className="home-video1 video">
-      <div className="home-container1" style ={{transitionDelay: '4s'}}>
-        <ReactPlayer className="home-iframe react-player" autoFocus volume on 
+      <div className="home-container1" style ={{transitionDelay: '3s'}}>
+        {mood === 'youtube' ? <ReactPlayer className="home-iframe react-player" autoFocus volume on 
             playsInline frameBorder='0' handleOnReady = {() => setTimeout(() => this.setState({ playing: true }), 100)}
-        allow='autoplay; encrypted-media' controls youtube width='100%' height='100%' playing  loaded style={{display: 'flex'}} 
+            allow='autoplay; encrypted-media' controls youtube width='100%' height='100%' playing  loaded style={{display: 'flex'}} 
               url={(playlist === 0 ? `https://www.youtube.com/watch?v=${id}` :  undefined || 
-                (idSongPlayList === '' && playlist === 1) ? `https://www.youtube.com/watch?v=${related?.videos?.[0]?.id}` :  `https://www.youtube.com/watch?v=${idSong[0]}`)}>
-        </ReactPlayer>
-        <img style={{display: 'none'}} 
+                (idSongPlayList === '' && playlist === 1) ? `https://www.youtube.com/watch?v=${related?.videos?.[0]?.id}` : 
+                 `https://www.youtube.com/watch?v=${idSong[0]}`)} /> : null }
+        
+     {mood === 'spotify' ? <img style={{display: 'flex'}}
           alt="image"
-          src="https://images.unsplash.com/photo-1669158424143-3be4e002b36d?ixid=Mnw5MTMyMXwwfDF8YWxsfDR8fHx8fHwyfHwxNjY5MjI0Nzc0&amp;ixlib=rb-4.0.3&amp;w=300"
-          className="home-image3"
-        />
+          src={videos?.[0]?.album?.images?.[0]?.url || description?.album?.images?.[0]?.url}
+          className="home-image3"/> : null}
       </div>
       <div className="home-test">
-        <span className="home-text08">{playlist === 0 ? videos?.title : related?.videos?.author || 
-        idSongPlayList === '' && playlist === 1 ? related?.videos?.[0]?.title : views?.title || idSong[2]}
+        <span className="home-text08">{ mood==='youtube' ? (playlist === 0 ? videos?.title : related?.videos?.author || 
+        idSongPlayList === '' && playlist === 1 ? related?.videos?.[0]?.title : views?.title || idSong[2] ? idSong[2] : null ) : null ||
+        mood === 'spotify' ? (videos?.[0]?.name ? videos?.[0]?.name : null || description?.name ? description?.name : null ||  
+        idSongPlayList === '' && playlist === 1 ? related?.videos?.[0]?.title : views?.title || idSong[2] ? idSong[2] : null) : null}
         <br /><br />
         </span>
         <div className="home-share1 posibili buttonChange" onClick={shareClick}>
@@ -210,21 +245,30 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList}) => {
       </div>
       <figure className="home-artist artist">
         <div className="home-container2" style ={{transitionDelay: '4s'}}>
-          <Link to={playlist === 0 ? `/channel/${videos?.channelid}` : null  ||idSongPlayList === '' && playlist === 1 ?
-           `/channel/${related?.videos?.[0]?.channel?.id}`  :`/channel/${idSong[5]}` }>
+          <Link to={mood === 'youtube' ? (playlist === 0 ? `/channel/${videos?.channel?.id}` : null  || idSongPlayList === '' && playlist === 1 ?
+           `/channel/${related?.videos?.[0]?.channel?.id}`  :`/channel/${idSong[5]}`) : null ||
+            mood === 'spotify' ? (videos?.[0]?.artists?.[0]?.id ? `/channel/${videos?.[0]?.artists?.[0]?.id}` : null || 
+                description?.artists?.[0]?.id ? `/channel/${description?.artists?.[0]?.id}` : null || idSongPlayList === '' && playlist === 1 ?
+                    `/channel/${related?.videos?.[0]?.channel?.id}`  :`/channel/${idSong[5]}`) : null }>
           <div className="home-button19 button">
             <img
               alt="image"
-              src={ playlist === 0 && views  ? videos?.thumb : null  ||
-                idSongPlayList === '' && playlist === 1 ?  related?.videos?.[0]?.thumbnail?.url : idSong[1] }
+              src={ mood === 'youtube' ? (playlist === 0 && views  ? videos?.channel?.icon : null  ||
+                idSongPlayList === '' && playlist === 1 ? related?.videos?.[0]?.thumbnail?.url : idSong[1]) : null || 
+                mood === 'spotify' ? (artist?.images?.[0]?.url ? artist?.images?.[0]?.url : null || 
+                  channel?.images?.[0]?.url ? channel?.images?.[0]?.url : null || 
+                  idSongPlayList === '' && playlist === 1 ? related?.videos?.[0]?.thumbnail?.url : idSong[1]) : null}
               className="home-image4"
               loading='eager'
             />
           </div>
           </Link>
           <div className="home-text11" >
-            <span className="home-text12">{ playlist === 0 && videos ? videos?.author?.slice(0,20) : videos?.channelTitle?.slice(0,20) || 
-                  idSongPlayList === '' && playlist === 1 ? related?.videos?.[0]?.channel?.name?.slice(0,20) : idSong[3].slice(0,20) }</span>
+            <span className="home-text12">{mood ==='youtube' ? (playlist === 0 && videos ? videos?.channel?.name?.slice(0,20) : videos?.channelTitle?.slice(0,20) || 
+                  mood === 'youtube' && idSongPlayList === '' && playlist === 1 ? related?.videos?.[0]?.channel?.name?.slice(0,20) : idSong[3].slice(0,20)) : null || 
+                  mood === 'spotify' ? (videos?.[0]?.artists?.[0]?.name ? videos?.[0]?.artists?.[0]?.name : null || 
+                    description?.artists?.[0]?.name ? description?.artists?.[0]?.name : null ||
+                    idSongPlayList === '' && playlist === 1 ? related?.videos?.[0]?.channel?.name?.slice(0,20) : null) : null}</span>
             <span className="home-text12">{videos ? videos?.author?.stats?.subscribersText : null || views ? views?.statistics?.subscriberCount : null}
             </span>
           </div>
@@ -234,7 +278,10 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList}) => {
             <path d="M512 192c-223.318 0-416.882 130.042-512 320 95.118 189.958 288.682 320 512 320 223.312 0 416.876-130.042 512-320-95.116-189.958-288.688-320-512-320zM764.45 361.704c60.162 38.374 111.142 89.774 149.434 150.296-38.292 60.522-89.274 111.922-149.436 150.296-75.594 48.218-162.89 73.704-252.448 73.704-89.56 0-176.858-25.486-252.452-73.704-60.158-38.372-111.138-89.772-149.432-150.296 38.292-60.524 89.274-111.924 149.434-150.296 3.918-2.5 7.876-4.922 11.86-7.3-9.96 27.328-15.41 56.822-15.41 87.596 0 141.382 114.616 256 256 256 141.382 0 256-114.618 256-256 0-30.774-5.452-60.268-15.408-87.598 3.978 2.378 7.938 4.802 11.858 7.302v0zM512 416c0 53.020-42.98 96-96 96s-96-42.98-96-96 42.98-96 96-96 96 42.982 96 96z"></path>
           </svg>
           <span className="home-text14">
-            <span>{like?.viewCount}</span>
+            <span>{like?.viewCount ? like?.viewCount  : null || 
+              videos?.[0]?.popularity ? videos?.[0]?.popularity : null || 
+              description?.popularity ? description?.popularity : null}
+            </span>
             <br></br>
           </span>
         </div>
@@ -242,44 +289,53 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList}) => {
           <svg viewBox="0 0 1024 1024" className="home-icon056">
             <path d="M534 298v224l192 114-32 54-224-136v-256h64zM512 854q140 0 241-101t101-241-101-241-241-101-241 101-101 241 101 241 241 101zM512 86q176 0 301 125t125 301-125 301-301 125-301-125-125-301 125-301 301-125z"></path>
           </svg>
-          <span className="home-text17">{playlist === 0 ? videos?.length : null ||
-          idSongPlayList === '' && playlist === 1 ? related?.videos?.[0]?.duration_formatted : idSong[4]}</span>
+          <span className="home-text17">{mood ==='youtube' ? (playlist === 0 ? videos?.duration_formatted : null ||
+          idSongPlayList === '' && playlist === 1 ? related?.videos?.[0]?.duration_formatted : idSong[4]) : null || 
+          mood ==='spotify' ? (videos?.[0]?.duration_ms ? millisToMinutesAndSeconds(videos?.[0]?.duration_ms) : null || 
+              description?.duration_ms ? millisToMinutesAndSeconds(description?.duration_ms) : null ||
+               idSongPlayList === '' && playlist === 1 ? millisToMinutesAndSeconds(related?.videos?.[0]?.duration_formatted) : millisToMinutesAndSeconds(idSong[4])) : null}</span> 
         </div>
-        <div className="home-rating posibili">
-          <svg
-            viewBox="0 0 877.7142857142857 1024"
-            className="home-icon058"
-          >
+        { mood === 'youtube' ? <div className="home-rating posibili">
+          <svg viewBox="0 0 877.7142857142857 1024" className="home-icon058">
             <path d="M146.286 768c0-20-16.571-36.571-36.571-36.571s-36.571 16.571-36.571 36.571 16.571 36.571 36.571 36.571 36.571-16.571 36.571-36.571zM804.571 438.857c0-38.857-34.857-73.143-73.143-73.143h-201.143c0-66.857 54.857-115.429 54.857-182.857 0-66.857-13.143-109.714-91.429-109.714-36.571 37.143-17.714 124.571-73.143 182.857-16 16.571-29.714 34.286-44 52-25.714 33.143-93.714 130.857-138.857 130.857h-18.286v365.714h18.286c32 0 84.571 20.571 115.429 31.429 62.857 21.714 128 41.714 195.429 41.714h69.143c64.571 0 109.714-25.714 109.714-95.429 0-10.857-1.143-21.714-2.857-32 24-13.143 37.143-45.714 37.143-72 0-13.714-3.429-27.429-10.286-39.429 19.429-18.286 30.286-41.143 30.286-68 0-18.286-8-45.143-20-58.857 26.857-0.571 42.857-52 42.857-73.143zM877.714 438.286c0 33.143-9.714 65.714-28 93.143 3.429 12.571 5.143 26.286 5.143 39.429 0 28.571-7.429 57.143-21.714 82.286 1.143 8 1.714 16.571 1.714 24.571 0 36.571-12 73.143-34.286 101.714 1.143 108-72.571 171.429-178.286 171.429h-73.714c-81.143 0-156.571-24-232-50.286-16.571-5.714-62.857-22.857-78.857-22.857h-164.571c-40.571 0-73.143-32.571-73.143-73.143v-365.714c0-40.571 32.571-73.143 73.143-73.143h156.571c22.286-14.857 61.143-66.286 78.286-88.571 19.429-25.143 39.429-49.714 61.143-73.143 34.286-36.571 16-126.857 73.143-182.857 13.714-13.143 32-21.143 51.429-21.143 59.429 0 116.571 21.143 144.571 76.571 17.714 34.857 20 68 20 106.286 0 40-10.286 74.286-27.429 109.714h100.571c78.857 0 146.286 66.857 146.286 145.714z"></path>
           </svg>
           <span className="home-text18">{like?.likes}</span>
-          <svg
-            viewBox="0 0 877.7142857142857 1024"
-            className="home-icon060"
-          >
+          <svg viewBox="0 0 877.7142857142857 1024" className="home-icon060">
             <path d="M146.286 256c0-20-16.571-36.571-36.571-36.571s-36.571 16.571-36.571 36.571 16.571 36.571 36.571 36.571 36.571-16.571 36.571-36.571zM804.571 585.143c0-21.143-16-72.571-42.857-73.143 12-13.714 20-40.571 20-58.857 0-26.857-10.857-49.714-30.286-68 6.857-12 10.286-25.714 10.286-39.429 0-26.286-13.143-58.857-37.143-72 1.714-10.286 2.857-21.143 2.857-32 0-66.857-42.286-95.429-105.714-95.429h-73.143c-67.429 0-132.571 20-195.429 41.714-30.857 10.857-83.429 31.429-115.429 31.429h-18.286v365.714h18.286c45.143 0 113.143 97.714 138.857 130.857 14.286 17.714 28 35.429 44 52 55.429 58.286 36.571 145.714 73.143 182.857 78.286 0 91.429-42.857 91.429-109.714 0-67.429-54.857-116-54.857-182.857h201.143c38.286 0 73.143-34.286 73.143-73.143zM877.714 585.714c0 78.857-67.429 145.714-146.286 145.714h-100.571c17.143 35.429 27.429 69.714 27.429 109.714 0 37.714-2.286 72-20 106.286-28 55.429-85.143 76.571-144.571 76.571-19.429 0-37.714-8-51.429-21.143-57.143-56-39.429-146.286-73.143-183.429-21.714-22.857-41.714-47.429-61.143-72.571-17.143-22.286-56-73.714-78.286-88.571h-156.571c-40.571 0-73.143-32.571-73.143-73.143v-365.714c0-40.571 32.571-73.143 73.143-73.143h164.571c16 0 62.286-17.143 78.857-22.857 82.286-28.571 153.714-50.286 241.714-50.286h64c104 0 178.857 61.714 178.286 168.571v2.857c22.286 28.571 34.286 65.143 34.286 101.714 0 8-0.571 16.571-1.714 24.571 14.286 25.143 21.714 53.714 21.714 82.286 0 13.143-1.714 26.857-5.143 39.429 18.286 27.429 28 60 28 93.143z"></path>
           </svg>
           <span className="home-text19">{like?.dislikes}</span>
-        </div>
+        </div>  : null}
       </figure>
     </div>
     <div className="home-play-list02 music-card" style={{display: 'flex'}}>
-      {playlist === 1 && <FeatureCard playlist={videos} text='0'></FeatureCard>}
-      {playlist === 0 && Array.isArray(relatedPlayList) && relatedPlayList.map((item, idx) => (
+      {mood === 'youtube' && playlist === 1 && <FeatureCard playlist={videos} text='0'></FeatureCard>}
+      {mood === 'youtube' && playlist === 0 && Array.isArray(relatedPlayList) && relatedPlayList.map((item, idx) => (
         <div key={idx} style={{width: '100%' }}> 
         {relatedPlayList?.[idx]?.type === 'playlist' && <FeatureCard playlist={item} text='1' idx={idx}></FeatureCard>}
         </div>
       ))}
+       {mood === 'spotify' && playlist === 1 && <FeatureCard playlist={videos} text='0'></FeatureCard>}
+        {mood === 'spotify' && playlist === 0 && <FeatureCard playlist={relatedPlayList} text='1' idxx={idxx}></FeatureCard>}
     </div>
     <div className="home-list1 music-list" >
-    {playlist === 0 && <Music1 video={videos} idx={-1} pointerEvents='none'></Music1>}
-      {playlist === 0 ? Array.isArray(related) && related.map((item, idx) => (
+    {mood === 'youtube' && playlist === 0 && <Music1 video={videos} idx={-1} mood={mood} pointerEvents='none'></Music1>}
+      {mood === 'youtube' && playlist === 0 ? Array.isArray(related) && related.map((item, idx) => (
         <div key={idx} style={{width: '100%' }}> 
-        {  <Music1 video={item} idx={idx}></Music1>}
+        {  <Music1 video={item} idx={idx} mood={mood}></Music1>}
         </div>
-      )) : Array.isArray(related.videos) && related.videos.map((item, idx) => (
+      )) : mood === 'youtube' && Array.isArray(related.videos) && related.videos.map((item, idx) => (
         <div key={idx} style={{width: '100%' }}> 
-        {  <Music1 video={item} idx={idx} idSearch={idSearch}></Music1>}
+        {  <Music1 video={item} idx={idx} idSearch={idSearch} mood={mood}></Music1>}
+        </div>
+      ))}
+      {mood === 'spotify' && playlist === 0 && <Music1 video={videos} albums={videos?.[0]?.album?.images?.[0]?.url} mood={mood} idx={-1} pointerEvents='none'></Music1>}
+      {mood === 'spotify' && playlist === 0 ? Array.isArray(related) && related.map((item, idx) => (
+        <div key={idx} style={{width: '100%' }}> 
+        {  <Music1 video={item} albums={videos?.[0]?.album?.images?.[0]?.url} idx={idx} mood={mood}></Music1>}
+        </div>
+      )) : mood === 'spotify' && Array.isArray(related?.tracks?.items) && related?.tracks?.items.map((item, idx) => (
+        <div key={idx} style={{width: '100%' }}> 
+        {  <Music1 video={item?.track} playlist={playlist} idx={idx} idSearch={idSearch} albums={videos?.[0]?.album?.images?.[0]?.url} mood={mood}></Music1>}
         </div>
       ))}
     </div>

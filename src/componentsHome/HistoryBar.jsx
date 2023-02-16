@@ -7,7 +7,7 @@ import Music from "../components/music";
 import FeatureCard from "../components/feature-card";
 import ChanelCard from "../components/chanel-card";
 
-const HistoryBar = ()=>{
+const HistoryBar = ({mood})=>{
   const [type, setType] = React.useState("video");
   const video=JSON.parse(localStorage.getItem('video'));
   const playlist=JSON.parse(localStorage.getItem('playlist'));
@@ -16,11 +16,11 @@ const HistoryBar = ()=>{
   const styleChangeOn=((idClass)=>{
     document.getElementById(idClass).classList.add("hoverType");
   });
+
   const styleChangeOf=((idClass)=>{
     document.getElementById(idClass).classList.remove("hoverType");
   });
 
-console.log(channel)
   return(
         <section className="home-history"style={{display: 'flex', alignContent: 'baseline'}}>
           <span className="home-text29 text"></span>
@@ -50,22 +50,21 @@ console.log(channel)
             </button>
           </div>
           <div className="home-card2 music-card">
-          {type === 'video' && Array.isArray(video) && video.map((item, idx) => (
+          {mood === 'youtube' && type === 'video' && Array.isArray(video) && video.map((item, idx) => (
             <section  key={idx} style={{width: '99%', transitionDelay: '1s' }}> 
             { Array.isArray(video?.[idx])&&  <Music video={item} idx={idx}></Music> }
             </section>
           ))}
-          {type === 'playlist' && Array.isArray(playlist) && playlist.map((item, idx) => (
+          {mood === 'youtube' && type === 'playlist' && Array.isArray(playlist) && playlist.map((item, idx) => (
             <section key={idx} style={{marginLeft: '', transitionDelay: '1s'}}> 
             {Array.isArray(playlist?.[idx])&&  <FeatureCard playlist={item} idx={idx}></FeatureCard> }
             </section>
           ))}
-          {type === 'channel' && Array.isArray(channel) && channel.map((item, idx) => (
+          {mood === 'youtube' && type === 'channel' && Array.isArray(channel) && channel.map((item, idx) => (
             <section key={idx} style={{width: '99%' , transitionDelay: '1s' }}> 
             {Array.isArray(channel?.[idx])&&  <ChanelCard channelDetail={item} idx={idx}></ChanelCard> }
             </section>
           ))}
-          
           </div>
         </section>
     )
