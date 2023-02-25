@@ -7,6 +7,7 @@ import './music.css'
 
 const Music = ({video, idx, page, mood, treding, treding1}) => {
   const [like, setLike] = useState([]);
+  const [image, setImage] = React.useState('');
 
   function toTime(seconds) {
     var date = new Date(null);
@@ -26,6 +27,15 @@ const Music = ({video, idx, page, mood, treding, treding1}) => {
       ApiYouTube9(`video?id=${video?.id}`).then((data2) => setLike(data2));
   },[video?.id]);
 
+  useEffect(()=>{
+    if(mood === 'appleMusic'){
+      if(video !== undefined){
+        const a = video?.artwork?.url.split('{w}x{h}');
+        setImage(a?.[0] + "3000x3000" + a?.[1]);
+      }
+    }
+  },[video]);
+
   return (
     <div className={`music-music `} style={{display: 'flex'}}>
       <Link to={video?.video?.videoId ? `/video/${video?.video?.videoId}` : null ||
@@ -37,11 +47,13 @@ const Music = ({video, idx, page, mood, treding, treding1}) => {
           video?.track?.id ? `/video/${video?.track?.id}` : null ||
           video?.id ? `/video/${video?.id}` : null ||
           video?.trackMetadata?.trackUri ? `/video/${idxx?.[2]}` : null ||
-          video?.key ? `/video/${video?.key}` : null} 
+          video?.key ? `/video/${video?.key}` : null ||
+          video?.playParams?.id ? `/video/${video?.playParams?.id}` : null} 
           onClick={() => video?.id ? video?.id && Cookies.set('spotifyType', "123:"+video?.type+':'+video?.id) : null ||
               video?.track?.uri ? video?.track?.uri && Cookies.set('spotifyType', video?.track?.uri) : null || 
               video?.trackMetadata?.trackUri ? video?.trackMetadata?.trackUri && Cookies.set('spotifyType', video?.trackMetadata?.trackUri) : null ||
-              video?.key ? video?.key && Cookies.set('spotifyType', "123:"+video?.type+':'+ video?.key) : null}>
+              video?.key ? video?.key && Cookies.set('spotifyType', "123:"+video?.type+':'+ video?.key) : null ||
+              video?.playParams?.id ? video?.playParams?.id && Cookies.set('spotifyType', "123:"+video?.playParams?.kind+':'+ video?.playParams?.id) : null}>
       <div className="button music-line">
       <span id="number" className="music-text" >#{++idx}</span>
         <img
@@ -60,7 +72,8 @@ const Music = ({video, idx, page, mood, treding, treding1}) => {
                 video?.podcast?.cover?.[2]?.url ? video?.podcast?.cover?.[2]?.url : null || 
                 video?.track?.album?.coverArt?.sources?.[2]?.url ? video?.track?.album?.coverArt?.sources?.[2]?.url : null ||
                 video?.trackMetadata?.displayImageUri ? video?.trackMetadata?.displayImageUri : null ||
-                video?.images?.coverarthq ? video?.images?.coverarthq : null}
+                video?.images?.coverarthq ? video?.images?.coverarthq : null ||
+                image ? image : null}
           className="music-image"
         />
         <span id="song" className="music-text01">

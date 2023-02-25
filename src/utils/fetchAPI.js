@@ -17,6 +17,8 @@ const BASE_URL15='https://spotify117.p.rapidapi.com';
 const BASE_URL16='https://spotify23.p.rapidapi.com';
 const BASE_URL17='https://spotify-data.p.rapidapi.com';
 const BASE_URL18='https://shazam-song-recognizer.p.rapidapi.com'
+const BASE_URL19='https://shazam.p.rapidapi.com';
+const BASE_URL20='https://shazam8.p.rapidapi.com';
 
 const apiYouTube1 = {
     params: {
@@ -157,11 +159,29 @@ const apiShazam1 = {
   params: {
     country_code: 'RO', 
     limit: '40', 
-    start_from: '0'
+    start_from: '0',
+    lang: '-',
   },
   headers: {
     'X-RapidAPI-Key':  process.env.REACT_APP_RAPID_API_KEY,
     'X-RapidAPI-Host': 'shazam-song-recognizer.p.rapidapi.com'
+  }
+};
+
+const apiShazam2 = {
+  params: {
+    l: 'en-US'
+  },
+  headers: {
+    'X-RapidAPI-Key': process.env.REACT_APP_RAPID_API_KEY,
+    'X-RapidAPI-Host': 'shazam.p.rapidapi.com'
+  }
+};
+
+const apiShazam3 = {
+  headers: {
+    'X-RapidAPI-Key':  process.env.REACT_APP_RAPID_API_KEY,
+    'X-RapidAPI-Host': 'shazam8.p.rapidapi.com'
   }
 };
 
@@ -247,5 +267,15 @@ export const ApiSpotify6 = async(url) =>{
 
 export const ApiShazam1 = async(url) =>{
   const {data} = await axios.get(`${BASE_URL18}/${url}`,apiShazam1);
+  return data;
+}
+
+export const ApiShazam2 = async(url) =>{
+  const {data} = await axios.get(`${BASE_URL19}/${url}`,apiShazam2);
+  return data;
+}
+
+export const ApiShazam3 = async(url) =>{
+  const {data} = await axios.get(`${BASE_URL20}/${url}`,apiShazam3);
   return data;
 }

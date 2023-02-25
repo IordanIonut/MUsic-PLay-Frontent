@@ -19,7 +19,6 @@ const FiltreBar = ({selectedFiltre, setSelectedFiltre,setStatusFiltreButtons,set
                   key={genrey.text}
                   onClick={() => {
                     setSelectedFiltre(genrey.text);
-                    console.log(selectedFiltre);
                     setStatusSearchButtons(true);
                     setStatusFiltreButtons(false);
                   }}

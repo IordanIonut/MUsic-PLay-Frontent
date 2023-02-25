@@ -1032,6 +1032,38 @@
 .home-play-list06:hover {
   opacity: 0.6;
 }
+.hover111{
+  fill: var(--dl-color-gray-700);
+  width: 70px;
+  height: 30px;
+  opacity: 1;
+  align-items: center;
+  border-color: #2c3e50;
+  border-width: 4px;
+  border-radius: 0px;
+  flex-direction: row;
+  justify-content: flex-end;
+  background-color: transparent;
+  border-top-width: 0px;
+  border-left-width: 0px;
+  border-bottom-width: 0px;
+}
+.hover112{
+  fill: var(--dl-color-gray-700);
+  width: 70px;
+  height: 30px;
+  opacity: 1;
+  align-items: center;
+  border-color: #2c3e50;
+  border-width: 4px;
+  border-radius: 0px;
+  flex-direction: row;
+  justify-content: flex-end;
+  background-color: transparent;
+  border-top-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 0px;
+}
 .home-button23 {
   display: flex;
   opacity: 1;
@@ -1853,7 +1885,6 @@
   fill: #999;
   width: 100%;
   height: 100%;
-  display: none;
 }
 .home-text70 {
   color: var(--dl-color-gray-700);

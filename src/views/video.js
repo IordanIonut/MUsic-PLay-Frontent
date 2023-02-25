@@ -1,11 +1,14 @@
-import React, { useEffect, useState } from 'react'
-import { Helmet } from 'react-helmet'
-import './home.css'
-import '../style.css'
+import React, { useEffect, useState, useRef } from 'react';
+import { Helmet } from 'react-helmet';
+import { useDispatch, useSelector } from 'react-redux';
+import './home.css';
+import '../style.css';
 import {useParams} from 'react-router-dom';
-import MusicBar from '../componentsHome/MusicBar'
-import VideoBar from '../componentsHome/VideoBar'
-import { ApiYouTube7, ApiYouTube3, ApiYouTube1, ApiYouTube10, ApiSpotify3, ApiSpotify6} from '../utils/fetchAPI'
+import MusicBar from '../componentsHome/MusicBar';
+import VideoBar from '../componentsHome/VideoBar';
+import { useHistory } from 'react-router-dom';
+import { ApiYouTube7, ApiYouTube3, ApiYouTube1, ApiYouTube10, ApiSpotify3, ApiSpotify6, ApiShazam1, ApiShazam2} from '../utils/fetchAPI';
+import {setCurrentTime, setDuration, toggleLoop, toggleMute, playVideo, pauseVideo, setPreview, setNext, toggleRandome, setRad  } from '../utils/actions';
 import { Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
@@ -20,14 +23,14 @@ const Video = () => {
     const [type, setType] = React.useState("youtube");
     const mood = Cookies.get('mood') || 'youtube';
     const spotifyType = Cookies.get('spotifyType') || null;
-    const playlistActivate = Cookies.get('playlistActivate');
+    const playlistActivate = Cookies.get('playlistActivate') || null;
     const idChannel = Cookies.get('idChannel');
     const idx = a?.mediaItems?.[0]?.uri;
     const idxx = idx?.split(':');
-    const typex =spotifyType;
+    const typex = spotifyType;
     const typexx = typex?.split(':');
+    const history = useHistory();
 
-    console.log(typexx);
     useEffect(() =>{
       styleChangeOnBar(mood);
     },[mood]);
@@ -60,7 +63,8 @@ const Video = () => {
           ApiYouTube3(`playlist?list=${id}`).then((data) => setVideo(data.result));
           ApiYouTube3(`playlist?list=${id}`).then((data) => setRelated(data.result));
         }
-      }else if(mood === 'spotify'){
+      } 
+      if(mood === 'spotify'){
           if(typexx?.[1] === 'track'){
             setPlaylist(0);
             ApiSpotify3(`tracks?ids=${id}`).then((data) => setVideo(data?.tracks));
@@ -71,14 +75,28 @@ const Video = () => {
             ApiSpotify3(`playlist?id=${id}`).then((data) => setVideo(data));
           }
       }
+      if(mood === 'appleMusic'){
+        if(typexx?.[1] === 'song' || typexx?.[1] === 'MUSIC' || typexx?.[1] === 'SONG'){
+          setPlaylist(0);
+          ApiShazam1(`track_about?track_id=${id}`).then((data1) => setVideo(data1?.result));
+          ApiShazam2(`shazam-songs/list-similarities?id=track-similarities-id-${id}`).then((data2) => setRelated(data2?.resources));
+        }
+        if(typexx?.[1] === 'albums' || typexx?.[1] === 'album'){
+          setPlaylist(1);
+          ApiShazam2(`albums/get-details?id=${id}`).then((data1) => setVideo(data1));
+        }
+      }
     },[id, idChannel]);
-console.log(videos);
+
     useEffect(() =>{
       if(mood === 'spotify'){
         if(typexx?.[1] === 'track')
           ApiSpotify3(`albums?ids=${videos?.[0]?.album?.id}`).then((data) => setRelated(data?.albums?.[0]?.tracks?.items));
       }
-    },[videos?.[0]?.album?.id]);
+      if(mood === 'appleMusic')
+        if(typexx?.[1] === 'albums' || typexx?.[1] === 'album')
+          setRelated(videos);
+    },[videos]);
 
     useEffect(() =>{
       if(mood === 'spotify'){
@@ -103,14 +121,17 @@ console.log(videos);
 
     const styleChangeOnBar=((idClass)=>{
       document.getElementById(idClass).classList.add("accoun1");
+      Cookies.set('mood',idClass);
       if(idClass === 'youtube')
         document.getElementById('youtube1').classList.add("accoun2");
       if(idClass === 'spotify')
         document.getElementById('spotify1').classList.add("accoun3");
       if(idClass === 'shazam')
         document.getElementById('shazam1').classList.add("accoun4");
+      if(idClass === 'appleMusic')
+        document.getElementById('appleMusic1').classList.add("accoun5");
     });
-
+  
     const styleChangeOfBar=((idClass)=>{
       document.getElementById(idClass).classList.remove("accoun1");
       if(idClass === 'youtube')
@@ -119,9 +140,146 @@ console.log(videos);
         document.getElementById('spotify1').classList.remove("accoun3");
       if(idClass === 'shazam')
         document.getElementById('shazam1').classList.remove("accoun4");
-    });  
+      if(idClass === 'appleMusic')
+        document.getElementById('appleMusic1').classList.remove("accoun5");
+    });
 
-    return (  
+   
+    const dispatch = useDispatch();
+    const playerRef = React.useRef(null);
+    const { url, playing, muted, loop, played, duration, currentTime, artist, name, thumbnail, previous, next, randome, rad } = useSelector((state) => state);
+    const [index, setIndex] = useState(0);
+    const [last, setLast] = useState();
+
+    const handleProgress = ({ progress }) => {
+      if (!progress.played) {
+        dispatch(setCurrentTime(progress.playedSeconds));
+      }
+    };
+    
+    const handleDuration = (duration) => {
+      dispatch(setDuration(duration));
+    };
+  
+    useEffect(() => {
+      if (loop && played === 1) {
+        playerRef.current.seekTo(0);
+      }
+    }, [played, loop]);
+
+    const handleMute = () => {
+      dispatch(toggleMute(!muted));
+    };
+
+    const handleLoop = () => {
+      dispatch(toggleLoop(!loop));
+    };
+
+    const handleRandome = () => {
+      dispatch(toggleRandome(!randome));
+    };
+
+    const handlePlayPause = () => {
+      if (playing) {
+        dispatch(pauseVideo());
+      } else {
+        dispatch(playVideo());
+      }
+    };
+
+    const handleSeek = event => {
+      const time = parseFloat(event.target.value);
+      playerRef.current.seekTo(time);
+    };
+  
+    useEffect(() => {
+      const interval = setInterval(() => {
+        if (playerRef?.current) {
+          dispatch(setCurrentTime(playerRef?.current?.getCurrentTime()));
+        }
+      }, 500);
+      return () => clearInterval(interval);
+    }, [dispatch]);
+
+    useEffect(() =>{
+      if(mood === 'youtube')
+        if(playlist === 1)
+          if(randome === true) {
+            const arr = [];
+            var n = related?.videos?.length;
+            let count = 0;
+            if(rad?.length === 0){
+              for(let i=0; i <= 400; i++){
+                const num = Math?.floor(Math?.random() * n) + 0;
+                if (!arr?.includes(num)) {
+                  arr?.push(num);
+                  count++;
+                  dispatch(setRad(num));
+                }
+                if(count === n)
+                  break;
+              }
+            }
+          }
+    },[randome, rad]);
+
+    const handleNext = () => {
+      if(mood === 'youtube'){
+        if(playlist === 0 && randome === true){
+          let x = Math.floor((Math.random() * related?.length)); 
+          dispatch(setPreview(id));
+          history.push('/video/'+related?.[x]?.videoId);
+        }
+        if(playlist === 0 && randome === false){
+          dispatch(setPreview(id));
+          history.push('/video/'+related?.[0]?.videoId);
+        }
+        if(playlist === 1 && randome === false){
+          dispatch(setPreview(related?.videos?.[index]?.id));
+          dispatch(setNext(related?.videos?.[index]?.id));
+          if(related?.videos?.length === index){
+            setIndex(0);
+          }
+          else
+            setIndex(index+1);
+        }
+        if(playlist === 1 && randome === true){
+          let a = rad?.[index] - 1;
+          dispatch(setPreview(related?.videos?.[a]?.id));
+          dispatch(setNext(related?.videos?.[a]?.id));
+          if(related?.videos?.length === index){
+            setIndex(0);
+          }
+          else
+            setIndex(index+1);
+        }
+      }
+    };
+
+    const handlePreview = () => {
+      if(mood === 'youtube'){
+        if(playlist === 0){
+          let last1 = previous[previous?.length - 1];
+          const removeLast = previous?.pop();
+          if(last1 !== undefined) 
+            history.push('/video/'+last1);
+          else 
+            playerRef?.current?.seekTo(0);
+        }
+        if(playlist === 1){
+          let last1 = previous[previous?.length - 1];
+          const removeLast = previous?.pop();
+          if(last1 !== undefined){
+            setLast(last1);
+            setIndex(index-1);
+          }
+          else 
+            playerRef?.current?.seekTo(0);
+        }
+      }
+    };
+
+  return (
     <div className="home-container"style={{transitionDelay: '4s'}}>
       <Helmet>
         <title>MusicPLay</title>  
@@ -153,19 +311,26 @@ console.log(videos);
         </form>
         <div className="home-posibili posibili">
           <button id="youtube" className="home-button button account" onClick={() => {setType('youtube');
-            styleChangeOnBar('youtube'); styleChangeOfBar('spotify'); styleChangeOfBar('shazam'); Cookies.set('mood','youtube');}}>
+            styleChangeOnBar('youtube'); styleChangeOfBar('spotify'); styleChangeOfBar('shazam');styleChangeOfBar('appleMusic');}}>
             <svg id='youtube1' viewBox="0 0 1024 1024" className="home-icon002">
               <path d="M406.286 644.571l276.571-142.857-276.571-144.571v287.429zM512 152c215.429 0 358.286 10.286 358.286 10.286 20 2.286 64 2.286 102.857 43.429 0 0 31.429 30.857 40.571 101.714 10.857 82.857 10.286 165.714 10.286 165.714v77.714s0.571 82.857-10.286 165.714c-9.143 70.286-40.571 101.714-40.571 101.714-38.857 40.571-82.857 40.571-102.857 42.857 0 0-142.857 10.857-358.286 10.857v0c-266.286-2.286-348-10.286-348-10.286-22.857-4-74.286-2.857-113.143-43.429 0 0-31.429-31.429-40.571-101.714-10.857-82.857-10.286-165.714-10.286-165.714v-77.714s-0.571-82.857 10.286-165.714c9.143-70.857 40.571-101.714 40.571-101.714 38.857-41.143 82.857-41.143 102.857-43.429 0 0 142.857-10.286 358.286-10.286v0z"></path>
             </svg>
           </button>
           <button id="spotify" className="home-button button account" onClick={() => {setType('spotify');
-            styleChangeOnBar('spotify'); styleChangeOfBar('youtube'); styleChangeOfBar('shazam');Cookies.set('mood','spotify');}}>
+            styleChangeOnBar('spotify'); styleChangeOfBar('youtube'); styleChangeOfBar('shazam');styleChangeOfBar('appleMusic');}}>
             <svg id ='spotify1' viewBox="0 0 877.7142857142857 1024" className="home-icon002">
               <path d="M644 691.429c0-16-6.286-22.286-17.143-29.143-73.714-44-159.429-65.714-255.429-65.714-56 0-109.714 7.429-164 19.429-13.143 2.857-24 11.429-24 29.714 0 14.286 10.857 28 28 28 5.143 0 14.286-2.857 21.143-4.571 44.571-9.143 91.429-15.429 138.857-15.429 84 0 163.429 20.571 226.857 58.857 6.857 4 11.429 6.286 18.857 6.286 14.286 0 26.857-11.429 26.857-27.429zM698.857 568.571c0-15.429-5.714-26.286-20-34.857-87.429-52-198.286-80.571-313.143-80.571-73.714 0-124 10.286-173.143 24-18.286 5.143-27.429 17.714-27.429 36.571s15.429 34.286 34.286 34.286c8 0 12.571-2.286 21.143-4.571 40-10.857 88-18.857 143.429-18.857 108.571 0 207.429 28.571 278.857 70.857 6.286 3.429 12.571 7.429 21.714 7.429 19.429 0 34.286-15.429 34.286-34.286zM760.571 426.857c0-21.143-9.143-32-22.857-40-98.857-57.714-234.286-84.571-363.429-84.571-76 0-145.714 8.571-208 26.857-16 4.571-30.857 18.286-30.857 42.286 0 23.429 17.714 41.714 41.143 41.714 8.571 0 16.571-2.857 22.857-4.571 55.429-15.429 115.429-21.143 175.429-21.143 118.857 0 242.286 26.286 321.714 73.714 8 4.571 13.714 6.857 22.857 6.857 21.714 0 41.143-17.143 41.143-41.143zM877.714 512c0 242.286-196.571 438.857-438.857 438.857s-438.857-196.571-438.857-438.857 196.571-438.857 438.857-438.857 438.857 196.571 438.857 438.857z"></path>
             </svg>
           </button>
+          <button id="appleMusic" className="home-button button account" onClick={() => {setType('appleMusic');
+            styleChangeOnBar('appleMusic'); styleChangeOfBar('shazam');styleChangeOfBar('spotify'); styleChangeOfBar('youtube');}}>
+          <svg id='appleMusic1' className="home-icon002"  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"> 
+            <path d="M31.995 8.167c0-0.984-0.083-1.964-0.318-2.922-0.422-1.745-1.417-3.078-2.906-4.057-0.766-0.5-1.609-0.807-2.505-0.969-0.688-0.125-1.385-0.182-2.083-0.198-0.052-0.005-0.109-0.016-0.167-0.021h-16.031c-0.203 0.016-0.406 0.026-0.609 0.036-0.995 0.057-1.984 0.161-2.922 0.536-1.781 0.703-3.068 1.932-3.818 3.703-0.26 0.599-0.391 1.234-0.484 1.88-0.078 0.521-0.12 1.047-0.135 1.573 0 0.042-0.010 0.083-0.010 0.125v16.297c0.010 0.188 0.021 0.375 0.031 0.563 0.068 1.089 0.208 2.167 0.667 3.167 0.865 1.891 2.318 3.135 4.313 3.734 0.557 0.172 1.141 0.25 1.724 0.302 0.74 0.073 1.479 0.083 2.219 0.083h14.708c0.698 0 1.396-0.047 2.094-0.135 1.099-0.141 2.13-0.464 3.063-1.078 1.12-0.74 1.964-1.719 2.505-2.943 0.25-0.563 0.391-1.161 0.495-1.766 0.151-0.901 0.182-1.813 0.182-2.724-0.005-5.063 0-10.125-0.005-15.188zM23.432 13.484v7.615c0 0.557-0.078 1.104-0.328 1.609-0.385 0.786-1.010 1.281-1.849 1.521-0.464 0.135-0.943 0.208-1.427 0.229-1.266 0.063-2.365-0.797-2.589-2.047-0.193-1.031 0.302-2.167 1.385-2.698 0.427-0.208 0.891-0.333 1.354-0.427 0.505-0.109 1.010-0.208 1.51-0.323 0.37-0.083 0.609-0.307 0.682-0.688 0.021-0.083 0.026-0.172 0.026-0.255 0-2.422 0-4.844 0-7.26 0-0.083-0.016-0.167-0.036-0.245-0.052-0.203-0.198-0.323-0.406-0.313-0.214 0.010-0.422 0.047-0.63 0.089-1.016 0.198-2.031 0.401-3.042 0.609l-4.932 0.995c-0.021 0.005-0.047 0.016-0.068 0.016-0.37 0.104-0.5 0.271-0.516 0.656-0.005 0.057 0 0.115 0 0.172-0.005 3.469 0 6.938-0.005 10.406 0 0.563-0.063 1.115-0.286 1.635-0.37 0.854-1.026 1.391-1.911 1.646-0.469 0.135-0.948 0.214-1.438 0.229-1.276 0.047-2.339-0.802-2.557-2.057-0.188-1.083 0.307-2.25 1.536-2.771 0.479-0.198 0.974-0.307 1.479-0.411 0.38-0.078 0.766-0.156 1.146-0.234 0.51-0.109 0.776-0.432 0.802-0.953v-0.198c0-3.948 0-7.896 0-11.844 0-0.167 0.021-0.333 0.057-0.495 0.094-0.38 0.365-0.599 0.729-0.688 0.339-0.089 0.688-0.151 1.031-0.224 0.979-0.198 1.953-0.396 2.932-0.589l3.026-0.615c0.896-0.177 1.786-0.359 2.682-0.536 0.292-0.057 0.589-0.12 0.885-0.141 0.411-0.036 0.698 0.224 0.74 0.641 0.010 0.099 0.016 0.198 0.016 0.297 0 2.547 0 5.094 0 7.641z">
+            </path> 
+          </svg>
+          </button>
           <button id="shazam" className="home-button button account" onClick={() => {setType('shazam');
-            styleChangeOnBar('shazam'); styleChangeOfBar('spotify'); styleChangeOfBar('youtube'); Cookies.set('mood','shazam');}}>
+            styleChangeOnBar('shazam'); styleChangeOfBar('spotify'); styleChangeOfBar('youtube');styleChangeOfBar('appleMusic');}}>
           <svg id='shazam1' xmlns="http://www.w3.org/2000/svg"  className="home-icon002" viewBox="0 0 50 50">
             <path d="M25,2C12.32,2,2,12.32,2,25s10.32,23,23,23s23-10.32,23-23S37.68,2,25,2z M14.23,30.74c-3.51-3.51-3.51-9.24,0-12.73 l7.55-7.56c0.34-0.35,0.8-0.55,1.29-0.58c0.54-0.01,1.04,0.19,1.41,0.58c0.74,0.75,0.71,1.94-0.03,2.67l-7.55,7.55 c-2.06,2.06-2.06,5.34,0,7.4c2.05,2.06,5.33,2.06,7.39,0l3.78-3.77c0.02-0.03,0.03-0.04,0.06-0.06c0.75-0.72,1.94-0.7,2.67,0.06 c0.72,0.75,0.69,1.94-0.06,2.67l-3.78,3.77C23.47,34.24,17.73,34.24,14.23,30.74z M35.77,32l-7.55,7.55 c-0.01,0.02-0.03,0.03-0.06,0.06c-0.74,0.71-1.94,0.69-2.66-0.06c-0.73-0.76-0.7-1.95,0.05-2.68l7.55-7.54 c2.06-2.06,2.06-5.35,0-7.41c-2.05-2.04-5.33-2.04-7.39,0l-3.78,3.79c-0.02,0.01-0.03,0.04-0.06,0.05 c-0.75,0.72-1.94,0.69-2.67-0.05c-0.72-0.76-0.69-1.95,0.06-2.67l3.78-3.78c1.74-1.76,4.06-2.63,6.37-2.63 c2.3,0,4.61,0.87,6.36,2.63C39.28,22.76,39.28,28.5,35.77,32z"></path>
           </svg>
@@ -191,7 +356,7 @@ console.log(videos);
           </button>
         </div>
       </div>
-      <div className="home-view content">
+      <div className="home-view content" >
         <section className="home-left-bar">
           <Link  id="home" className="home-button05 navbar button account" to="/home">
              <svg xmlns="http://www.w3.org/2000/svg"  name='img2'  className="home-icon014" viewBox="0 0 16 16">
@@ -263,9 +428,37 @@ console.log(videos);
             </svg>
           </Link>
         </section>
-             <VideoBar videos={videos} views={views} related={related} relatedPlayList={relatedPlayList} id={id} playlist={playlist} mood={mood} idxx={idxx?.[2]}></VideoBar> 
-      </div>
-      <MusicBar></MusicBar>
+          <VideoBar videos={videos} views={views} related={related} relatedPlayList={relatedPlayList} id={id} playlist={playlist} mood={mood} idxx={idxx?.[2]}
+        playerRef={playerRef}
+        playing={playing}
+        muted={muted}
+        loop={loop}
+        index={index}
+        onProgress={handleProgress}
+        onDuration={handleDuration}
+        next={next}
+        previous={last}
+        ></VideoBar> 
+        </div>
+        <MusicBar 
+        playing={playing}
+        playerRef={playerRef}
+        muted={muted}
+        loop={loop}
+        onMute={handleMute}
+        onLoop={handleLoop}
+        onPlayStop={handlePlayPause}
+        next={handleNext}
+        previous={handlePreview}
+        onProgress={currentTime}
+        onDuration={duration}
+        handleSeek={handleSeek}
+        artist={artist} 
+        name={name}
+        onRandome={handleRandome}
+        thumbnail={thumbnail}
+        url={url}
+        ></MusicBar>
     </div>
   )
 }

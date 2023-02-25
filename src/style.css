@@ -322,6 +322,28 @@
   border-left-width: 0px;
   border-right-width: 4px;
 }
+.music1 {
+  flex-wrap: wrap;
+  align-self: center;
+  transition: 0.3s;
+  align-items: center;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 0px;
+  flex-direction: column;
+  justify-content: center;
+}
+.music1:hover {
+  align-items: center;
+  margin-left: 10px;
+  border-width: 0px;
+  margin-right: 10px;
+  margin-bottom: 0px;
+  flex-direction: row;
+  justify-content: space-between;
+  border-left-width: 4px;
+  border-right-width: 0px;
+}
 .music-card {
   width: 100%;
   height: auto;

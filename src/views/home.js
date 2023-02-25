@@ -19,6 +19,9 @@ import { ApiYouTube2, ApiYouTube10, ApiSpotify1, ApiSpotify3, ApiShazam1 } from 
 import { Link } from 'react-router-dom';
 import {useHistory} from 'react-router-dom';
 import Cookies from 'js-cookie';
+import { useDispatch, useSelector } from 'react-redux';
+import {setCurrentTime, setDuration, toggleLoop, toggleMute, playVideo, pauseVideo, setPreview, setNext  } from '../utils/actions';
+import ReactPlayer from 'react-player';
 
 const Home = () => {
   const [statusHomeButton, setStatusHomeButton] = React.useState(false);
@@ -115,24 +118,26 @@ const Home = () => {
   useEffect(() =>{
    // ApiYouTube2(`sugestions?q=${seachText}`).then((data) => setAuto(data));
   },[seachText]);
-
+ 
   useEffect(() =>{
-    if(mood === 'youtube'){
-      ApiYouTube2(`trending`).then((data2) => setTrending(data2));
-      ApiYouTube10(``).then((data2) => sethome(data2));
-    }
-    if(mood === 'spotify'){
-      const now = new Date();
-      const tenDaysAgo = new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000);
-      const formattedDate = tenDaysAgo.toLocaleDateString('en-GB');
-      const date = formattedDate.split('/');
-      ApiSpotify3(`top_200_tracks?country=RO&date=${date?.[2]+"-"+date?.[1]+"-"+date?.[0]}`).then((data2) => setTrending(data2));
-    }
-    if(mood === 'appleMusic'){
-      ApiShazam1(`top_country_tracks`).then((data2) => setTrending(data2?.result?.tracks));
+    if(statusTredingButton === true){
+      if(mood === 'youtube'){
+        ApiYouTube2(`trending`).then((data2) => setTrending(data2));
+        ApiYouTube10(``).then((data2) => sethome(data2));
+      }
+      if(mood === 'spotify'){
+        const now = new Date();
+        const tenDaysAgo = new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000);
+        const formattedDate = tenDaysAgo.toLocaleDateString('en-GB');
+        const date = formattedDate.split('/');
+        ApiSpotify3(`top_200_tracks?country=RO&date=${date?.[2]+"-"+date?.[1]+"-"+date?.[0]}`).then((data2) => setTrending(data2));
+      }
+      if(mood === 'appleMusic'){
+        ApiShazam1(`top_country_tracks`).then((data2) => setTrending(data2?.result?.tracks));
+      }
     }
     styleChangeOnBar(mood);
-  },[mood]);
+  },[mood,statusTredingButton]);
 
   const styleChangeOnBar=((idClass)=>{
     document.getElementById(idClass).classList.add("accoun1");
@@ -158,6 +163,105 @@ const Home = () => {
     if(idClass === 'appleMusic')
       document.getElementById('appleMusic1').classList.remove("accoun5");
   });
+
+  const dispatch = useDispatch();
+  const playerRef = React.useRef(null);
+  const { url, playing, muted, loop, played, duration, currentTime: storedTime, artist, name, thumbnail, previous, next } = useSelector((state) => state);
+  const [index, setIndex] = useState(0);
+  const [last, setLast] = useState();
+  const [currentTime, setCurrentTime] = useState(storedTime);
+
+  const handleProgress = (currentTime) => {
+    if (!currentTime?.played) {
+      dispatch(setCurrentTime(currentTime?.playedSeconds));
+    }
+  };
+
+  const handleDuration = (duration) => {
+    dispatch(setDuration(duration));
+  };
+
+  useEffect(() => {
+    if (loop && played === 1) {
+      playerRef?.current.seekTo(0);
+    }
+  }, [played, loop]);
+
+  const handleMute = () => {
+    dispatch(toggleMute(!muted));
+  };
+
+  const handleLoop = () => {
+    dispatch(toggleLoop(!loop));
+  };
+
+  const handlePlayPause = () => {
+    if (playing) {
+      dispatch(pauseVideo());
+    } else {
+      dispatch(playVideo());
+    }
+  };
+
+  const handleSeek = event => {
+    const time = parseFloat(event.target.value);
+    playerRef.current.seekTo(time);
+  };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (playerRef?.current) {
+        const current = playerRef?.current?.getCurrentTime();
+        if (current !== null) {
+          dispatch(setCurrentTime(current));
+        }
+      }
+    }, 500);
+    return () => clearInterval(interval);
+  }, [dispatch, playerRef]);
+
+
+  const handleNext = () => {
+    if(mood === 'youtube'){
+      if(playlist === 0){
+        let x = Math.floor((Math.random() * related?.length)); 
+        dispatch(setPreview(id));
+        history.push('/video/'+related?.[x]?.videoId);
+      }
+      if(playlist === 1){
+        dispatch(setPreview(related?.videos?.[index]?.id));
+        dispatch(setNext(related?.videos?.[index]?.id));
+        if(related?.videos?.length === index){
+          setIndex(0);
+        }
+        else
+          setIndex(index+1);
+      }
+    }
+  };
+
+  const handlePreview = () => {
+    if(mood === 'youtube'){
+      if(playlist === 0){
+        let last1 = previous[previous?.length - 1];
+        const removeLast = previous?.pop();
+        if(last1 !== undefined) 
+          history.push('/video/'+last1);
+        else 
+          playerRef?.current?.seekTo(0);
+      }
+      if(playlist === 1){
+        let last1 = previous[previous?.length - 1];
+        const removeLast = previous?.pop();
+        if(last1 !== undefined){
+          setLast(last1);
+          setIndex(index-1);
+        }
+        else 
+          playerRef?.current?.seekTo(0);
+      }
+    }
+  };
 
   return (
     <div className="home-container">
@@ -359,7 +463,7 @@ const Home = () => {
           </button>
           </Link>
           <Link to={`/playList`}>
-          <button id="playList" className="home-button07 navbar button account"onClick={()=>{
+          <button id="playList" className="home-button07 navbar button account" onClick={()=>{
                           setStatusHomeButton(false);
                           setStatusTredingButton(false);
                           setStatusFavoriteButton(false);
@@ -537,7 +641,39 @@ const Home = () => {
             {statusVideoButton? <VideoBar></VideoBar> :null}
 
       </div>
-      <MusicBar></MusicBar>
+      <ReactPlayer autoFocus volume on  playsInline frameBorder='0' allow='autoplay; encrypted-media' width='100%' height='100%'  loaded style={{display: 'none'}} 
+        url={`https://www.youtube.com/watch?v=${url}`}
+        ref={playerRef}
+        playing={playing}
+        muted={muted}
+        loop={loop}
+        startTime={currentTime}
+        onStart={() => {
+          if (storedTime > 0) {
+            playerRef.current.seekTo(storedTime);
+          }
+        }}
+        onProgress={handleProgress}
+        onDuration={handleDuration}
+        />
+      <MusicBar 
+        playing={playing}
+        playerRef={playerRef}
+        muted={muted}
+        loop={loop}
+        onMute={handleMute}
+        onLoop={handleLoop}
+        onPlayStop={handlePlayPause}
+        next={handleNext}
+        previous={handlePreview}
+        onProgress={currentTime}
+        onDuration={duration}
+        handleSeek={handleSeek}
+        artist={artist} 
+        name={name} 
+        thumbnail={thumbnail}
+        url={url}
+        ></MusicBar>
     </div>
   )
 }

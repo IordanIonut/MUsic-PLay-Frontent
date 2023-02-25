@@ -4,7 +4,7 @@ import '../views/home.css'
 import '../components/music.css'
 import '../componentsHome/VideoBar'
 import ChanelCard from '../components/chanel-card';
-import { ApiYouTube4, ApiYouTube2, ApiSpotify1, ApiSpotify2 } from '../utils/fetchAPI'
+import { ApiYouTube4, ApiYouTube2, ApiSpotify1, ApiSpotify2, ApiShazam1} from '../utils/fetchAPI'
 import FeatureCard from '../components/feature-card';
 
 const SearchBar = ({selectedFiltre,mood}) => {
@@ -17,7 +17,8 @@ const SearchBar = ({selectedFiltre,mood}) => {
           ApiYouTube4(`search?query=${selectedFiltre}&type=${type}`).then((data) => setVideo(data.data));
         else
           ApiYouTube2(`search-live?q=${selectedFiltre}`).then((data) => setVideo(data));
-      }else if(mood === 'spotify'){
+      }
+      if(mood === 'spotify'){
         let ex;
         if(type === "video")
           ex = 'track';
@@ -31,8 +32,14 @@ const SearchBar = ({selectedFiltre,mood}) => {
           ApiSpotify1(`search/?q=${selectedFiltre}&type=${ex}`).then((data) => setVideo(data));
         else
           ApiSpotify2(`search/?term=${selectedFiltre}&type=${ex}`).then((data) => setVideo(data));
-      } 
+      }
     },[selectedFiltre,type, mood]);
+
+    useEffect(() =>{
+      if(mood === 'appleMusic'){
+        ApiShazam1(`search/?query=${selectedFiltre}`).then((data) => setVideo(data));
+      }
+    },[selectedFiltre, mood]);
 
     const styleChangeOn=((idClass)=>{
       document.getElementById(idClass).classList.add("hoverType");
@@ -56,15 +63,15 @@ const SearchBar = ({selectedFiltre,mood}) => {
               </svg>
             </button>
           </div>
-          <div className="home-play-list06 posibili buttonChange" name="playlist"  onClick={() => {setType('playlist');
+          {mood != 'appleMusic' ? <div className="home-play-list06 posibili buttonChange" name="playlist"  onClick={() => {setType('playlist');
           styleChangeOn('playlist'); styleChangeOf('video'); styleChangeOf('channel');styleChangeOf('live1');}}>
             <button id="playlist"  className="home-button23 button account">
               <svg viewBox="0 0 1024 1024" className="home-icon070">
                 <path d="M86 682v-84h340v84h-340zM768 598h170v84h-170v172h-86v-172h-170v-84h170v-172h86v172zM598 256v86h-512v-86h512zM598 426v86h-512v-86h512z"></path>
               </svg>
             </button>
-          </div>
-          <div className="home-play-list06 posibili buttonChange" name="live1" onClick={() => {setType('live');
+          </div> : null }
+          {mood != 'appleMusic' ? <div className="home-play-list06 posibili buttonChange" name="live1" onClick={() => {setType('live');
           styleChangeOn('live1'); styleChangeOf('playlist'); styleChangeOf('video'); styleChangeOf('channel');}}>
             <button id="live1"  className="home-button23 button account">
               <svg xmlns="http://www.w3.org/2000/svg" className="home-icon072" viewBox="0 0 16 16">
@@ -72,7 +79,7 @@ const SearchBar = ({selectedFiltre,mood}) => {
                 <path d="M8 6.5a1 1 0 1 0 0 2 1 1 0 0 0 0-2Zm-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0Zm7 0a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0Z"/>
               </svg>
             </button>
-          </div>
+          </div> : null}
           <div className="home-like2 posibili buttonChange" name="channel" style={{marginRight: '20vh'}} onClick={() => {setType('channel');
           styleChangeOn('channel'); styleChangeOf('video'); styleChangeOf('playlist');styleChangeOf('live1');}}>
             <button id="channel"  className="home-button24 button account">
@@ -112,6 +119,16 @@ const SearchBar = ({selectedFiltre,mood}) => {
           {mood === 'spotify' && Array.isArray(videos?.artists?.items) && videos?.artists?.items.map((item, id) => (
             <section key={id} style={{transitionDelay: '1s'} && type === 'channel' ? {width: '100%'}: null }> 
               {type==='channel' && <ChanelCard channelDetail={item} idx={id} mood={mood}></ChanelCard>}
+            </section>
+          ))}
+          {mood === 'appleMusic' && Array.isArray(videos?.result?.tracks?.hits) && videos?.result?.tracks?.hits.map((item, id) => (
+            <section key={id} style={{transitionDelay: '1s'} && (type === 'video' ? {width: '100%'}: null)}> 
+              {type==='video' && <Music video={item?.track} treding={'1'} treding1={'1'} idx={id} page='0' mood={mood}></Music>}
+            </section>
+          ))}
+           {mood === 'appleMusic' && Array.isArray(videos?.result?.artists?.hits) && videos?.result?.artists?.hits.map((item, id) => (
+            <section key={id} style={{transitionDelay: '1s'} && type === 'channel' ? {width: '100%'}: null }> 
+              {type==='channel' && <ChanelCard channelDetail={item?.artist} idx={id} mood={mood}></ChanelCard>}
             </section>
           ))}
           </div>

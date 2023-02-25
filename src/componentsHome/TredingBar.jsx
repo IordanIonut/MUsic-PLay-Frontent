@@ -7,7 +7,7 @@ import Home from "../views/home";
 import '../views/home.css'
 
 const TredingBar = ({trending, mood})=>{
-
+   
     return(
       <section className="home-seach music-list" style={{display: 'flex', alignContent: 'baseline'}}>
       <span className="home-text47 text">
