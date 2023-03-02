@@ -23,7 +23,7 @@ const App = () => {
           <Route component={Video} path="/video/:id" />
           <Route component={Search} path="/search/:searchTerm" />
           <Route component={Account}  path="/account" />
-          <Route component={Login}  path="/login" />
+          <Route component={Login}  path="/auth/:id" />
           <Route component={PopUp}  path="/pop-up" />
         </div>
       </Router>

@@ -347,14 +347,13 @@ const Home = () => {
           </button>
         </div>
         <div className="home-account posibili">
-          <button
+          <Link to={`/auth/login`}
             id="account"
             name="account"
             type="button"
             disabled
             autoFocus
-            className="home-button03 button account"
-          >
+            className="home-button03 button account">
             <svg viewBox="0 0 1024 1024" className="home-icon006">
               <path d="M512 598q108 0 225 47t117 123v86h-684v-86q0-76 117-123t225-47zM512 512q-70 0-120-50t-50-120 50-121 120-51 120 51 50 121-50 120-120 50z"></path>
             </svg>
@@ -363,7 +362,7 @@ const Home = () => {
               src="https://images.unsplash.com/photo-1665686304355-0b09b1e3b03c?ixid=Mnw5MTMyMXwxfDF8YWxsfDZ8fHx8fHwyfHwxNjY3MTQwMzQ1&amp;ixlib=rb-4.0.3&amp;w=200"
               className="home-image2"
             />
-          </button>
+          </Link>
         </div>
       </div>
       <div className="home-view content">
