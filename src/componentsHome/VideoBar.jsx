@@ -26,7 +26,7 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
   //console.log(idSongPlayList);
   const [image, setImage] = React.useState('');
   const [image1, setImage1] = React.useState('');
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
 
   function millisToMinutesAndSeconds(millis) {

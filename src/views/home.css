@@ -173,6 +173,7 @@
 }
 .home-icon006 {
   fill: var(--dl-color-gray-700);
+  display: flex;
   width: 100%;
   height: 100%;
 }

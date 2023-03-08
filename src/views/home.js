@@ -15,13 +15,14 @@ import MusicBar from '../componentsHome/MusicBar'
 import FiltreBar from '../componentsHome/FiltreBar'
 import SearchBar from '../componentsHome/SearchBar'
 import VideoBar from '../componentsHome/VideoBar'
-import { ApiYouTube2, ApiYouTube10, ApiSpotify1, ApiSpotify3, ApiShazam1 } from '../utils/fetchAPI'
+import { ApiYouTube2, ApiYouTube10, ApiSpotify1, ApiSpotify3, ApiShazam1, ApiDataBaseGet } from '../utils/fetchAPI'
 import { Link } from 'react-router-dom';
 import {useHistory} from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
-import {setCurrentTime, setDuration, toggleLoop, toggleMute, playVideo, pauseVideo, setPreview, setNext  } from '../utils/actions';
+import {setDuration, toggleLoop, toggleMute, playVideo, pauseVideo, setPreview, setNext  } from '../utils/actions';
 import ReactPlayer from 'react-player';
+import colors from '../utils/colors';
 
 const Home = () => {
   const [statusHomeButton, setStatusHomeButton] = React.useState(false);
@@ -52,6 +53,10 @@ const Home = () => {
   Cookies.remove("playlistActivate");
   Cookies.remove("idChannel");
   localStorage.removeItem("check");
+
+  const token = localStorage.getItem('token') || undefined;
+  const [idSp, setIdSp]=useState('');
+  const [userDate, setUserDate] = useState([]);
 
   const handleSubmit =(e) => {
     e.preventDefault();
@@ -118,7 +123,27 @@ const Home = () => {
   useEffect(() =>{
    // ApiYouTube2(`sugestions?q=${seachText}`).then((data) => setAuto(data));
   },[seachText]);
- 
+
+
+  useEffect(() =>{
+    if (token) {
+      ApiDataBaseGet(`users/token?token=${token}`)
+        .then((response) => {
+          setIdSp(response)
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      ApiDataBaseGet(`users/get/${idSp}`)
+      .then((response) => {
+        setUserDate(response);
+      })
+      .catch((error) => {
+        //console.log(error);
+      });
+    }
+  },[token, idSp]);
+
   useEffect(() =>{
     if(statusTredingButton === true){
       if(mood === 'youtube'){
@@ -137,7 +162,7 @@ const Home = () => {
       }
     }
     styleChangeOnBar(mood);
-  },[mood,statusTredingButton]);
+  },[mood, statusTredingButton]);
 
   const styleChangeOnBar=((idClass)=>{
     document.getElementById(idClass).classList.add("accoun1");
@@ -270,16 +295,8 @@ const Home = () => {
         <meta property="og:title" content="MusicPLay" />
       </Helmet>
       <div className="home-up up">
-        <img 
-          alt="image"
-          src={process.env.PUBLIC_URL+`/playground_assets/1-removebg-preview-1500h.png`}
-          className="home-image"
-        />
-        <img
-          alt="image"
-          src={process.env.PUBLIC_URL+"/playground_assets/2-removebg-preview-1500h.png"}
-          className="home-image1"
-        />
+        <img alt="image" src={process.env.PUBLIC_URL+`/playground_assets/1-removebg-preview-1500h.png`} className="home-image" />
+        <img alt="image" src={process.env.PUBLIC_URL+"/playground_assets/2-removebg-preview-1500h.png"} className="home-image1" />
         <form onSubmit={handleSubmit} style={{width: '90vh',margin: 'auto'}}> 
           <input
             style={{width: '90vh'}}
@@ -347,16 +364,17 @@ const Home = () => {
           </button>
         </div>
         <div className="home-account posibili">
-          <Link to={`/auth/login`}
+          <Link to={token ? `/account` : `/auth/login`}
             id="account"
             name="account"
             type="button"
             disabled
             autoFocus
             className="home-button03 button account">
-            <svg viewBox="0 0 1024 1024" className="home-icon006">
+            {token !== undefined ? (<span classname="home-icon006" style={{display: 'flex', width: '100%',height: '100%', fill: colors?.[userDate?.fill]?.hex}} dangerouslySetInnerHTML={{ __html: userDate?.image }} />) : 
+            (<svg viewBox="0 0 1024 1024" className="home-icon006">
               <path d="M512 598q108 0 225 47t117 123v86h-684v-86q0-76 117-123t225-47zM512 512q-70 0-120-50t-50-120 50-121 120-51 120 51 50 121-50 120-120 50z"></path>
-            </svg>
+            </svg>)}
             <img
               alt="image"
               src="https://images.unsplash.com/photo-1665686304355-0b09b1e3b03c?ixid=Mnw5MTMyMXwxfDF8YWxsfDZ8fHx8fHwyfHwxNjY3MTQwMzQ1&amp;ixlib=rb-4.0.3&amp;w=200"
@@ -367,8 +385,7 @@ const Home = () => {
       </div>
       <div className="home-view content">
         <section className="home-left-bar">
-          <Link to={`/home`}>
-          <button  id="home" className="home-button05 navbar button account" onClick={()=>{
+          <Link to={`/home`} id="home" className="home-button05 navbar button account" onClick={()=>{
                           setStatusHomeButton(true);
                           setStatusTredingButton(false);
                           setStatusFavoriteButton(false);
@@ -382,6 +399,7 @@ const Home = () => {
                           setStatusFiltreButtons(false);
                           setStatusSendButtons(false);
                           styleChangeOn('home');
+                          if(token){
                           styleChangeOf('treding');
                           styleChangeOf('favorite');
                           styleChangeOf('playList');
@@ -389,6 +407,12 @@ const Home = () => {
                           styleChangeOf('live');
                           styleChangeOf('send');
                           styleChangeOf('qr');
+                        }else{
+                          styleChangeOf('treding');
+                          styleChangeOf('history');
+                          styleChangeOf('send');
+                          styleChangeOf('live');
+                        }
                           }}>
              <svg xmlns="http://www.w3.org/2000/svg"  name='img2'  className="home-icon014" viewBox="0 0 16 16">
                 <path d="M6.5 14.5v-3.505c0-.245.25-.495.5-.495h2c.25 0 .5.25.5.5v3.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5Z"/>
@@ -396,10 +420,8 @@ const Home = () => {
               <svg xmlns="http://www.w3.org/2000/svg" name='img1'  className="home-icon012" viewBox="0 0 16 16">
                 <path d="M8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4.5a.5.5 0 0 0 .5-.5v-4h2v4a.5.5 0 0 0 .5.5H14a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146ZM2.5 14V7.707l5.5-5.5 5.5 5.5V14H10v-4a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v4H2.5Z"/>
               </svg>
-          </button>
           </Link>
-          <Link to={`/treding`}>
-          <button id="treding" className="home-button05 navbar button account" onClick={()=>{
+          <Link to={`/treding`} id="treding" className="home-button05 navbar button account" onClick={()=>{
                           setStatusHomeButton(false);
                           setStatusTredingButton(true);
                           setStatusFavoriteButton(false);
@@ -413,6 +435,7 @@ const Home = () => {
                           setStatusFiltreButtons(false);
                           setStatusSendButtons(false);
                           styleChangeOn('treding');
+                          if(token){
                           styleChangeOf('home');
                           styleChangeOf('favorite');
                           styleChangeOf('playList');
@@ -420,6 +443,12 @@ const Home = () => {
                           styleChangeOf('live');
                           styleChangeOf('send');
                           styleChangeOf('qr');
+                        }else{
+                          styleChangeOf('home');
+                          styleChangeOf('history');
+                          styleChangeOf('send');
+                          styleChangeOf('live');
+                        }
                         }}>
                  <svg xmlns="http://www.w3.org/2000/svg" name='img1' className="home-icon014" viewBox="0 0 16 16">
                     <path d="M15.5 8.516a7.5 7.5 0 1 1-9.462-7.24A1 1 0 0 1 7 0h2a1 1 0 0 1 .962 1.276 7.503 7.503 0 0 1 5.538 7.24zm-3.61-3.905L6.94 7.439 4.11 12.39l4.95-2.828 2.828-4.95z"/>
@@ -428,10 +457,8 @@ const Home = () => {
                   <path d="M8 16.016a7.5 7.5 0 0 0 1.962-14.74A1 1 0 0 0 9 0H7a1 1 0 0 0-.962 1.276A7.5 7.5 0 0 0 8 16.016zm6.5-7.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0z"/>
                   <path d="m6.94 7.44 4.95-2.83-2.83 4.95-4.949 2.83 2.828-4.95z"/>
                 </svg>
-          </button>
           </Link>
-          <Link to={`/favorite`}>
-          <button id="favorite" className="home-button06 navbar button account"onClick={()=>{
+          {token ? <Link to={`/favorite`} id="favorite" className="home-button06 navbar button account"onClick={()=>{
                           setStatusHomeButton(false);
                           setStatusTredingButton(false);
                           setStatusFavoriteButton(true);
@@ -459,10 +486,8 @@ const Home = () => {
             <svg viewBox="0 0 1024 1024" name='img2' className="home-icon018">
               <path d="M516 792q96-86 142-130t100-104 75-106 21-90q0-64-43-106t-107-42q-50 0-93 28t-59 72h-80q-16-44-59-72t-93-28q-64 0-107 42t-43 106q0 44 21 90t75 106 100 104 142 130l4 4zM704 128q100 0 167 68t67 166q0 58-22 113t-81 123-107 114-154 142l-62 56-62-54q-138-124-199-186t-113-146-52-162q0-98 67-166t167-68q116 0 192 90 76-90 192-90z"></path>
             </svg>
-          </button>
-          </Link>
-          <Link to={`/playList`}>
-          <button id="playList" className="home-button07 navbar button account" onClick={()=>{
+          </Link> : null}
+          {token ? <Link to={`/playList`} id="playList" className="home-button07 navbar button account" onClick={()=>{
                           setStatusHomeButton(false);
                           setStatusTredingButton(false);
                           setStatusFavoriteButton(false);
@@ -490,10 +515,8 @@ const Home = () => {
             <svg viewBox="0 0 1024 1024" name='img2' className="home-icon020">
               <path d="M598 598l212 128-212 128v-256zM170 598h342v84h-342v-84zM170 256h512v86h-512v-86zM170 426h512v86h-512v-86z"></path>
             </svg>
-          </button>
-          </Link>
-          <Link to={`/history`}>
-          <button id="history" className="navbar button account"onClick={()=>{
+          </Link> : null}
+          <Link to={`/history`} id="history" className="navbar button account"onClick={()=>{
                           setStatusHomeButton(false);
                           setStatusTredingButton(false);
                           setStatusFavoriteButton(false);
@@ -507,13 +530,20 @@ const Home = () => {
                           setStatusFiltreButtons(false);
                           setStatusSendButtons(false);
                           styleChangeOn('history');
+                          if(token){
+                            styleChangeOf('home');
+                            styleChangeOf('treding');
+                            styleChangeOf('favorite');
+                            styleChangeOf('playList');
+                            styleChangeOf('live');
+                            styleChangeOf('send');
+                            styleChangeOf('qr');
+                        }else{
                           styleChangeOf('home');
                           styleChangeOf('treding');
-                          styleChangeOf('favorite');
-                          styleChangeOf('playList');
                           styleChangeOf('live');
-                          styleChangeOf('send');
                           styleChangeOf('qr');
+                        }
                         }}>
             <svg xmlns="http://www.w3.org/2000/svg" name='img2' className="home-icon024" viewBox="0 0 16 16">
               <path d="M2 1.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-1v1a4.5 4.5 0 0 1-2.557 4.06c-.29.139-.443.377-.443.59v.7c0 .213.154.451.443.59A4.5 4.5 0 0 1 12.5 13v1h1a.5.5 0 0 1 0 1h-11a.5.5 0 1 1 0-1h1v-1a4.5 4.5 0 0 1 2.557-4.06c.29-.139.443-.377.443-.59v-.7c0-.213-.154-.451-.443-.59A4.5 4.5 0 0 1 3.5 3V2h-1a.5.5 0 0 1-.5-.5zm2.5.5v1a3.5 3.5 0 0 0 1.989 3.158c.533.256 1.011.791 1.011 1.491v.702s.18.149.5.149.5-.15.5-.15v-.7c0-.701.478-1.236 1.011-1.492A3.5 3.5 0 0 0 11.5 3V2h-7z"/>
@@ -521,10 +551,8 @@ const Home = () => {
             <svg xmlns="http://www.w3.org/2000/svg" name='img1' className="home-icon026" viewBox="0 0 16 16">
               <path d="M2.5 15a.5.5 0 1 1 0-1h1v-1a4.5 4.5 0 0 1 2.557-4.06c.29-.139.443-.377.443-.59v-.7c0-.213-.154-.451-.443-.59A4.5 4.5 0 0 1 3.5 3V2h-1a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1h-1v1a4.5 4.5 0 0 1-2.557 4.06c-.29.139-.443.377-.443.59v.7c0 .213.154.451.443.59A4.5 4.5 0 0 1 12.5 13v1h1a.5.5 0 0 1 0 1h-11zm2-13v1c0 .537.12 1.045.337 1.5h6.326c.216-.455.337-.963.337-1.5V2h-7zm3 6.35c0 .701-.478 1.236-1.011 1.492A3.5 3.5 0 0 0 4.5 13s.866-1.299 3-1.48V8.35zm1 0v3.17c2.134.181 3 1.48 3 1.48a3.5 3.5 0 0 0-1.989-3.158C8.978 9.586 8.5 9.052 8.5 8.351z"/>
             </svg>
-          </button>
           </Link>
-          <Link to={`/live`}>
-          <button id="live" className="navbar button account"onClick={()=>{
+          <Link to={`/live`} id="live" className="navbar button account"onClick={()=>{
                           setStatusHomeButton(false);
                           setStatusTredingButton(false);
                           setStatusFavoriteButton(false);
@@ -538,13 +566,20 @@ const Home = () => {
                           setStatusFiltreButtons(false);
                           setStatusSendButtons(false);
                           styleChangeOn('live');
-                          styleChangeOf('home');
-                          styleChangeOf('treding');
-                          styleChangeOf('favorite');
-                          styleChangeOf('playList');
-                          styleChangeOf('history');
-                          styleChangeOf('send');
-                          styleChangeOf('qr');
+                          if(token){
+                            styleChangeOf('home');
+                            styleChangeOf('treding');
+                            styleChangeOf('favorite');
+                            styleChangeOf('playList');
+                            styleChangeOf('history');
+                            styleChangeOf('send');
+                            styleChangeOf('qr');
+                          }else{
+                            styleChangeOf('home');
+                            styleChangeOf('treding');
+                            styleChangeOf('history');
+                            styleChangeOf('send');
+                          }
                         }}>
             <svg viewBox="0 0 1024 1024" name='img1' className="home-icon028">
               <path d="M384 512c0-70.692 57.308-128 128-128s128 57.308 128 128c0 70.692-57.308 128-128 128s-128-57.308-128-128zM664.348 230.526c99.852 54.158 167.652 159.898 167.652 281.474s-67.8 227.316-167.652 281.474c44.066-70.126 71.652-170.27 71.652-281.474s-27.586-211.348-71.652-281.474zM288 512c0 111.204 27.584 211.348 71.652 281.474-99.852-54.16-167.652-159.898-167.652-281.474s67.8-227.314 167.652-281.474c-44.068 70.126-71.652 170.27-71.652 281.474zM96 512c0 171.9 54.404 326.184 140.652 431.722-142.302-90.948-236.652-250.314-236.652-431.722s94.35-340.774 236.652-431.722c-86.248 105.538-140.652 259.822-140.652 431.722zM787.352 80.28c142.298 90.946 236.648 250.312 236.648 431.72s-94.35 340.774-236.648 431.72c86.244-105.536 140.648-259.82 140.648-431.72s-54.404-326.184-140.648-431.72z"></path>
@@ -553,10 +588,8 @@ const Home = () => {
             <svg xmlns="http://www.w3.org/2000/svg" name='img2' className="home-icon030" viewBox="0 0 16 16">
               <path d="M3.05 3.05a7 7 0 0 0 0 9.9.5.5 0 0 1-.707.707 8 8 0 0 1 0-11.314.5.5 0 0 1 .707.707zm2.122 2.122a4 4 0 0 0 0 5.656.5.5 0 1 1-.708.708 5 5 0 0 1 0-7.072.5.5 0 0 1 .708.708zm5.656-.708a.5.5 0 0 1 .708 0 5 5 0 0 1 0 7.072.5.5 0 1 1-.708-.708 4 4 0 0 0 0-5.656.5.5 0 0 1 0-.708zm2.122-2.12a.5.5 0 0 1 .707 0 8 8 0 0 1 0 11.313.5.5 0 0 1-.707-.707 7 7 0 0 0 0-9.9.5.5 0 0 1 0-.707zM6 8a2 2 0 1 1 2.5 1.937V15.5a.5.5 0 0 1-1 0V9.937A2 2 0 0 1 6 8z"/>
             </svg>
-          </button>
           </Link>
-          <Link to={`/qr`}>
-          <button id="qr" className="home-button10 navbar button account"onClick={()=>{
+          {token ? <Link to={`/qr`} id="qr" className="home-button10 navbar button account"onClick={()=>{
                            setStatusHomeButton(false);
                            setStatusTredingButton(false);
                            setStatusFavoriteButton(false);
@@ -588,10 +621,9 @@ const Home = () => {
             <svg viewBox="0 0 804.5714285714286 1024" style={{display: 'flex'}} name='img2' className="home-icon034">
               <path d="M219.429 658.286v73.143h-73.143v-73.143h73.143zM219.429 219.429v73.143h-73.143v-73.143h73.143zM658.286 219.429v73.143h-73.143v-73.143h73.143zM73.143 804h219.429v-218.857h-219.429v218.857zM73.143 365.714h219.429v-219.429h-219.429v219.429zM512 365.714h219.429v-219.429h-219.429v219.429zM365.714 512v365.714h-365.714v-365.714h365.714zM658.286 804.571v73.143h-73.143v-73.143h73.143zM804.571 804.571v73.143h-73.143v-73.143h73.143zM804.571 512v219.429h-219.429v-73.143h-73.143v219.429h-73.143v-365.714h219.429v73.143h73.143v-73.143h73.143zM365.714 73.143v365.714h-365.714v-365.714h365.714zM804.571 73.143v365.714h-365.714v-365.714h365.714z"></path>
             </svg>
-          </button>
-          </Link>
+          </Link>: null}
           <Link to={`/send`}>
-          <button id="send" className="home-button11 navbar button account"onClick={()=>{
+          <Link to={`/send`} id="send" className="home-button11 navbar button account"onClick={()=>{
                           setStatusHomeButton(false);
                           setStatusTredingButton(false);
                           setStatusFavoriteButton(false);
@@ -605,6 +637,7 @@ const Home = () => {
                           setStatusSearchButtons(false);
                           setStatusVideoButtons(false);
                           styleChangeOn('send');
+                          if(token){
                           styleChangeOf('home');
                           styleChangeOf('treding');
                           styleChangeOf('favorite');
@@ -612,6 +645,12 @@ const Home = () => {
                           styleChangeOf('history');
                           styleChangeOf('live');
                           styleChangeOf('qr');
+                          }else{
+                            styleChangeOf('home');
+                            styleChangeOf('treding');
+                            styleChangeOf('live');
+                            styleChangeOf('history');
+                          }
                         }}>
             <svg viewBox="0 0 1025.1702857142857 1024" name='img1' className="home-icon036">
               <path d="M1008 6.286c12 8.571 17.714 22.286 15.429 36.571l-146.286 877.714c-1.714 10.857-8.571 20-18.286 25.714-5.143 2.857-11.429 4.571-17.714 4.571-4.571 0-9.143-1.143-13.714-2.857l-258.857-105.714-138.286 168.571c-6.857 8.571-17.143 13.143-28 13.143-4 0-8.571-0.571-12.571-2.286-14.286-5.143-24-18.857-24-34.286v-199.429l493.714-605.143-610.857 528.571-225.714-92.571c-13.143-5.143-21.714-17.143-22.857-31.429-0.571-13.714 6.286-26.857 18.286-33.714l950.857-548.571c5.714-3.429 12-5.143 18.286-5.143 7.429 0 14.857 2.286 20.571 6.286z"></path>
@@ -619,7 +658,7 @@ const Home = () => {
             <svg viewBox="0 0 1024.5851428571427 1024" name='img2' className="home-icon038">
               <path d="M1008 6.286c12 8.571 17.714 22.286 15.429 36.571l-146.286 877.714c-1.714 10.857-8.571 20-18.286 25.714-5.143 2.857-11.429 4.571-17.714 4.571-4.571 0-9.143-1.143-13.714-2.857l-301.143-122.857-170.286 186.857c-6.857 8-16.571 12-26.857 12-4.571 0-9.143-0.571-13.143-2.286-14.286-5.714-23.429-19.429-23.429-34.286v-258.286l-269.714-110.286c-13.143-5.143-21.714-17.143-22.857-31.429-1.143-13.714 6.286-26.857 18.286-33.714l950.857-548.571c12-7.429 27.429-6.857 38.857 1.143zM812.571 862.857l126.286-756-819.429 472.571 192 78.286 493.143-365.143-273.143 455.429z"></path>
             </svg>
-          </button>
+          </Link>
           </Link>
         </section>
             {statusHomeButton? <HomeBar mood={mood}></HomeBar>:null}

@@ -1,18 +1,23 @@
 import { display } from '@mui/system';
 import React, {useState, useEffect} from 'react';
 import { Helmet } from 'react-helmet';
-import {useParams, Link} from 'react-router-dom';
+import {useParams, Link, useHistory} from 'react-router-dom';
 import './login.css';
 import { useFormik } from 'formik';
 import * as Yup from "yup";
 import Swal from 'sweetalert2';
 import '../views/home.css'
+import colors from '../utils/colors';
+import image from '../utils/image';
+import axios from 'axios';
+import { ApiDataBasePost} from '../utils/fetchAPI'
 
 const Login = () => {
   const [login, setLogin] = useState(false);
   const [register, setRegister] = useState(false);
   const [change, setChange] = useState(false)
   const {id} = useParams();
+  const history = useHistory();
 
   useEffect(() =>{
     setLogin(false);
@@ -31,6 +36,8 @@ const Login = () => {
       name: '',
       password: '',
       email: '',
+      fill: '',
+      image: '',
     },
     validationSchema: Yup.object({
       name: Yup.string()
@@ -48,7 +55,26 @@ const Login = () => {
         .required('Email address is mandatory!'),
     }),
     onSubmit: (values) => {
-      console.log(values);
+      ApiDataBasePost(`users/add`, values)
+      .then((response) => {
+        history.push('/auth/login');
+          formik.values.name = '';
+          formik.values.password = '';
+          formik.values.email = '';
+          formik.values.fill = '';
+          formik.values.image = '';})
+      .catch((error) => {
+         Swal.fire({
+            icon: 'error',
+            text: error?.response?.data,
+            showConfirmButton: false,
+            customClass: {
+              container: 'blur-background popup'
+            },
+            timer: 2000,
+            buttons: false
+          });
+        });
     },
   });
 
@@ -89,17 +115,23 @@ const Login = () => {
           buttons: false
       });
     }
+    let a = formik.values.name.slice(0,1);
+    let im = image.find((obj, index) => obj?.letter === a.toLocaleUpperCase());
+    formik.values.image =  im?.svg;
+    let ran = Math.floor(Math.random() * 142);
+    formik.values.fill = ran;
   };
 
   const formik1 = useFormik({
     initialValues: {
-      name: '',
+      email: '',
       password: '',
     },
     validationSchema: Yup.object({
-      name: Yup.string()
-        .min(6, 'The name need to have minimum 6 characters!')
-        .required('The name is mandatory!'),
+      email: Yup.string()
+        .email('The email address is invalid!')
+        .matches(/(yahoo|gmail)\.com$/, 'The email address must be of the type "yahoo.com" or "gmail.com"!')
+        .required('Email address is mandatory!'),
       password: Yup.string()
         .matches(
           /^(?=.*\d)(?=.*[!@#$%^&*()\-_=+{};:,<.>])(?=.*[a-zA-Z]).{8,}$/,
@@ -108,17 +140,34 @@ const Login = () => {
         .required('The password is mandatory!'),
     }),
     onSubmit: (values) => {
-      console.log(values);
+      ApiDataBasePost(`users/login`, values)
+      .then((response) => {
+        localStorage.setItem('token', response?.token);
+        history.push('/home');
+        formik1.values.password = '';
+        formik1.values.email = '';
+      }).catch((error) => {
+          Swal.fire({
+            icon: 'error',
+            text: error?.response?.data,
+            showConfirmButton: false,
+            customClass: {
+              container: 'blur-background popup'
+            },
+            timer: 2000,
+            buttons: false
+          });
+        });
     },
   });
 
   const handleSubmit1 = async (event) => {
     event.preventDefault();
     formik1.submitForm();
-    if (formik1.errors.name) {
+    if (formik1.errors.email) {
       Swal.fire({
         icon: 'error',
-        text: formik1.errors.name,
+        text: formik1.errors.email,
         showConfirmButton: false,
         customClass: {
           container: 'blur-background popup'
@@ -246,10 +295,10 @@ const Login = () => {
                 </div>
                 <input
                  type="text"
-                 id="name"
-                 name="name"
+                 id="email"
+                 name="email"
                  placeholder="Your Name"
-                 value={formik1.values.name}
+                 value={formik1.values.email}
                  onChange={formik1.handleChange}
                  className="login-textinput3 input"/>
                 <input

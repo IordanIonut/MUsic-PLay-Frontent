@@ -19,6 +19,7 @@ const BASE_URL17='https://spotify-data.p.rapidapi.com';
 const BASE_URL18='https://shazam-song-recognizer.p.rapidapi.com'
 const BASE_URL19='https://shazam.p.rapidapi.com';
 const BASE_URL20='https://shazam8.p.rapidapi.com';
+const BASE_URL21='http://localhost:8080/api';
 
 const apiYouTube1 = {
     params: {
@@ -185,6 +186,9 @@ const apiShazam3 = {
   }
 };
 
+const apiDataBase = {
+};
+
 export const ApiYouTube1 = async(url) =>{
   const {data} = await axios.get(`${BASE_URL1}/${url}`,apiYouTube1);
   return data;
@@ -279,3 +283,23 @@ export const ApiShazam3 = async(url) =>{
   const {data} = await axios.get(`${BASE_URL20}/${url}`,apiShazam3);
   return data;
 }
+
+export const ApiDataBaseGet = async(url) =>{
+  const {data} = await axios.get(`${BASE_URL21}/${url}`,apiDataBase);
+  return data;
+}
+
+export const ApiDataBasePost = async (url, postData) => {
+  const { data } = await axios.post(`${BASE_URL21}/${url}`, postData, apiDataBase);
+  return data;
+};
+
+export const ApiDataBasePut = async (url, putData) => {
+  const { data } = await axios.put(`${BASE_URL21}/${url}`, putData, apiDataBase);
+  return data;
+};
+
+export const ApiDataBaseDelete = async (url) => {
+  const { data } = await axios.delete(`${BASE_URL21}/${url}`, apiDataBase);
+  return data;
+};

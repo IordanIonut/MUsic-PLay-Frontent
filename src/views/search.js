@@ -7,7 +7,8 @@ import { Link } from 'react-router-dom';
 import SearchBar from '../componentsHome/SearchBar';
 import {useParams} from 'react-router-dom';
 import Cookies from 'js-cookie';
-
+import colors from '../utils/colors';
+import { ApiDataBaseGet  } from '../utils/fetchAPI'
 const Search = () => {
   const {searchTerm} = useParams();
   Cookies.remove("idSongPlayList");
@@ -46,6 +47,30 @@ const Search = () => {
       document.getElementById('appleMusic1').classList.remove("accoun5");
   });
 
+  const token = localStorage.getItem('token') || undefined;
+  const [idSp, setIdSp]=useState('');
+  const [userDate, setUserDate] = useState([]); 
+
+ useEffect(() =>{
+    if (token) {
+      ApiDataBaseGet(`users/token?token=${token}`)
+        .then((response) => {
+          setIdSp(response)
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      ApiDataBaseGet(`users/get/${idSp}`)
+      .then((response) => {
+        setUserDate(response);
+      })
+      .catch((error) => {
+        //console.log(error);
+      });
+    }
+  },[token, idSp]);
+    console.log(userDate);
+
     return ( 
         <div className="home-container">
         <Helmet>
@@ -53,16 +78,8 @@ const Search = () => {
           <meta property="og:title" content="MusicPLay" />
         </Helmet>
         <div className="home-up up">
-          <img 
-            alt="image"
-            src={process.env.PUBLIC_URL+"/playground_assets/1-removebg-preview-1500h.png"}
-            className="home-image"
-          />
-          <img
-            alt="image"
-            src={process.env.PUBLIC_URL+"/playground_assets/2-removebg-preview-1500h.png"}
-            className="home-image1"
-          />
+          <img alt="image" src={process.env.PUBLIC_URL+"/playground_assets/1-removebg-preview-1500h.png"} className="home-image" />
+          <img alt="image" src={process.env.PUBLIC_URL+"/playground_assets/2-removebg-preview-1500h.png"} className="home-image1"/>
             <form  style={{width: 'auto',margin: 'auto'}}> 
           <Link to={`/filtre`} >
           <input
@@ -105,22 +122,23 @@ const Search = () => {
           </button>
         </div>
           <div className="home-account posibili">
-            <button
-              id="account"
-              name="account"
-              type="button"
-              autoFocus
-              className="home-button03 button account"
-            >
-              <svg viewBox="0 0 1024 1024" className="home-icon006">
-                <path d="M512 598q108 0 225 47t117 123v86h-684v-86q0-76 117-123t225-47zM512 512q-70 0-120-50t-50-120 50-121 120-51 120 51 50 121-50 120-120 50z"></path>
-              </svg>
-              <img
-                alt="image"
-                src="https://images.unsplash.com/photo-1665686304355-0b09b1e3b03c?ixid=Mnw5MTMyMXwxfDF8YWxsfDZ8fHx8fHwyfHwxNjY3MTQwMzQ1&amp;ixlib=rb-4.0.3&amp;w=200"
-                className="home-image2"
-              />
-            </button>
+          <Link to={token ? `/account` : `/auth/login`}
+            id="account"
+            name="account"
+            type="button"
+            disabled
+            autoFocus
+            className="home-button03 button account">
+            {token !== undefined ? (<span classname="home-icon006" style={{display: 'flex', width: '100%',height: '100%', fill: colors?.[userDate?.fill]?.hex}} dangerouslySetInnerHTML={{ __html: userDate?.image }} />) : 
+            (<svg viewBox="0 0 1024 1024" className="home-icon006">
+              <path d="M512 598q108 0 225 47t117 123v86h-684v-86q0-76 117-123t225-47zM512 512q-70 0-120-50t-50-120 50-121 120-51 120 51 50 121-50 120-120 50z"></path>
+            </svg>)}
+            <img
+              alt="image"
+              src="https://images.unsplash.com/photo-1665686304355-0b09b1e3b03c?ixid=Mnw5MTMyMXwxfDF8YWxsfDZ8fHx8fHwyfHwxNjY3MTQwMzQ1&amp;ixlib=rb-4.0.3&amp;w=200"
+              className="home-image2"
+            />
+          </Link>
           </div>
         </div>
         <div className="home-view content">
@@ -142,22 +160,22 @@ const Search = () => {
                     <path d="m6.94 7.44 4.95-2.83-2.83 4.95-4.949 2.83 2.828-4.95z"/>
                   </svg>
             </Link>
-            <Link id="favorite" className="home-button06 navbar button account" to="/favorite">
+            {token ? <Link id="favorite" className="home-button06 navbar button account" to="/favorite">
               <svg viewBox="0 0 1024 1024" name='img1' className="home-icon016">
                 <path d="M512 910l-62-56q-106-96-154-142t-107-114-81-123-22-113q0-98 67-166t167-68q116 0 192 90 76-90 192-90 100 0 167 68t67 166q0 78-52 162t-113 146-199 186z"></path>
               </svg>
               <svg viewBox="0 0 1024 1024" name='img2' className="home-icon018">
                 <path d="M516 792q96-86 142-130t100-104 75-106 21-90q0-64-43-106t-107-42q-50 0-93 28t-59 72h-80q-16-44-59-72t-93-28q-64 0-107 42t-43 106q0 44 21 90t75 106 100 104 142 130l4 4zM704 128q100 0 167 68t67 166q0 58-22 113t-81 123-107 114-154 142l-62 56-62-54q-138-124-199-186t-113-146-52-162q0-98 67-166t167-68q116 0 192 90 76-90 192-90z"></path>
               </svg>
-            </Link>
-            <Link id="playList" className="home-button07 navbar button account" to="/playList">
+            </Link> : null}
+            {token ? <Link id="playList" className="home-button07 navbar button account" to="/playList">
               <svg viewBox="0 0 1024 1024" name='img1' className="home-icon022">
                 <path d="M918 490l64 64-298 300-194-192 64-64 130 128zM86 682v-84h340v84h-340zM598 256v86h-512v-86h512zM598 426v86h-512v-86h512z"></path>
               </svg>
               <svg viewBox="0 0 1024 1024" name='img2' className="home-icon020">
                 <path d="M598 598l212 128-212 128v-256zM170 598h342v84h-342v-84zM170 256h512v86h-512v-86zM170 426h512v86h-512v-86z"></path>
               </svg>
-            </Link>
+            </Link> : null}
             <Link id="history" className="navbar button account" to="/history">
               <svg xmlns="http://www.w3.org/2000/svg" name='img2' className="home-icon024" viewBox="0 0 16 16">
                 <path d="M2 1.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-1v1a4.5 4.5 0 0 1-2.557 4.06c-.29.139-.443.377-.443.59v.7c0 .213.154.451.443.59A4.5 4.5 0 0 1 12.5 13v1h1a.5.5 0 0 1 0 1h-11a.5.5 0 1 1 0-1h1v-1a4.5 4.5 0 0 1 2.557-4.06c.29-.139.443-.377.443-.59v-.7c0-.213-.154-.451-.443-.59A4.5 4.5 0 0 1 3.5 3V2h-1a.5.5 0 0 1-.5-.5zm2.5.5v1a3.5 3.5 0 0 0 1.989 3.158c.533.256 1.011.791 1.011 1.491v.702s.18.149.5.149.5-.15.5-.15v-.7c0-.701.478-1.236 1.011-1.492A3.5 3.5 0 0 0 11.5 3V2h-7z"/>
@@ -174,7 +192,7 @@ const Search = () => {
                 <path d="M3.05 3.05a7 7 0 0 0 0 9.9.5.5 0 0 1-.707.707 8 8 0 0 1 0-11.314.5.5 0 0 1 .707.707zm2.122 2.122a4 4 0 0 0 0 5.656.5.5 0 1 1-.708.708 5 5 0 0 1 0-7.072.5.5 0 0 1 .708.708zm5.656-.708a.5.5 0 0 1 .708 0 5 5 0 0 1 0 7.072.5.5 0 1 1-.708-.708 4 4 0 0 0 0-5.656.5.5 0 0 1 0-.708zm2.122-2.12a.5.5 0 0 1 .707 0 8 8 0 0 1 0 11.313.5.5 0 0 1-.707-.707 7 7 0 0 0 0-9.9.5.5 0 0 1 0-.707zM6 8a2 2 0 1 1 2.5 1.937V15.5a.5.5 0 0 1-1 0V9.937A2 2 0 0 1 6 8z"/>
               </svg>
             </Link>
-            <Link id="qr" className="home-button10 navbar button account" to="/qr">
+            { token ? <Link id="qr" className="home-button10 navbar button account" to="/qr">
                             <svg xmlns="http://www.w3.org/2000/svg" name='img2' className="home-icon034" viewBox="0 0 16 16">
                               <path d="M0 .5A.5.5 0 0 1 .5 0h3a.5.5 0 0 1 0 1H1v2.5a.5.5 0 0 1-1 0v-3Zm12 0a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0V1h-2.5a.5.5 0 0 1-.5-.5ZM.5 12a.5.5 0 0 1 .5.5V15h2.5a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5v-3a.5.5 0 0 1 .5-.5Zm15 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1 0-1H15v-2.5a.5.5 0 0 1 .5-.5ZM4 4h1v1H4V4Z"/>
                               <path d="M7 2H2v5h5V2ZM3 3h3v3H3V3Zm2 8H4v1h1v-1Z"/>
@@ -185,7 +203,7 @@ const Search = () => {
               <svg viewBox="0 0 804.5714285714286 1024" style={{display: 'flex'}} name='img2' className="home-icon034">
                 <path d="M219.429 658.286v73.143h-73.143v-73.143h73.143zM219.429 219.429v73.143h-73.143v-73.143h73.143zM658.286 219.429v73.143h-73.143v-73.143h73.143zM73.143 804h219.429v-218.857h-219.429v218.857zM73.143 365.714h219.429v-219.429h-219.429v219.429zM512 365.714h219.429v-219.429h-219.429v219.429zM365.714 512v365.714h-365.714v-365.714h365.714zM658.286 804.571v73.143h-73.143v-73.143h73.143zM804.571 804.571v73.143h-73.143v-73.143h73.143zM804.571 512v219.429h-219.429v-73.143h-73.143v219.429h-73.143v-365.714h219.429v73.143h73.143v-73.143h73.143zM365.714 73.143v365.714h-365.714v-365.714h365.714zM804.571 73.143v365.714h-365.714v-365.714h365.714z"></path>
               </svg>
-            </Link>
+            </Link> : null}
             <Link id="send" className="home-button11 navbar button account" to="/send">
               <svg viewBox="0 0 1025.1702857142857 1024" name='img1' className="home-icon036">
                 <path d="M1008 6.286c12 8.571 17.714 22.286 15.429 36.571l-146.286 877.714c-1.714 10.857-8.571 20-18.286 25.714-5.143 2.857-11.429 4.571-17.714 4.571-4.571 0-9.143-1.143-13.714-2.857l-258.857-105.714-138.286 168.571c-6.857 8.571-17.143 13.143-28 13.143-4 0-8.571-0.571-12.571-2.286-14.286-5.143-24-18.857-24-34.286v-199.429l493.714-605.143-610.857 528.571-225.714-92.571c-13.143-5.143-21.714-17.143-22.857-31.429-0.571-13.714 6.286-26.857 18.286-33.714l950.857-548.571c5.714-3.429 12-5.143 18.286-5.143 7.429 0 14.857 2.286 20.571 6.286z"></path>

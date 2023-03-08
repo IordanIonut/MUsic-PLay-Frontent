@@ -12,7 +12,7 @@ const HistoryBar = ({mood})=>{
   const video=JSON.parse(localStorage.getItem('video'));
   const playlist=JSON.parse(localStorage.getItem('playlist'));
   const channel = JSON.parse(localStorage.getItem('channel'));
- 
+
   const styleChangeOn=((idClass)=>{
     document.getElementById(idClass).classList.add("hoverType");
   });
