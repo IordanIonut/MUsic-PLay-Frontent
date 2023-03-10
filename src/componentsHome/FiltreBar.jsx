@@ -1,18 +1,15 @@
 import React, { useEffect, useState } from 'react'
-import FilreCard from "../components/filre-card";
 import genres from "../utils/filtre";
-import { Home } from '../views/home';
 import '../views/home.css'
 import '../components/filre-card.css'
-import SearchBar from './SearchBar';
-
+import { Link } from 'react-router-dom';
 
 const FiltreBar = ({selectedFiltre, setSelectedFiltre,setStatusFiltreButtons,setStatusSearchButtons})=>{
   return(
     <section className="home-filtre" style={{display: 'block', overflowY: 'scroll'}}>
         <div className="home-card2 music-card" style={{width: '99%',display: 'flex'}}>
             {genres.map((genrey) =>(
-                  <div
+                  <Link to={`/filtre`}
                   className={`filre-card-filre-card filtre-card  `}>
                   <button 
                   className="filre-card-button button" 
@@ -30,7 +27,7 @@ const FiltreBar = ({selectedFiltre, setSelectedFiltre,setStatusFiltreButtons,set
                       className="filre-card-image"
                     />
                   </button>
-                </div>
+                </Link>
                ))};
           </div>
     </section>

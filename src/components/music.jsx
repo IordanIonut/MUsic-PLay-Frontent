@@ -63,6 +63,7 @@ const Music = ({video, idx, page, mood, treding, treding1}) => {
                 video?.thumbnail?.[3]?.url ? video?.thumbnail?.[3]?.url : null ||
                 video?.thumbnail && page=== '1' ? video?.thumbnail  : null || 
                 video?.thumbnail?.[1]?.url  ? video?.thumbnail[1]?.url : null ||
+                video?.thumbnail?.url ? video?.thumbnail?.url : null || 
                 video?.[0]?.id?.thumb  ? video?.[0]?.id?.thumb : null ||
                 video?.thumbnail?.[3]?.url ? video?.thumbnail?.[3]?.url : null ||
                 video?.[0]?.id?.thumbnail?.url ? video?.[0]?.id?.thumbnail?.url : null ||
@@ -83,6 +84,7 @@ const Music = ({video, idx, page, mood, treding, treding1}) => {
              video?.channelTitle ? video?.channelTitle.slice(0,50) : null || 
              like && page === '1'&& mood !== 'spotify' ? like?.videoDetails?.author : null||
              video?.snippet ? video?.snippet?.title.slice(0,50) : null || 
+             video?.channel?.name ? video?.channel?.name : null ||
              video?.publishedText ? video?.publishedText.slice(0,50) : null ||
              video?.[0]?.id?.author ? video?.[0]?.id?.author : null || 
              video?.[0]?.id?.channel?.name ? video?.[0]?.id?.channel?.name : null ||
@@ -110,7 +112,7 @@ const Music = ({video, idx, page, mood, treding, treding1}) => {
             className=""
           ></path>
         </svg> : null}
-        <span className="music-text07">{video?.video?.stats?.views ? video?.video?.stats?.views : null ||  
+        <span className="music-text07">{video?.video?.stats?.views ? video?.video?.stats?.views : null ||  video?.views ? video?.views : null ||
               video?.viewCount ?  video?.viewCount : null || video?.[0]?.id?.views ? video?.[0]?.id?.views : null 
                 || like?.videoDetails?.viewCount || video?.[0]?.id?.view_count || video?.track?.playcount}</span>    
         {treding1 === undefined ? <svg viewBox="0 0 1024 1024" className="music-icon2">
@@ -124,6 +126,7 @@ const Music = ({video, idx, page, mood, treding, treding1}) => {
                 video?.lengthSeconds ? toTime(video?.lengthSeconds) : null || 
                 video?.[0]?.id?.length ? video?.[0]?.id?.length : null ||
                 video?.lengthText ? video?.lengthText || 'Live' : null ||
+                video?.duration ? millisToMinutesAndSeconds(video?.duration) : null ||
                 video?.[0]?.id?.duration_formatted ? video?.[0]?.id?.duration_formatted : null ||
                 mood === 'youtube' && video?.timeText ? video?.timeText || 'Live' : null ||
                 mood === 'youtube' && video?.durationText ? video?.durationText : null ||

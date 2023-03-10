@@ -69,7 +69,6 @@ const Search = () => {
       });
     }
   },[token, idSp]);
-    console.log(userDate);
 
     return ( 
         <div className="home-container">

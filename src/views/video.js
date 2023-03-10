@@ -43,7 +43,7 @@ const Video = () => {
             setIdSp(response)
           })
           .catch((error) => {
-            console.log(error);
+           // console.log(error);
           });
         ApiDataBaseGet(`users/get/${idSp}`)
         .then((response) => {
@@ -146,13 +146,13 @@ const Video = () => {
       }else{
         if(mood === 'youtube' && videos?.length !== 0){
           if(id.length  <= 11 && !playlistActivate){
-            const rezult = {description: videos, mood: 'youtube', type: 'video'};
-            ApiDataBasePost(`content/add`, rezult).catch((error) => {console.log(error);});
+            const rezult = {description: videos, mood: 'youtube', type: 'video', idPage: id};
+            ApiDataBasePost(`content/add`, rezult).catch((error) => {console.log("error");});
           }else if(playlistActivate === null){
             const aaaa = videos;
             delete aaaa.videos; 
-            const rezult = {description: aaaa, mood: 'youtube', type: 'playlist'};
-            ApiDataBasePost(`content/add`, rezult).catch((error) => {console.log(error);});
+            const rezult = {description: aaaa, mood: 'youtube', type: 'playlist', idPage: id};
+            ApiDataBasePost(`content/add`, rezult).catch((error) => {console.log("error");});
           }
         }
       }
@@ -160,16 +160,33 @@ const Video = () => {
 
     useEffect(() =>{
       if(token){
-        if(mood === 'youtube' && videos?.length !== 0 && playlistActivate === null){
-          ApiDataBaseGet(`content/last`).then((data) => {console.log(data?.content_id);}).catch((error) => {console.log(error);});
-          ApiDataBaseGet(`content/last`).then((data) => {console.log(data?.content_id);}).catch((error) => {console.log(error);});
-          ApiDataBaseGet(`content/last`).then((data) => {console.log(data?.content_id);}).catch((error) => {console.log(error);});
-          ApiDataBaseGet(`content/last`).then((data) => {console.log(data?.content_id);}).catch((error) => {console.log(error);});
-          ApiDataBaseGet(`content/last`).then((data) => {console.log(data?.content_id);}).catch((error) => {console.log(error);});
-          ApiDataBaseGet(`content/last`).then((data) => {console.log(data?.content_id);}).catch((error) => {console.log(error);});
-          ApiDataBaseGet(`content/last`).then((data) => {console.log(data?.content_id);}).catch((error) => {console.log(error);});
-          ApiDataBaseGet(`content/last`).then((data) => {console.log(data?.content_id);}).catch((error) => {console.log(error);});
-          ApiDataBaseGet(`content/last`).then((data) => {console.log(data?.content_id);}).catch((error) => {console.log(error);});
+        if(mood === 'youtube' && videos?.length !== 0){
+          if(id.length  <= 11 && !playlistActivate){
+            ApiDataBaseGet(`content/last`);
+            ApiDataBaseGet(`content/last`);
+            ApiDataBaseGet(`content/last`);
+            ApiDataBaseGet(`content/last`);
+            ApiDataBaseGet(`content/last`);
+            ApiDataBaseGet(`content/last`);
+            ApiDataBaseGet(`content/last`);
+            ApiDataBaseGet(`content/last`);
+            ApiDataBaseGet(`content/last`);
+            ApiDataBaseGet(`content/last`);
+            ApiDataBaseGet(`content/last`);
+            ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=video&description=${id}`).then((data1) => {console.log(data1);}).catch((err) => {console.log(err);});    
+          }else if(playlistActivate === null){
+            ApiDataBaseGet(`content/last`);
+            ApiDataBaseGet(`content/last`);
+            ApiDataBaseGet(`content/last`);
+            ApiDataBaseGet(`content/last`);
+            ApiDataBaseGet(`content/last`);
+            ApiDataBaseGet(`content/last`);
+            ApiDataBaseGet(`content/last`);
+            ApiDataBaseGet(`content/last`);
+            ApiDataBaseGet(`content/last`);
+            ApiDataBaseGet(`content/last`);
+            ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=playlist&description=${id}`).then((data1) => {console.log(data1);}).catch((err) => {console.log(err);});    
+          }
         }
       }
     },[videos, token]);
@@ -474,7 +491,7 @@ const Video = () => {
             </svg>
           </Link>
         </section>
-          <VideoBar videos={videos} views={views} related={related} relatedPlayList={relatedPlayList} id={id} playlist={playlist} mood={mood} idxx={idxx?.[2]}
+          <VideoBar videos={videos} token={token} views={views} related={related} relatedPlayList={relatedPlayList} id={id} playlist={playlist} mood={mood} idxx={idxx?.[2]}
         playerRef={playerRef}
         playing={playing}
         muted={muted}

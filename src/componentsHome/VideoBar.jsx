@@ -10,7 +10,7 @@ import Swal from 'sweetalert2';
 import {setAuthor, setName, setThumbnail, setUrl, playVideo, pauseVideo} from '../utils/actions';
 import { useDispatch, useSelector } from 'react-redux';
 
-const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, idxx, previous, index,
+const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, idxx, previous, token,
   playerRef, playing, muted, loop, onProgress, onDuration, next }) => {
   const [like, setLike] = useState([]);
   const idSearch=id;
@@ -151,6 +151,30 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
         timer: 2000,
         buttons: false
       });
+    };
+
+    const addClick = () => {
+      Swal.fire({
+        title: 'Login Form',
+        html: `<input type="text" id="login" class="swal2-input" placeholder="Username">
+        <input type="password" id="password" class="swal2-input" placeholder="Password">`,
+        confirmButtonText: 'Sign in',
+        focusConfirm: false,
+        preConfirm: () => {
+          const login = Swal.getPopup().querySelector('#login').value
+          const password = Swal.getPopup().querySelector('#password').value
+          if (!login || !password) {
+            Swal.showValidationMessage(`Please enter login and password`)
+          }
+          return { login: login, password: password }
+        }
+      }).then((result) => {
+        Swal.fire(`
+          Login: ${result.value.login}
+          Password: ${result.value.password}
+        `.trim())
+      })
+      
     };
 
     const commentClick = () => {
@@ -325,13 +349,13 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
             </svg>
           </button>
         </div>
-        <div className="home-play-list01 posibili buttonChange">
+        {token !== undefined ? <div className="home-play-list01 posibili buttonChange" onClick={addClick}>
           <button className="home-button16 button account" id="addPlaylist">
             <svg viewBox="0 0 1024 1024" className="home-icon048">
               <path d="M86 682v-84h340v84h-340zM768 598h170v84h-170v172h-86v-172h-170v-84h170v-172h86v172zM598 256v86h-512v-86h512zM598 426v86h-512v-86h512z"></path>
             </svg>
           </button>
-        </div>
+        </div> : null}
         {mood !== 'appleMusic' || (playlist === 0 && mood === 'appleMusic') ? <div className="home-like1 posibili buttonChange" onClick={commentClick}>
           <button className="home-button17 button account" id="comments">
             <svg xmlns="http://www.w3.org/2000/svg" className="home-icon050" viewBox="0 0 16 16">

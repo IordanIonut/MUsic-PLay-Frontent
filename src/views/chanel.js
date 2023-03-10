@@ -5,7 +5,7 @@ import '../style.css'
 import {useParams} from 'react-router-dom';
 import MusicBar from '../componentsHome/MusicBar'
 import ChanelBar from '../componentsHome/ChanelBar'
-import { ApiYouTube8, ApiYouTube1, ApiSpotify1, ApiSpotify3, ApiShazam2, ApiShazam3, ApiDataBaseGet } from '../utils/fetchAPI'
+import { ApiYouTube8, ApiYouTube1, ApiSpotify1, ApiSpotify3, ApiShazam2, ApiShazam3, ApiDataBaseGet, ApiDataBasePost } from '../utils/fetchAPI'
 import { Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import colors from '../utils/colors';
@@ -47,7 +47,6 @@ const Chanel = () => {
       });
     }
   },[token, idSp]);
-    console.log(userDate);
 
   const storeData = ((video, text, mood) => {
     let data = new Date().toLocaleString();
@@ -87,9 +86,31 @@ const Chanel = () => {
     if(token === undefined){
       if(mood === 'youtube')
         storeData(channelDetail,'channel','youtube');
+    }else{
+      if(mood === 'youtube' && channelDetail?.length !== 0){
+          const rezult = {description: channelDetail, mood: 'youtube', type: 'channel', idPage: id};
+          ApiDataBasePost(`content/add`, rezult).catch((error) => {console.log(error);});
+      }
     }
-  },[channelDetail]);
-  
+  },[channelDetail, token]);
+
+  useEffect(() =>{
+    if(token){
+      if(mood === 'youtube' && channelDetail?.length !== 0){
+        ApiDataBaseGet(`content/last`);
+            ApiDataBaseGet(`content/last`);
+            ApiDataBaseGet(`content/last`);
+            ApiDataBaseGet(`content/last`);
+            ApiDataBaseGet(`content/last`);
+            ApiDataBaseGet(`content/last`);
+            ApiDataBaseGet(`content/last`);
+            ApiDataBaseGet(`content/last`);
+            ApiDataBaseGet(`content/last`);
+            ApiDataBaseGet(`content/last`);
+            ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=channel&description=${id}`).then((data1) => {console.log(data1);}).catch((err) => {console.log(err);});   
+      }
+    }
+  },[channelDetail, token]);
   useEffect(() =>{
     styleChangeOnBar(mood);
   },[mood]);
