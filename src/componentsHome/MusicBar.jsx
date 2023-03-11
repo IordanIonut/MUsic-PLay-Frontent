@@ -1,12 +1,17 @@
 import React,{useState, useEffect} from 'react';
 import '../views/home.css';
 import { Link } from 'react-router-dom';
-
-
-export const MusicBar = ({previous, playing, muted, onProgress, onDuration, loop, onPlayStop, onMute, onLoop, handleSeek, url, artist, name, thumbnail, next, onRandome}) => {
+import { ApiDataBaseGet, ApiDataBasePost } from '../utils/fetchAPI';
+import colors from '../utils/colors';
+export const MusicBar = ({previous, playing, muted, onProgress, onDuration, loop, onPlayStop, onMute, onLoop, handleSeek, url, artist, idSp, id, token,
+   name, thumbnail, next, onRandome}) => {
   const currentTimeFormatted = onProgress && typeof onProgress === 'number' ? new Date(onProgress * 1000).toISOString().substr(11, 8) : '00:00:00';
   const durationFormatted = onDuration && typeof onDuration === 'number' ? new Date(onDuration * 1000).toISOString().substr(11, 8) : '00:00:00';
- 
+  const [count, setCount] = useState(0);
+  const [all, setAll] = useState([]);
+  const [sameID, setSameID] = useState('');
+  const [check, setCheck] = useState(false);
+  
   const style=((idClass)=>{
     const element = document.getElementById(idClass);
     if(idClass === 'random')
@@ -27,9 +32,71 @@ export const MusicBar = ({previous, playing, muted, onProgress, onDuration, loop
       } else {
         document.getElementById(idClass).classList.add("hover112");
       }
+    if(idClass === 'save'){
+      if(check === false && sameID === '' && count === 0){
+        document.getElementById(idClass).classList.add("hover112");
+        setCount(count + 1);
+        setCheck(true);
+        console.log("111111111111111111111111111111111");
+      }
+      if (element.classList.contains("hover112") && !check)  {
+        document.getElementById(idClass).classList.remove("hover112");
+        console.log('22222222222222222222222222222222222');
+      }else if(!element.classList.contains("hover112") && check){
+        document.getElementById(idClass).classList.add("hover112");
+        console.log("333333333333333333333333333333333333");
+      }
+    }
   });
+  const handleClick = () => {
+    if (count % 2 === 0) {
+      let ran = Math.floor(Math.random() * 142);
+        ApiDataBaseGet(`content/last`).then((data) => {
+          const val={content_id: {content_id: data?.content_id},  fill: ran, user_id: {user_id: idSp}};
+          ApiDataBasePost(`favorite/add`, val).then((data) => {
+            ApiDataBaseGet(`favorite/all`).then((data) =>{setAll(data); console.log("4444444444444444444444")});
+        }).catch((err) => {console.log(err?.message)})})
+        .catch((err) => {console.log(err)});
+    } else {
+      ApiDataBaseGet(`content/last`).then((data) => {
+      ApiDataBaseGet(`favorite/delete/search?userId=${idSp}&idPage=${data?.idPage}`).then((data) => {console.log("delete : 555555555555555555555555555555"); setCheck(false);}).catch((err) => {console.log(err)})});
+    }
+    setCount(count + 1);
+  };
 
-  return (
+  useEffect(() =>{
+    if(id !== undefined && check){
+      ApiDataBaseGet(`favorite/all`).then((data) =>{setAll(data)});
+      setCount(0);
+      setSameID('');
+      setAll([]);
+      setCheck(false);
+      style('save');
+      console.log("6666666666666666666666666666666");
+    }
+    else{
+      console.log("77777777777777777777777777777");
+      ApiDataBaseGet(`favorite/all`).then((data) =>{setAll(data)});
+      setCheck(false);
+      setCount(0);
+      setSameID('');
+      setAll([]);
+    }
+  }, [id]);
+
+  useEffect(() =>{
+    for (let i = 0; i < all?.length; i++) {
+        if (all?.[i]?.content_id?.idPage === id) {
+            setSameID(all?.[i]?.fill);
+            console.log("culoare: "+sameID);
+            console.log(count);
+            style('save');
+            console.log('8888888888888888888888888888')
+        }
+      }
+  },[id, all, sameID, check, all]);
+
+   return (
     <section className="home-bar bar">
         <div className="home-music-play">
           <div className="home-music music-bar">
@@ -76,11 +143,13 @@ export const MusicBar = ({previous, playing, muted, onProgress, onDuration, loop
                 <path d="M726 726v-172h84v256h-512v128l-170-170 170-170v128h428zM298 298v172h-84v-256h512v-128l170 170-170 170v-128h-428z"></path>
               </svg>
             </button>
-            <button className="home-button41 navbar button music1 account">
-              <svg viewBox="0 0 1024 1024" className="home-icon120">
+            {token !== undefined ? <button id="save" className="home-button41 navbar button music1 account" onClick={()=>{handleClick();style('save')}}>
+              { check ? <svg viewBox="0 0 1024 1024"  className="home-icon120">
+                <path fill={sameID !== '' ? colors?.[sameID]?.hex : null} d="M512 910l-62-56q-106-96-154-142t-107-114-81-123-22-113q0-98 67-166t167-68q116 0 192 90 76-90 192-90 100 0 167 68t67 166q0 78-52 162t-113 146-199 186z"></path>
+              </svg> : <svg viewBox="0 0 1024 1024"  className="home-icon120">
                 <path d="M512 910l-62-56q-106-96-154-142t-107-114-81-123-22-113q0-98 67-166t167-68q116 0 192 90 76-90 192-90 100 0 167 68t67 166q0 78-52 162t-113 146-199 186z"></path>
-              </svg>
-            </button>
+              </svg>}
+            </button> : null}
             <button id="volume" className="home-button42 navbar button music account hover111" onClick={()=>{onMute();style('volume')}}>
               {muted ? <svg  viewBox="0 0 16 16" className="home-icon122">
                 <path d="M6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06zM6 5.04 4.312 6.39A.5.5 0 0 1 4 6.5H2v3h2a.5.5 0 0 1 .312.11L6 10.96V5.04zm7.854.606a.5.5 0 0 1 0 .708L12.207 8l1.647 1.646a.5.5 0 0 1-.708.708L11.5 8.707l-1.646 1.647a.5.5 0 0 1-.708-.708L10.793 8 9.146 6.354a.5.5 0 1 1 .708-.708L11.5 7.293l1.646-1.647a.5.5 0 0 1 .708 0z"/>

@@ -132,7 +132,7 @@ const Home = () => {
           setIdSp(response)
         })
         .catch((error) => {
-          console.log(error);
+          console.log(error?.message);
         });
       ApiDataBaseGet(`users/get/${idSp}`)
       .then((response) => {

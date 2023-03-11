@@ -98,15 +98,21 @@ const Chanel = () => {
     if(token){
       if(mood === 'youtube' && channelDetail?.length !== 0){
         ApiDataBaseGet(`content/last`);
-            ApiDataBaseGet(`content/last`);
-            ApiDataBaseGet(`content/last`);
-            ApiDataBaseGet(`content/last`);
-            ApiDataBaseGet(`content/last`);
-            ApiDataBaseGet(`content/last`);
-            ApiDataBaseGet(`content/last`);
-            ApiDataBaseGet(`content/last`);
-            ApiDataBaseGet(`content/last`);
-            ApiDataBaseGet(`content/last`);
+        ApiDataBaseGet(`content/last`);
+        ApiDataBaseGet(`content/last`);
+        ApiDataBaseGet(`content/last`);
+        ApiDataBaseGet(`content/last`);
+        ApiDataBaseGet(`content/last`);
+        ApiDataBaseGet(`content/last`);
+        ApiDataBaseGet(`content/last`);
+        ApiDataBaseGet(`content/last`);
+        ApiDataBaseGet(`content/last`);
+        ApiDataBaseGet(`content/last`);
+        ApiDataBaseGet(`content/last`);
+        ApiDataBaseGet(`content/last`);
+        ApiDataBaseGet(`content/last`);
+        ApiDataBaseGet(`content/last`);
+        ApiDataBaseGet(`content/last`);
             ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=channel&description=${id}`).then((data1) => {console.log(data1);}).catch((err) => {console.log(err);});   
       }
     }

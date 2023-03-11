@@ -31,7 +31,6 @@ const Video = () => {
     const typex = spotifyType;
     const typexx = typex?.split(':');
     const history = useHistory();
-
     const token = localStorage.getItem('token') || undefined;
     const [idSp, setIdSp]=useState('');
     const [userDate, setUserDate] = useState([]); 
@@ -173,8 +172,17 @@ const Video = () => {
             ApiDataBaseGet(`content/last`);
             ApiDataBaseGet(`content/last`);
             ApiDataBaseGet(`content/last`);
-            ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=video&description=${id}`).then((data1) => {console.log(data1);}).catch((err) => {console.log(err);});    
+            ApiDataBaseGet(`content/last`);
+            ApiDataBaseGet(`content/last`);
+            ApiDataBaseGet(`content/last`);
+            ApiDataBaseGet(`content/last`);
+            ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=video&description=${id}`).then((data1) => {console.log(data1);}).catch((err) => {console.log(err?.message);});    
           }else if(playlistActivate === null){
+            ApiDataBaseGet(`content/last`);
+            ApiDataBaseGet(`content/last`);
+            ApiDataBaseGet(`content/last`);
+            ApiDataBaseGet(`content/last`);
+            ApiDataBaseGet(`content/last`);
             ApiDataBaseGet(`content/last`);
             ApiDataBaseGet(`content/last`);
             ApiDataBaseGet(`content/last`);
@@ -492,35 +500,37 @@ const Video = () => {
           </Link>
         </section>
           <VideoBar videos={videos} token={token} views={views} related={related} relatedPlayList={relatedPlayList} id={id} playlist={playlist} mood={mood} idxx={idxx?.[2]}
-        playerRef={playerRef}
-        playing={playing}
-        muted={muted}
-        loop={loop}
-        index={index}
-        onProgress={handleProgress}
-        onDuration={handleDuration}
-        next={next}
-        previous={last}
+          playerRef={playerRef}
+          playing={playing}
+          muted={muted}
+          loop={loop}
+          index={index}
+          onProgress={handleProgress}
+          onDuration={handleDuration}
+          next={next}
+          previous={last}
         ></VideoBar> 
-        </div>
-        <MusicBar 
-        playing={playing}
-        playerRef={playerRef}
-        muted={muted}
-        loop={loop}
-        onMute={handleMute}
-        onLoop={handleLoop}
-        onPlayStop={handlePlayPause}
-        next={handleNext}
-        previous={handlePreview}
-        onProgress={currentTime}
-        onDuration={duration}
-        handleSeek={handleSeek}
-        artist={artist} 
-        name={name}
-        onRandome={handleRandome}
-        thumbnail={thumbnail}
-        url={url}
+        </div> <MusicBar 
+          playing={playing}
+          playerRef={playerRef}
+          muted={muted}
+          loop={loop}
+          onMute={handleMute}
+          onLoop={handleLoop}
+          onPlayStop={handlePlayPause}
+          next={handleNext}
+          previous={handlePreview}
+          onProgress={currentTime}
+          onDuration={duration}
+          handleSeek={handleSeek}
+          artist={artist} 
+          name={name}
+          onRandome={handleRandome}
+          thumbnail={thumbnail}
+          url={url}
+          idSp={idSp}
+          id={id}
+          token={token}
         ></MusicBar>
     </div>
   )
