@@ -39,11 +39,12 @@ export const MusicBar = ({previous, playing, muted, onProgress, onDuration, loop
         setCheck(true);
         console.log("111111111111111111111111111111111");
       }
-      if (element.classList.contains("hover112") && !check)  {
-        document.getElementById(idClass).classList.remove("hover112");
-        console.log('22222222222222222222222222222222222');
-      }else if(!element.classList.contains("hover112") && check){
+      if (element.classList.contains("hover112"))  {
         document.getElementById(idClass).classList.add("hover112");
+        console.log('222222222222222222222222222222222');
+      }else if(!element.classList.contains("hover112") && check){
+        document.getElementById(idClass).classList.remove("hover112");
+        setCheck(false);
         console.log("333333333333333333333333333333333333");
       }
     }
@@ -54,48 +55,40 @@ export const MusicBar = ({previous, playing, muted, onProgress, onDuration, loop
         ApiDataBaseGet(`content/last`).then((data) => {
           const val={content_id: {content_id: data?.content_id},  fill: ran, user_id: {user_id: idSp}};
           ApiDataBasePost(`favorite/add`, val).then((data) => {
-            ApiDataBaseGet(`favorite/all`).then((data) =>{setAll(data); console.log("4444444444444444444444")});
-        }).catch((err) => {console.log(err?.message)})})
+            ApiDataBaseGet(`favorite/all`).then((data) =>{setAll(data); console.log("4444444444444444444444");setSameID('')})}).catch((err) => {console.log(err?.message)})})
         .catch((err) => {console.log(err)});
     } else {
       ApiDataBaseGet(`content/last`).then((data) => {
-      ApiDataBaseGet(`favorite/delete/search?userId=${idSp}&idPage=${data?.idPage}`).then((data) => {console.log("delete : 555555555555555555555555555555"); setCheck(false);}).catch((err) => {console.log(err)})});
+      ApiDataBaseGet(`favorite/delete/search?userId=${idSp}&idPage=${data?.idPage}`).then((data) => {console.log("delete : 555555555555555555555555555555"); setCheck(false); setAll([])}).catch((err) => {console.log(err)})});
     }
     setCount(count + 1);
   };
 
   useEffect(() =>{
     if(id !== undefined && check){
-      ApiDataBaseGet(`favorite/all`).then((data) =>{setAll(data)});
-      setCount(0);
-      setSameID('');
-      setAll([]);
-      setCheck(false);
+      ApiDataBaseGet(`favorite/all`).then((data) =>{setAll(data);setSameID('');setCount(0);});
       style('save');
       console.log("6666666666666666666666666666666");
     }
     else{
       console.log("77777777777777777777777777777");
-      ApiDataBaseGet(`favorite/all`).then((data) =>{setAll(data)});
-      setCheck(false);
-      setCount(0);
-      setSameID('');
-      setAll([]);
+      ApiDataBaseGet(`favorite/all`).then((data) =>{setAll(data);setSameID('');setCount(0);});
     }
-  }, [id]);
+  }, [id, check]);
 
   useEffect(() =>{
     for (let i = 0; i < all?.length; i++) {
         if (all?.[i]?.content_id?.idPage === id) {
             setSameID(all?.[i]?.fill);
             console.log("culoare: "+sameID);
-            console.log(count);
+            console.log("count: "+count);
+            setCount(1);
             style('save');
             console.log('8888888888888888888888888888')
         }
       }
-  },[id, all, sameID, check, all]);
-
+  },[id,sameID, check, all]);
+console.log(sameID);
    return (
     <section className="home-bar bar">
         <div className="home-music-play">
@@ -143,7 +136,7 @@ export const MusicBar = ({previous, playing, muted, onProgress, onDuration, loop
                 <path d="M726 726v-172h84v256h-512v128l-170-170 170-170v128h428zM298 298v172h-84v-256h512v-128l170 170-170 170v-128h-428z"></path>
               </svg>
             </button>
-            {token !== undefined ? <button id="save" className="home-button41 navbar button music1 account" onClick={()=>{handleClick();style('save')}}>
+            {token !== undefined ? <button id="save" className="home-button41 navbar button music1 account hover112" onClick={()=>{handleClick();}}>
               { check ? <svg viewBox="0 0 1024 1024"  className="home-icon120">
                 <path fill={sameID !== '' ? colors?.[sameID]?.hex : null} d="M512 910l-62-56q-106-96-154-142t-107-114-81-123-22-113q0-98 67-166t167-68q116 0 192 90 76-90 192-90 100 0 167 68t67 166q0 78-52 162t-113 146-199 186z"></path>
               </svg> : <svg viewBox="0 0 1024 1024"  className="home-icon120">
