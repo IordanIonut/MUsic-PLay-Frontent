@@ -34,16 +34,16 @@ export const MusicBar = ({previous, playing, muted, onProgress, onDuration, loop
       }
     if(idClass === 'save'){
       if(check === false && sameID === '' && count === 0){
-        document.getElementById(idClass).classList.add("hover112");
+        document.getElementById(idClass).classList.add("hover113");
         setCount(count + 1);
         setCheck(true);
         console.log("111111111111111111111111111111111");
       }
-      if (element.classList.contains("hover112"))  {
-        document.getElementById(idClass).classList.add("hover112");
+      if (element.classList.contains("hover113"))  {
+        document.getElementById(idClass).classList.add("hover113");
         console.log('222222222222222222222222222222222');
-      }else if(!element.classList.contains("hover112") && check){
-        document.getElementById(idClass).classList.remove("hover112");
+      }else if(!element.classList.contains("hover113") && check){
+        document.getElementById(idClass).classList.remove("hover113");
         setCheck(false);
         console.log("333333333333333333333333333333333333");
       }
@@ -72,9 +72,9 @@ export const MusicBar = ({previous, playing, muted, onProgress, onDuration, loop
     }
     else{
       console.log("77777777777777777777777777777");
-      ApiDataBaseGet(`favorite/all`).then((data) =>{setAll(data);setSameID('');setCount(0);});
+      ApiDataBaseGet(`favorite/all`).then((data) =>{setAll(data);setSameID('');setCount(0);setCheck(true);});
     }
-  }, [id, check]);
+  }, [id]);
 
   useEffect(() =>{
     for (let i = 0; i < all?.length; i++) {
@@ -88,8 +88,8 @@ export const MusicBar = ({previous, playing, muted, onProgress, onDuration, loop
         }
       }
   },[id,sameID, check, all]);
-console.log(sameID);
-   return (
+
+  return (
     <section className="home-bar bar">
         <div className="home-music-play">
           <div className="home-music music-bar">
@@ -136,9 +136,9 @@ console.log(sameID);
                 <path d="M726 726v-172h84v256h-512v128l-170-170 170-170v128h428zM298 298v172h-84v-256h512v-128l170 170-170 170v-128h-428z"></path>
               </svg>
             </button>
-            {token !== undefined ? <button id="save" className="home-button41 navbar button music1 account hover112" onClick={()=>{handleClick();}}>
-              { check ? <svg viewBox="0 0 1024 1024"  className="home-icon120">
-                <path fill={sameID !== '' ? colors?.[sameID]?.hex : null} d="M512 910l-62-56q-106-96-154-142t-107-114-81-123-22-113q0-98 67-166t167-68q116 0 192 90 76-90 192-90 100 0 167 68t67 166q0 78-52 162t-113 146-199 186z"></path>
+            {token !== undefined ? <button id="save" className="home-button41 navbar button music1 account hover113" onClick={()=>{handleClick();}}>
+              { check && sameID !== '' ? <svg viewBox="0 0 1024 1024"  className="home-icon120">
+                <path fill={colors?.[sameID]?.hex} d="M512 910l-62-56q-106-96-154-142t-107-114-81-123-22-113q0-98 67-166t167-68q116 0 192 90 76-90 192-90 100 0 167 68t67 166q0 78-52 162t-113 146-199 186z"></path>
               </svg> : <svg viewBox="0 0 1024 1024"  className="home-icon120">
                 <path d="M512 910l-62-56q-106-96-154-142t-107-114-81-123-22-113q0-98 67-166t167-68q116 0 192 90 76-90 192-90 100 0 167 68t67 166q0 78-52 162t-113 146-199 186z"></path>
               </svg>}

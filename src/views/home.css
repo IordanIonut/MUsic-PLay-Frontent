@@ -1063,6 +1063,23 @@
   border-right-width: 0px;
   border-bottom-width: 0px;
 }
+
+.hover113{
+  fill: var(--dl-color-gray-700);
+  width: 70px;
+  height: 30px;
+  opacity: 0.6;
+  align-items: center;
+  border-color: #2c3e50;
+  border-width: 4px;
+  border-radius: 0px;
+  flex-direction: row;
+  justify-content: flex-end;
+  background-color: transparent;
+  border-top-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 0px;
+}
 .home-button23 {
   display: flex;
   opacity: 1;

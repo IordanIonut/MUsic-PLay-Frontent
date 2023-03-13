@@ -663,7 +663,7 @@ const Home = () => {
         </section>
             {statusHomeButton? <HomeBar mood={mood}></HomeBar>:null}
             {statusTredingButton? <TredingBar trending={trending} mood={mood}></TredingBar>  :null}
-            {statusFavoriteButton? <FavoriteBar></FavoriteBar> :null}
+            {statusFavoriteButton? <FavoriteBar mood={mood} idSp={idSp} userDate={userDate}></FavoriteBar> :null}
             {statusPlayListButton? <PlayListBar></PlayListBar> :null}
             {statusHistoryButton? <HistoryBar mood={mood} idSp={idSp} userDate={userDate}></HistoryBar> :null}
             {statusLiveButton? <LiveBar></LiveBar> :null}
