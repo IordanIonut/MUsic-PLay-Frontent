@@ -15,11 +15,21 @@ const Music = ({video, idx, page, mood, treding, treding1}) => {
     return date?.toISOString()?.substr(11, 8);
  }
 
-  function millisToMinutesAndSeconds(millis) {
-    var minutes = Math?.floor(millis / 60000);
-    var seconds = ((millis % 60000) / 1000)?.toFixed(0);
-    return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
-  }
+ function formatTime(milliseconds) {
+  const date = new Date(milliseconds);
+  const hours = date?.getUTCHours()?.toString()?.padStart(2, '0');
+  const minutes = date?.getUTCMinutes()?.toString()?.padStart(2, '0');
+  const seconds = date?.getUTCSeconds()?.toString()?.padStart(2, '0');
+  const milliseconds1 = date?.getUTCMilliseconds()?.toString()?.padStart(3, '0');
+  return `${hours}:${minutes}:${seconds}`;
+}
+
+function millisToMinutesAndSeconds(millis) {
+  var minutes = Math?.floor(millis / 60000);
+  var seconds = ((millis % 60000) / 1000)?.toFixed(0);
+  return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
+}
+
   const idxx = video?.trackMetadata?.trackUri.split(':') || '';
 
   useEffect(() =>{
@@ -126,7 +136,7 @@ const Music = ({video, idx, page, mood, treding, treding1}) => {
                 video?.lengthSeconds ? toTime(video?.lengthSeconds) : null || 
                 video?.[0]?.id?.length ? video?.[0]?.id?.length : null ||
                 video?.lengthText ? video?.lengthText || 'Live' : null ||
-                video?.duration ? millisToMinutesAndSeconds(video?.duration) : null ||
+                video?.duration ? formatTime(video?.duration) : null ||
                 video?.[0]?.id?.duration_formatted ? video?.[0]?.id?.duration_formatted : null ||
                 mood === 'youtube' && video?.timeText ? video?.timeText || 'Live' : null ||
                 mood === 'youtube' && video?.durationText ? video?.durationText : null ||

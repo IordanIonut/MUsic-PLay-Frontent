@@ -37,15 +37,16 @@ export const MusicBar = ({previous, playing, muted, onProgress, onDuration, loop
         document.getElementById(idClass).classList.add("hover113");
         setCount(count + 1);
         setCheck(true);
-        console.log("111111111111111111111111111111111");
+       // console.log("111111111111111111111111111111111");
       }
       if (element.classList.contains("hover113"))  {
+        setCheck(true);
         document.getElementById(idClass).classList.add("hover113");
-        console.log('222222222222222222222222222222222');
+        //console.log('222222222222222222222222222222222');
       }else if(!element.classList.contains("hover113") && check){
         document.getElementById(idClass).classList.remove("hover113");
         setCheck(false);
-        console.log("333333333333333333333333333333333333");
+       // console.log("333333333333333333333333333333333333");
       }
     }
   });
@@ -55,23 +56,24 @@ export const MusicBar = ({previous, playing, muted, onProgress, onDuration, loop
         ApiDataBaseGet(`content/last`).then((data) => {
           const val={content_id: {content_id: data?.content_id},  fill: ran, user_id: {user_id: idSp}};
           ApiDataBasePost(`favorite/add`, val).then((data) => {
-            ApiDataBaseGet(`favorite/all`).then((data) =>{setAll(data); console.log("4444444444444444444444");setSameID('')})}).catch((err) => {console.log(err?.message)})})
+            ApiDataBaseGet(`favorite/all`).then((data) =>{setAll(data); /*console.log("4444444444444444444444")*/;setSameID('')})}).catch((err) => {console.log(err?.message)})})
         .catch((err) => {console.log(err)});
     } else {
       ApiDataBaseGet(`content/last`).then((data) => {
-      ApiDataBaseGet(`favorite/delete/search?userId=${idSp}&idPage=${data?.idPage}`).then((data) => {console.log("delete : 555555555555555555555555555555"); setCheck(false); setAll([])}).catch((err) => {console.log(err)})});
+      ApiDataBaseGet(`favorite/delete/search?userId=${idSp}&idPage=${data?.idPage}`).then((data) => {//console.log("delete : 555555555555555555555555555555"); 
+      console.log("countqw          "+count);setCheck(false);setCount(0);setAll([]);setSameID('');}).catch((err) => {console.log(err)})});
+      setAll([]);setSameID('');
     }
-    setCount(count + 1);
   };
 
   useEffect(() =>{
     if(id !== undefined && check){
       ApiDataBaseGet(`favorite/all`).then((data) =>{setAll(data);setSameID('');setCount(0);});
       style('save');
-      console.log("6666666666666666666666666666666");
+      //console.log("6666666666666666666666666666666");
     }
     else{
-      console.log("77777777777777777777777777777");
+      //console.log("77777777777777777777777777777");
       ApiDataBaseGet(`favorite/all`).then((data) =>{setAll(data);setSameID('');setCount(0);setCheck(true);});
     }
   }, [id]);
@@ -80,13 +82,13 @@ export const MusicBar = ({previous, playing, muted, onProgress, onDuration, loop
     for (let i = 0; i < all?.length; i++) {
         if (all?.[i]?.content_id?.idPage === id) {
             setSameID(all?.[i]?.fill);
-            console.log("culoare: "+sameID);
-            console.log("count: "+count);
-            setCount(1);
+            //console.log("culoare: "+sameID);
+            //console.log("count: "+count);
+            setCount(1);              
             style('save');
-            console.log('8888888888888888888888888888')
+           // console.log('8888888888888888888888888888')
+          }
         }
-      }
   },[id,sameID, check, all]);
 
   return (

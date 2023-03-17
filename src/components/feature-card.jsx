@@ -3,7 +3,7 @@ import './feature-card.css'
 import { Link } from 'react-router-dom'
 import Cookies from 'js-cookie';
 
-const FeatureCard = ({playlist, text, mood, idxx}) => {
+const FeatureCard = ({playlist, text, mood, idxx, userDate, count}) => {
   const [id, setId] = useState('');
   const [image, setImage] = React.useState('');
 
@@ -26,6 +26,7 @@ const FeatureCard = ({playlist, text, mood, idxx}) => {
       <Link to={ playlist?.playlistId ? `/video/${playlist?.playlistId}` : null || playlist?.id ? `/video/${playlist?.id}` : null ||
           playlist?.[0]?.id?.id ? `/video/${playlist?.[0]?.id?.id}`: null || playlist?.data?.id?.id ? `/video/${playlist?.data?.id}` : null ||
           playlist?.data?.uri ? `/video/${id}` : null ||
+          playlist?.[4] ? `/video/${playlist?.[4]+'|'+playlist?.[3]+'|'+playlist?.[8]+'|'+playlist?.[0]}` : null ||
           playlist?.releases?.items?.[0]?.id ? `/video/${playlist?.releases?.items?.[0]?.id}` : null ||
           idxx ? `/video/${idxx}` : null ||
           playlist?.playParams?.id ? `/video/${playlist?.playParams?.id}` : null || 
@@ -45,7 +46,7 @@ const FeatureCard = ({playlist, text, mood, idxx}) => {
         </svg>
       </button>
       </Link>
-      <img src={playlist?.thumbnail?.url  ?  playlist?.thumbnail?.url : null ||
+      {!playlist?.[2] && !playlist?.[0] ? <img src={playlist?.thumbnail?.url  ?  playlist?.thumbnail?.url : null ||
            playlist?.thumbnail?.[1]?.url  ? playlist?.thumbnail[1]?.url : null ||
           playlist?.[0]?.id?.thumbnail?.url ? playlist?.[0]?.id?.thumbnail?.url : null ||
            playlist?.thumbnails  ? playlist?.thumbnails[1]?.url : null || 
@@ -55,30 +56,36 @@ const FeatureCard = ({playlist, text, mood, idxx}) => {
           playlist?.releases?.items?.[0]?.coverArt?.sources?.[2]?.url ? playlist?.releases?.items?.[0]?.coverArt?.sources?.[2]?.url : null || 
           playlist?.images?.[0]?.url ? playlist?.images?.[0]?.url : null ||
           image ? image : null}
-        className="feature-card-image"
-      />
+        className="feature-card-image"/> : <div className="feature-card-image" style={{backgroundColor: 
+          `${playlist?.[2] || playlist?.[0]?.playlist_id?.fill}`}}></div>}
+      
       <div className="text-card" style={{ overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis'}}>
         <span className="feature-card-text1">{playlist?.title ? playlist?.title : null || 
           playlist?.[0]?.id?.title ? playlist?.[0]?.id?.title : null ||
           playlist?.data?.name ? playlist?.data?.name : null || 
           playlist?.name ? playlist?.name : null ||
           playlist?.releases?.items?.[0]?.name ? playlist?.releases?.items?.[0]?.name : null || 
-          playlist?.value?.attributes?.name ? playlist?.value?.attributes?.name : null }
+          playlist?.value?.attributes?.name ? playlist?.value?.attributes?.name : null ||
+          playlist?.[3] ?  playlist?.[3] : null ||
+          playlist?.[0]?.playlist_id?.name ? playlist?.[0]?.playlist_id?.name : null}
         </span>
         <span id="artist" className="feature-card-text2">
           {playlist?.channelTitle ? playlist?.channelTitle : null || 
           playlist?.channel?.name ? playlist?.channel?.name : null ||
           playlist?.[0]?.id?.channel?.name ? playlist?.[0]?.id?.channel?.name : null ||
-           playlist?.owner?.name ? playlist?.owner?.name : null ||  
+          playlist?.owner?.name ? playlist?.owner?.name : null ||  
           playlist?.data?.owner?.name ? playlist?.data?.owner?.name : null  ||
           playlist?.owner?.display_name ? playlist?.owner?.display_name : null ||
           playlist?.artistName ? playlist?.artistName : null ||
-          playlist?.value?.attributes?.artistName  ? playlist?.value?.attributes?.artistName : null}
+          playlist?.value?.attributes?.artistName  ? playlist?.value?.attributes?.artistName : null ||
+          userDate?.name ? userDate?.name : null || 
+          playlist?.[0]?.playlist_id?.user_id?.name ? playlist?.[0]?.playlist_id?.user_id?.name : null}
         </span>
       </div>
       <span className="feature-card-text3" style={{paddingTop: '30px'}}>
         <span className="">{playlist?.videoCount ? playlist?.videoCount : null || playlist?.video_count ? playlist?.video_count : null || 
-          playlist?.[0]?.id?.video_count ? playlist?.[0]?.id?.video_count :  null || playlist?.tracks?.total ? playlist?.tracks?.total : null || 
+          playlist?.[0]?.id?.video_count ? playlist?.[0]?.id?.video_count :  null || playlist?.[9] ? playlist?.[9] : null 
+            || playlist?.tracks?.total ? playlist?.tracks?.total : null || count ? count : null ||
           playlist?.videoCountText ? playlist?.videoCountText.replace('videos','') : null || playlist?.trackCount? playlist?.trackCount+" Videos" : null} 
           {mood !== 'appleMusic' ? ' Videos' : playlist?.value?.attributes?.releaseDate}
         </span>

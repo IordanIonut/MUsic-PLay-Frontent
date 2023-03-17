@@ -2,6 +2,7 @@ import React, {useState, useEffect} from "react";
 import '../views/home.css'
 import { ApiDataBaseGet } from "../utils/fetchAPI";
 import Music from "../components/music";
+import FeatureCard from "../components/feature-card";
 
 const FavoriteBar = ({mood, idSp, userDate})=>{
   const [type, setType] = React.useState("video");
@@ -24,12 +25,12 @@ const FavoriteBar = ({mood, idSp, userDate})=>{
       if(type === 'channel')
         ApiDataBaseGet(`favorite/search?userId=${idSp}&type=channel&mood=${mood}`).then((data) =>{setArrayBD(data)}).catch((err) =>{console.log(err?.message)});;
     }
-  }, [type, idSp]);
+  }, [type, idSp, mood]);
 
   
     return(
       <section className="home-history"style={{display: 'flex', alignContent: 'baseline'}}>
-      <span className="home-text29 text"></span>
+      <span className="home-text29 text">My Favorite</span>
       <div className="home-share2 posibili buttonChange" name="music">
         <button id="video" className="home-button22 button account hoverType" onClick={() => {setType('video');
         styleChangeOn('video'); styleChangeOf('playlist'); styleChangeOf('channel');}}>

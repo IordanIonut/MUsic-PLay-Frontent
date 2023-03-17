@@ -9,7 +9,6 @@ import Swal from 'sweetalert2';
 import '../views/home.css'
 import colors from '../utils/colors';
 import image from '../utils/image';
-import axios from 'axios';
 import { ApiDataBasePost} from '../utils/fetchAPI'
 
 const Login = () => {

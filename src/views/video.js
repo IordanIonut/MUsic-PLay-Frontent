@@ -39,7 +39,7 @@ const Video = () => {
       if (token) {
         ApiDataBaseGet(`users/token?token=${token}`)
           .then((response) => {
-            setIdSp(response)
+            setIdSp(response);console.log(data);
           })
           .catch((error) => {
            // console.log(error);
@@ -51,6 +51,15 @@ const Video = () => {
         .catch((error) => {
           //console.log(error);
         });
+        if(token && id?.includes("|")){
+          setPlaylist(1);
+          const con = id;
+          const content = con?.split("|");
+          if(content.length > 0 && idSp !== ''){
+            ApiDataBaseGet(`playlistContent/mood/name/user_id/playlist_id2?mood=${content?.[0]}&name=${content?.[1]}&user_id=${idSp}&playlist_id=${content?.[3]}`).then((data1) => {setVideo(data1);}).catch((err1) => console.error(err1?.message));
+            ApiDataBaseGet(`playlistContent/mood/name/user_id/playlist_id?mood=${content?.[0]}&name=${content?.[1]}&user_id=${idSp}&playlist_id=${content?.[3]}`).then((data1) => {setRelated(data1);}).catch((err1) => console.error(err1?.message));
+          }
+        }
       }
     },[token, idSp]);
 
@@ -76,7 +85,7 @@ const Video = () => {
     });
     
     useEffect(() =>{
-      if(mood === 'youtube'){
+      if(mood === 'youtube' && !id?.includes("|")){
         if(id.length  <= 11 && !playlistActivate){
           setPlaylist(0);
           ApiYouTube3(`video?search=https://www.youtube.com/watch?v=${id}`).then((data1) => setVideo(data1.result));
@@ -88,7 +97,7 @@ const Video = () => {
           ApiYouTube3(`playlist?list=${id}`).then((data) => setRelated(data.result));
         }
       } 
-      if(mood === 'spotify'){
+      if(mood === 'spotify' && !id?.includes("|")){
           if(typexx?.[1] === 'track'){
             setPlaylist(0);
             ApiSpotify3(`tracks?ids=${id}`).then((data) => setVideo(data?.tracks));
@@ -99,7 +108,7 @@ const Video = () => {
             ApiSpotify3(`playlist?id=${id}`).then((data) => setVideo(data));
           }
       }
-      if(mood === 'appleMusic'){
+      if(mood === 'appleMusic' && !id?.includes("|")){
         if(typexx?.[1] === 'song' || typexx?.[1] === 'MUSIC' || typexx?.[1] === 'SONG'){
           setPlaylist(0);
           ApiShazam1(`track_about?track_id=${id}`).then((data1) => setVideo(data1?.result));
@@ -159,7 +168,7 @@ const Video = () => {
 
     useEffect(() =>{
       if(token){
-        if(mood === 'youtube' && videos?.length !== 0){
+        if(mood === 'youtube' && videos?.length !== 0 && !id?.includes("|")){
           if(id.length  <= 11 && !playlistActivate){
             ApiDataBaseGet(`content/last`);
             ApiDataBaseGet(`content/last`);
@@ -176,7 +185,7 @@ const Video = () => {
             ApiDataBaseGet(`content/last`);
             ApiDataBaseGet(`content/last`);
             ApiDataBaseGet(`content/last`);
-            ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=video&description=${id}`).then((data1) => {console.log(data1);}).catch((err) => {console.log(err?.message);});    
+            ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=video&description=${id}`).then((data1) => {/*console.log(data1);*/}).catch((err) => {console.log(err?.message);});    
           }else if(playlistActivate === null){
             ApiDataBaseGet(`content/last`);
             ApiDataBaseGet(`content/last`);
@@ -193,7 +202,7 @@ const Video = () => {
             ApiDataBaseGet(`content/last`);
             ApiDataBaseGet(`content/last`);
             ApiDataBaseGet(`content/last`);
-            ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=playlist&description=${id}`).then((data1) => {console.log(data1);}).catch((err) => {console.log(err);});    
+            ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=playlist&description=${id}`).then((data1) => {/*console.log(data1);*/}).catch((err) => {console.log(err);});    
           }
         }
       }
@@ -358,7 +367,7 @@ const Video = () => {
       }
     };
 
-  return (
+    return (
     <div className="home-container"style={{transitionDelay: '4s'}}>
       <Helmet>
         <title>MusicPLay</title>  
@@ -509,6 +518,8 @@ const Video = () => {
           onDuration={handleDuration}
           next={next}
           previous={last}
+          idSp={idSp}
+          type={type}
         ></VideoBar> 
         </div> <MusicBar 
           playing={playing}

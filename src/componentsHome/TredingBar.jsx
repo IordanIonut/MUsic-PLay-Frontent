@@ -1,9 +1,5 @@
 import React, {useEffect, useState} from "react";
-import FeatureCard from "../components/feature-card";
-import FilreCard from "../components/filre-card";
 import Music from "../components/music";
-import Music1 from "../components/music1";
-import Home from "../views/home";
 import '../views/home.css'
 
 const TredingBar = ({trending, mood})=>{

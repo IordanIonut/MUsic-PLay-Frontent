@@ -5,6 +5,108 @@
   backdrop-filter: blur(3px);
   background-color: rgba(255, 255, 255, 0.75);
 }
+.my-sweetalert-container .swal2-confirm {
+  opacity: 0.6 !important;
+  background-color: rgb(44, 62, 80) !important;
+  width: 200px !important;
+  height: 50px !important;
+  border: none !important;
+  font-size: 18px !important;
+  align-self: center !important;
+  text-transform: uppercase !important;
+  align-self: center !important;
+  margin-top: 10px !important;
+  transition: 0.3s !important;
+}
+.my-sweetalert-container .swal2-confirm:hover {
+  opacity: 0.9 !important;
+  background-color: rgb(44, 62, 80)!important;
+  align-items: center !important;
+  font-size: 18px !important;
+  border: none !important;
+  align-self: center !important;
+  text-transform: uppercase !important;
+  border-radius: 30px !important;
+  justify-content: center !important;
+}
+.my-sweetalert-container .swal2-confirm:active {
+  width: 200px !important;
+  height: 50px !important;
+  font-size: 18px !important;
+  align-self: center !important;
+  text-transform: uppercase !important;
+  align-self: center !important;
+  margin-top: 10px !important;
+  transition: 0.3s !important;
+}
+.my-sweetalert-container .swal2-cancel {
+  background-color: #595959 !important;
+  opacity: 0.6 !important;
+  width: 200px !important;
+  height: 50px !important;
+  border: none !important;
+  font-size: 18px !important;
+  align-self: center !important;
+  text-transform: uppercase !important;
+  align-self: center !important;
+  margin-top: 10px !important;
+  transition: 0.3s !important;
+}
+.my-sweetalert-container .swal2-cancel:hover {
+  opacity: 0.9 !important;
+  background-color: #595959!important;
+  align-items: center !important;
+  font-size: 18px !important;
+  border: none !important;
+  align-self: center !important;
+  text-transform: uppercase !important;
+  border-radius: 30px !important;
+  justify-content: center !important;
+}
+.my-sweetalert-container .swal2-cancel:active {
+  width: 200px !important;
+  height: 50px !important;
+  font-size: 18px !important;
+  align-self: center !important;
+  text-transform: uppercase !important;
+  align-self: center !important;
+  margin-top: 10px !important;
+  transition: 0.3s !important;
+}
+.my-sweetalert-container .swal2-deny {
+  background-color: #595959 !important;
+  opacity: 0.6 !important;
+  width: 200px !important;
+  height: 50px !important;
+  border: none !important;
+  font-size: 18px !important;
+  align-self: center !important;
+  text-transform: uppercase !important;
+  align-self: center !important;
+  margin-top: 10px !important;
+  transition: 0.3s !important;
+}
+.my-sweetalert-container .swal2-deny:hover {
+  opacity: 0.9 !important;
+  background-color: #595959!important;
+  align-items: center !important;
+  font-size: 18px !important;
+  border: none !important;
+  align-self: center !important;
+  text-transform: uppercase !important;
+  border-radius: 30px !important;
+  justify-content: center !important;
+}
+.my-sweetalert-container .swal2-deny:active {
+  width: 200px !important;
+  height: 50px !important;
+  font-size: 18px !important;
+  align-self: center !important;
+  text-transform: uppercase !important;
+  align-self: center !important;
+  margin-top: 10px !important;
+  transition: 0.3s !important;
+}
 .swal2-popup {
   box-shadow: 5px 5px 20px 0px #2c3e50,-5px -5px 20px 0px #2c3e50 !important;
   width: 70vh !important;

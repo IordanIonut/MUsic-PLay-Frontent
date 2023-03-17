@@ -92,9 +92,9 @@ const Home = () => {
      setStatusFavoriteButton(true);
      styleChangeOn('favorite');
     }
-    else if(id === 'palyList'){
+    else if(id === 'playList'){
       setStatusPlayListButton(true);
-      styleChangeOn('palyList');
+      styleChangeOn('playList');
     }
     else if(id === 'history'){
       setStatusHistoryButton(true);
@@ -494,12 +494,12 @@ const Home = () => {
                           setStatusPlayListButton(true);
                           setStatusHistoryButton(false);
                           setStatusLiveButtons(false);
-                          setStatusFiltreButtons(false);
                           setStatusChanelButtons(false);
                           setStatusSearchButtons(false);
                           setStatusVideoButtons(false);
                           setStatusQrButtons(false);
                           setStatusSendButtons(false);
+                          setStatusFiltreButtons(false);
                           styleChangeOn('playList');
                           styleChangeOf('home');
                           styleChangeOf('treding');
@@ -664,7 +664,7 @@ const Home = () => {
             {statusHomeButton? <HomeBar mood={mood}></HomeBar>:null}
             {statusTredingButton? <TredingBar trending={trending} mood={mood}></TredingBar>  :null}
             {statusFavoriteButton? <FavoriteBar mood={mood} idSp={idSp} userDate={userDate}></FavoriteBar> :null}
-            {statusPlayListButton? <PlayListBar></PlayListBar> :null}
+            {statusPlayListButton? <PlayListBar mood={mood} idSp={idSp} userDate={userDate}></PlayListBar> :null}
             {statusHistoryButton? <HistoryBar mood={mood} idSp={idSp} userDate={userDate}></HistoryBar> :null}
             {statusLiveButton? <LiveBar></LiveBar> :null}
             {statusQrButton? <QrBar></QrBar> :null}
