@@ -12,7 +12,7 @@ import {setAuthor, setName, setThumbnail, setUrl, playVideo, pauseVideo} from '.
 import { useDispatch, useSelector } from 'react-redux';
 import colors from '../utils/colors';
 
-const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, idxx, previous, token, idSp,
+const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, idxx, previous, token, idSp, setRelated,
   playerRef, playing, muted, loop, onProgress, onDuration, next }) => { 
   const [like, setLike] = useState([]);
   const idSearch=id;
@@ -58,10 +58,24 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
 
   useEffect(() => {
     ApiDataBaseGet(`playList/user_id?user_id=${idSp}&mood=${mood}`).then((data) => {setOption(data)});
-    ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${id}&mood=${mood}`).then((data) => {setSame(data)});
+    if(idSongPlayList === '' && playlist === 1){
+      if(!id?.includes("|")){
+        ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${related?.videos?.[0]?.id}&mood=${mood}`).then((data) => {setSame(data)});
+      }else{
+        ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${related?.[0]?.content_id?.idPage}&mood=${mood}`).then((data) => {setSame(data)});
+      }
+    }else if(idSongPlayList === ''){
+      ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${idSearch}&mood=${mood}`).then((data) => {setSame(data)});
+    }else{
+      ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${idSong[0]}&mood=${mood}`).then((data) => {setSame(data)});
+    }
     if(mood === 'youtube'){
       if(idSongPlayList === '' && playlist === 1){
-        ApiYouTube11(`dl?id=${related?.videos?.[0]?.id || related?.[0]?.content_id?.idPage}`).then((data2) => setmp3(data2));
+        if(!id?.includes("|")){
+          ApiYouTube11(`dl?id=${related?.videos?.[0]?.id}`).then((data2) => setmp3(data2));
+        }else{
+          ApiYouTube11(`dl?id=${related?.[0]?.content_id?.idPage}`).then((data2) => setmp3(data2));
+        }
       }else if(idSongPlayList === ''){
         ApiYouTube11(`dl?id=${idSearch}`).then((data2) => setmp3(data2));
       }else{
@@ -72,24 +86,32 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
       if(idSongPlayList === '')
         ApiShazam1(`track_about?track_id=${idSearch}`).then((data2) => setmp3(data2?.result));
     }
-  },[related]);
+  },[related, idSongPlayList]);
 
   useEffect(() =>{
     if(mood === 'youtube'){
       if(idSongPlayList === '' && playlist === 1){
-        ApiYouTube8(`commentThreads?videoId=${related?.videos?.[0]?.id || related?.[0]?.content_id?.idPage}`).then((data2) => setComments(data2.items));
+        if(!id?.includes("|")){
+          ApiYouTube8(`commentThreads?videoId=${related?.videos?.[0]?.id }`).then((data2) => setComments(data2.items));
+        }else{
+          ApiYouTube8(`commentThreads?videoId=${related?.[0]?.content_id?.idPage}`).then((data2) => setComments(data2.items));
+        }
       }else if(idSongPlayList === ''){
         ApiYouTube8(`commentThreads?videoId=${idSearch}`).then((data2) => setComments(data2.items));
       }else{
         ApiYouTube8(`commentThreads?videoId=${idSong[0]}`).then((data2) => setComments(data2.items));
       }
     }
-  },[related]);
+  },[related, idSongPlayList]);
  
   useEffect(() =>{
     if(mood === 'youtube'){
       if(idSongPlayList === '' && playlist === 1){
-        ApiYouTube4(`video?id=${related?.videos?.[0]?.id || related?.[0]?.content_id?.idPage}`).then((data2) => setDescription(data2));
+        if(!id?.includes("|")){
+          ApiYouTube4(`video?id=${related?.videos?.[0]?.id}`).then((data2) => setDescription(data2));
+        }else{
+          ApiYouTube4(`video?id=${related?.[0]?.content_id?.idPage}`).then((data2) => setDescription(data2));
+        }
       }else if(idSongPlayList === ''){
           ApiYouTube4(`video?id=${idSearch}`).then((data2) => setDescription(data2));
       }else{
@@ -105,12 +127,32 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
         setDescription(mp3);
       }
     }
-  },[related]);
+  },[related, idSongPlayList]);
 
   useEffect(() =>{
     if(mood === 'spotify')
       ApiSpotify4(`get_single_artist/?artist_id=${videos?.[0]?.artists?.[0]?.id}`).then((data) => setArtist(data));
   },[videos?.[0]?.artists?.[0]?.id]);
+
+  useEffect(() =>{
+    if(token && !id?.includes("|")){
+      if(mood === 'youtube' && videos?.length !== 0 ){
+        if(id.length  >= 11 && playlist === 1){
+          let res = null;
+          if(idSong[0])
+            res = related?.videos?.find(obj => obj?.id ===  idSong[0]);
+          let rezult;
+          if(res === null){
+            rezult = {description: related?.videos?.[0], mood: 'youtube', type: 'video', idPage: related?.videos?.[0]?.id};
+          }else{
+            rezult = {description: res, mood: 'youtube', type: 'video', idPage: idSong[0]};
+          } 
+          if(rezult?.description != null)
+            ApiDataBasePost(`content/add`, rezult).then((data) => {console.log(data);}).catch((error) => {console.log(error?.message);});
+        }
+      }
+    }
+  },[related]);
 
   function copyToClipboard(text) {
     const dummy = document.createElement("textarea");
@@ -162,19 +204,43 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
         buttons: false
       });
     };
-    
 
 
 
 
-    const handleConfirm = (selectedValues) => {
-      ApiDataBaseGet(`playList/user_id?user_id=${idSp}&mood=${mood}`).then((data) => {setOption(data)}).catch((err) => console.log(err?.message));
-      ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${id}&mood=${mood}`).then((data) => {setSame(data)}).catch((err) => console.log(err?.message));
+    const handleConfirm = () => {
+      const con = id;
+      const content = con?.split("|");
+      if(content.length > 0 && idSp !== ''){
+        ApiDataBaseGet(`playlistContent/mood/name/user_id/playlist_id?mood=${content?.[0]}&name=${content?.[1]}&user_id=${idSp}&playlist_id=${content?.[3]}`).then((data1) => {setRelated(data1);}).catch((err1) => console.error(err1?.message));
+      }
+      ApiDataBaseGet(`playList/user_id?user_id=${idSp}&mood=${mood}`).then((data) => {setOption(data)});
+      if(idSongPlayList === '' && playlist === 1){
+        if(!id?.includes("|")){
+          ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${related?.videos?.[0]?.id}&mood=${mood}`).then((data) => {setSame(data)});
+        }else{
+          ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${related?.[0]?.content_id?.idPage}&mood=${mood}`).then((data) => {setSame(data)});
+        }
+      }else if(idSongPlayList === ''){
+        ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${idSearch}&mood=${mood}`).then((data) => {setSame(data)});
+      }else{
+        ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${idSong[0]}&mood=${mood}`).then((data) => {setSame(data)});
+      }
     };
-    
+ 
     const handleConfirm1 = () => {
-      ApiDataBaseGet(`playList/user_id?user_id=${idSp}&mood=${mood}`).then((data) => {setOption(data)}).catch((err) => console.log(err?.message));
-      ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${id}&mood=${mood}`).then((data) => {setSame(data)}).catch((err) => console.log(err?.message));
+      ApiDataBaseGet(`playList/user_id?user_id=${idSp}&mood=${mood}`).then((data) => {setOption(data)});
+    if(idSongPlayList === '' && playlist === 1){
+      if(!id?.includes("|")){
+        ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${related?.videos?.[0]?.id}&mood=${mood}`).then((data) => {setSame(data)});
+      }else{
+        ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${related?.[0]?.content_id?.idPage}&mood=${mood}`).then((data) => {setSame(data)});
+      }
+      }else if(idSongPlayList === ''){
+        ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${idSearch}&mood=${mood}`).then((data) => {setSame(data)});
+      }else{
+        ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${idSong[0]}&mood=${mood}`).then((data) => {setSame(data)});
+      }
     };
 
     const addClick = () => {
@@ -239,9 +305,24 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
       }).then((result) => {
         if (result.isConfirmed) {
           ApiDataBaseGet(`content/last`).then((data) => {
-              ApiDataBaseGet(`playList/delete?user_id=${idSp}&id_page=${id}&mood=${mood}&playlist_id=${result?.value?.[0]}&content_id=${data?.content_id}`).then((data) =>{console.log(data);handleConfirm(result.value);}).catch((err) =>{console.log(err?.message)})
+            if(idSongPlayList === '' && playlist === 1){
+              if(!id?.includes("|")){
+                ApiDataBaseGet(`playList/delete?user_id=${idSp}&id_page=${related?.videos?.[0]?.id}&mood=${mood}&playlist_id=${result?.value?.[0]}&content_id=${data?.content_id}`).then((data) =>{handleConfirm();}).catch((err) =>{console.log(err?.message)});
+                console.log("1");
+              }else{
+                ApiDataBaseGet(`playList/delete?user_id=${idSp}&id_page=${videos?.[0]?.content_id?.idPage}&mood=${mood}&playlist_id=${result?.value?.[0]}&content_id=${data?.content_id}`).then((data) =>{handleConfirm();}).catch((err) =>{console.log(err?.message)});
+                console.log("2");
+              }
+              }else if(idSongPlayList === ''){
+                ApiDataBaseGet(`playList/delete?user_id=${idSp}&id_page=${idSearch}&mood=${mood}&playlist_id=${result?.value?.[0]}&content_id=${data?.content_id}`).then((data) =>{handleConfirm();}).catch((err) =>{console.log(err?.message)});
+                console.log("3");
+              }else{
+              ApiDataBaseGet(`playList/delete?user_id=${idSp}&id_page=${idSong[0]}&mood=${mood}&playlist_id=${result?.value?.[0]}&content_id=${data?.content_id}`).then((data) =>{handleConfirm();}).catch((err) =>{console.log(err?.message)});
+              console.log("4");
+            }
+            handleConfirm();
           }).catch((err) => console.log(err?.message));
-          handleConfirm(result.value);
+          handleConfirm();
         }
         if(result.isDenied){
           Swal.fire({

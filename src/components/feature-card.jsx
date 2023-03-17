@@ -46,7 +46,7 @@ const FeatureCard = ({playlist, text, mood, idxx, userDate, count}) => {
         </svg>
       </button>
       </Link>
-      {!playlist?.[2] && !playlist?.[0] ? <img src={playlist?.thumbnail?.url  ?  playlist?.thumbnail?.url : null ||
+      {!playlist?.[2] && !playlist?.[0]?.playlist_id ? <img src={playlist?.thumbnail?.url  ?  playlist?.thumbnail?.url : null ||
            playlist?.thumbnail?.[1]?.url  ? playlist?.thumbnail[1]?.url : null ||
           playlist?.[0]?.id?.thumbnail?.url ? playlist?.[0]?.id?.thumbnail?.url : null ||
            playlist?.thumbnails  ? playlist?.thumbnails[1]?.url : null || 

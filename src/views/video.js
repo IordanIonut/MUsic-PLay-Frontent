@@ -160,7 +160,7 @@ const Video = () => {
             const aaaa = videos;
             delete aaaa.videos; 
             const rezult = {description: aaaa, mood: 'youtube', type: 'playlist', idPage: id};
-            ApiDataBasePost(`content/add`, rezult).catch((error) => {console.log("error");});
+            ApiDataBasePost(`content/add`, rezult).catch((error) => {console.log(error?.message);});
           }
         }
       }
@@ -513,6 +513,7 @@ const Video = () => {
           playing={playing}
           muted={muted}
           loop={loop}
+          setRelated={setRelated}
           index={index}
           onProgress={handleProgress}
           onDuration={handleDuration}
