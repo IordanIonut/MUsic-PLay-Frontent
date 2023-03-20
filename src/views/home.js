@@ -46,7 +46,7 @@ const Home = () => {
   const [seachText, setseachText] = useState('');
   const [auto, setAuto] = useState([]);
   const [activate, setactivate] = useState(false);
-  const history = useHistory();
+  const hist = useHistory();
   const mood = Cookies.get('mood') || 'youtube';
   
   Cookies.remove("idSongPlayList");
@@ -62,7 +62,7 @@ const Home = () => {
     e.preventDefault();
     e.stopPropagation();
     if(seachText){
-      history.push(`/search/${seachText}`);
+      hist.push(`/search/${seachText}`);
       setseachText('');
     }
   };
@@ -251,7 +251,7 @@ const Home = () => {
       if(playlist === 0){
         let x = Math.floor((Math.random() * related?.length)); 
         dispatch(setPreview(id));
-        history.push('/video/'+related?.[x]?.videoId);
+        hist.push('/video/'+related?.[x]?.videoId);
       }
       if(playlist === 1){
         dispatch(setPreview(related?.videos?.[index]?.id));
@@ -271,7 +271,7 @@ const Home = () => {
         let last1 = previous[previous?.length - 1];
         const removeLast = previous?.pop();
         if(last1 !== undefined) 
-          history.push('/video/'+last1);
+          hist.push('/video/'+last1);
         else 
           playerRef?.current?.seekTo(0);
       }
@@ -316,15 +316,23 @@ const Home = () => {
                             setStatusSearchButtons(false);
                             setStatusVideoButtons(false);
                             setStatusFiltreButtons(true);
-                            styleChangeOf('home');
-                            styleChangeOf('treding');
-                            styleChangeOf('favorite');
-                            styleChangeOf('playList');
-                            styleChangeOf('history');
-                            styleChangeOf('live');
-                            styleChangeOf('send');
-                            styleChangeOf('qr');   
-                            history.push(`/filtre`);
+                            if(token){
+                              styleChangeOf('home');
+                              styleChangeOf('treding');
+                              styleChangeOf('favorite');
+                              styleChangeOf('playList');
+                              styleChangeOf('history');
+                              styleChangeOf('live');
+                              styleChangeOf('send');
+                              styleChangeOf('qr');
+                              }else{
+                                styleChangeOf('home');
+                                styleChangeOf('treding');
+                                styleChangeOf('live');
+                                styleChangeOf('send');
+                                styleChangeOf('history');
+                              }
+                            hist.push(`/filtre`);
                     }}
             onChange={(e) =>{ setseachText(e.target.value); setAuto(e.target.value); setactivate(true); }}
             placeholder="Search..."
@@ -364,7 +372,7 @@ const Home = () => {
           </button>
         </div>
         <div className="home-account posibili">
-          <Link to={token ? `/account` : `/auth/login`}
+          <Link to={token ? `/account/date` : `/auth/login`}
             id="account"
             name="account"
             type="button"
@@ -471,6 +479,7 @@ const Home = () => {
                           setStatusQrButtons(false);
                           setStatusSendButtons(false);
                           setStatusFiltreButtons(false);
+                          setStatusFiltreButtons(false);
                           styleChangeOn('favorite');
                           styleChangeOf('home');
                           styleChangeOf('treding');
@@ -516,7 +525,7 @@ const Home = () => {
               <path d="M598 598l212 128-212 128v-256zM170 598h342v84h-342v-84zM170 256h512v86h-512v-86zM170 426h512v86h-512v-86z"></path>
             </svg>
           </Link> : null}
-          <Link to={`/history`} id="history" className="navbar button account"onClick={()=>{
+          <Link to={`/history`} id="history" className="home-button05 navbar button account" onClick={()=>{
                           setStatusHomeButton(false);
                           setStatusTredingButton(false);
                           setStatusFavoriteButton(false);
@@ -531,21 +540,21 @@ const Home = () => {
                           setStatusSendButtons(false);
                           styleChangeOn('history');
                           if(token){
-                            styleChangeOf('home');
-                            styleChangeOf('treding');
-                            styleChangeOf('favorite');
-                            styleChangeOf('playList');
-                            styleChangeOf('live');
-                            styleChangeOf('send');
-                            styleChangeOf('qr');
+                          styleChangeOf('home');
+                          styleChangeOf('favorite');
+                          styleChangeOf('playList');
+                          styleChangeOf('treding');
+                          styleChangeOf('live');
+                          styleChangeOf('send');
+                          styleChangeOf('qr');
                         }else{
                           styleChangeOf('home');
                           styleChangeOf('treding');
+                          styleChangeOf('send');
                           styleChangeOf('live');
-                          styleChangeOf('qr');
                         }
                         }}>
-            <svg xmlns="http://www.w3.org/2000/svg" name='img2' className="home-icon024" viewBox="0 0 16 16">
+                  <svg xmlns="http://www.w3.org/2000/svg" name='img2' className="home-icon024" viewBox="0 0 16 16">
               <path d="M2 1.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-1v1a4.5 4.5 0 0 1-2.557 4.06c-.29.139-.443.377-.443.59v.7c0 .213.154.451.443.59A4.5 4.5 0 0 1 12.5 13v1h1a.5.5 0 0 1 0 1h-11a.5.5 0 1 1 0-1h1v-1a4.5 4.5 0 0 1 2.557-4.06c.29-.139.443-.377.443-.59v-.7c0-.213-.154-.451-.443-.59A4.5 4.5 0 0 1 3.5 3V2h-1a.5.5 0 0 1-.5-.5zm2.5.5v1a3.5 3.5 0 0 0 1.989 3.158c.533.256 1.011.791 1.011 1.491v.702s.18.149.5.149.5-.15.5-.15v-.7c0-.701.478-1.236 1.011-1.492A3.5 3.5 0 0 0 11.5 3V2h-7z"/>
             </svg>
             <svg xmlns="http://www.w3.org/2000/svg" name='img1' className="home-icon026" viewBox="0 0 16 16">
@@ -622,7 +631,6 @@ const Home = () => {
               <path d="M219.429 658.286v73.143h-73.143v-73.143h73.143zM219.429 219.429v73.143h-73.143v-73.143h73.143zM658.286 219.429v73.143h-73.143v-73.143h73.143zM73.143 804h219.429v-218.857h-219.429v218.857zM73.143 365.714h219.429v-219.429h-219.429v219.429zM512 365.714h219.429v-219.429h-219.429v219.429zM365.714 512v365.714h-365.714v-365.714h365.714zM658.286 804.571v73.143h-73.143v-73.143h73.143zM804.571 804.571v73.143h-73.143v-73.143h73.143zM804.571 512v219.429h-219.429v-73.143h-73.143v219.429h-73.143v-365.714h219.429v73.143h73.143v-73.143h73.143zM365.714 73.143v365.714h-365.714v-365.714h365.714zM804.571 73.143v365.714h-365.714v-365.714h365.714z"></path>
             </svg>
           </Link>: null}
-          <Link to={`/send`}>
           <Link to={`/send`} id="send" className="home-button11 navbar button account"onClick={()=>{
                           setStatusHomeButton(false);
                           setStatusTredingButton(false);
@@ -659,7 +667,6 @@ const Home = () => {
               <path d="M1008 6.286c12 8.571 17.714 22.286 15.429 36.571l-146.286 877.714c-1.714 10.857-8.571 20-18.286 25.714-5.143 2.857-11.429 4.571-17.714 4.571-4.571 0-9.143-1.143-13.714-2.857l-301.143-122.857-170.286 186.857c-6.857 8-16.571 12-26.857 12-4.571 0-9.143-0.571-13.143-2.286-14.286-5.714-23.429-19.429-23.429-34.286v-258.286l-269.714-110.286c-13.143-5.143-21.714-17.143-22.857-31.429-1.143-13.714 6.286-26.857 18.286-33.714l950.857-548.571c12-7.429 27.429-6.857 38.857 1.143zM812.571 862.857l126.286-756-819.429 472.571 192 78.286 493.143-365.143-273.143 455.429z"></path>
             </svg>
           </Link>
-          </Link>
         </section>
             {statusHomeButton? <HomeBar mood={mood}></HomeBar>:null}
             {statusTredingButton? <TredingBar trending={trending} mood={mood}></TredingBar>  :null}
@@ -669,12 +676,7 @@ const Home = () => {
             {statusLiveButton? <LiveBar></LiveBar> :null}
             {statusQrButton? <QrBar></QrBar> :null}
             {statusSendButton? <SendBar></SendBar> :null}
-            {statusFiltreButton? <FiltreBar
-                    selectedFiltre={selectedFiltre}
-                    setStatusSearchButtons={setStatusSearchButtons}
-                    setStatusFiltreButtons={setStatusFiltreButtons}
-                    setSelectedFiltre={setSelectedFiltre}>
-                    </FiltreBar> :null}
+            {statusFiltreButton? <FiltreBar selectedFiltre={selectedFiltre} setStatusSearchButtons={setStatusSearchButtons} setStatusFiltreButtons={setStatusFiltreButtons} setSelectedFiltre={setSelectedFiltre}> </FiltreBar> :null}
             {statusSearcheButton? <SearchBar selectedFiltre={selectedFiltre} mood={mood}></SearchBar> :null}
             {statusVideoButton? <VideoBar></VideoBar> :null}
 

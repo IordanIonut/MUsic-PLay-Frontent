@@ -9,12 +9,15 @@ import FeatureCard from '../components/feature-card';
 const HomeBar = ({mood})=>{
   const [type, setType] = React.useState("video");
   const [homeSong, setHomeSong] = useState([]);
+  const [homePlaylist, setPlaylist] = useState([]);
   const songStart = start;
   const playlistStart = startPlayList;
-  const video=JSON.parse(localStorage.getItem('video'));
-  const playlist=JSON.parse(localStorage.getItem('playlist'));
+  const appleMusic_video=JSON.parse(localStorage.getItem('appleMusic_video'));
+  const appleMusic_playlist=JSON.parse(localStorage.getItem('appleMusic_playlist'));
+  const youtube_video=JSON.parse(localStorage.getItem('youtube_video'));
+  const youtube_playlist=JSON.parse(localStorage.getItem('youtube_playlist'));
 
-    function handleGetRandomNumbers1(aaa, bbb) {
+    function handleGetRandomNumbers(aaa, bbb, text) {
       const result = [];
       const set = new Set();
       let original1 = aaa;
@@ -56,12 +59,16 @@ const HomeBar = ({mood})=>{
         if(count === 40)
           break;
       }
-      setHomeSong(result);
+      if(text === "video")
+        setHomeSong(result);
+      if(text === "playlist")
+        setPlaylist(result);
     }
 
     useEffect(() =>{
     if(mood === 'youtube'){
-      handleGetRandomNumbers1(songStart, video);
+      handleGetRandomNumbers(songStart, youtube_video, "video");
+      handleGetRandomNumbers(playlistStart, youtube_playlist, "playlist");
     }else if(mood === 'spotify'){
       
     }
@@ -85,7 +92,7 @@ const HomeBar = ({mood})=>{
     document.getElementById(idClass).classList.remove("hoverType1");
   });
 
-    return(
+  return(
       <section className="home-seach music-list"style={{display: 'flex', alignContent: 'baseline'}}>
        <span className="home-text62 text">
         <br></br>
@@ -109,9 +116,12 @@ const HomeBar = ({mood})=>{
           </div>
           <div className="home-card2 music-card">
           { mood === 'youtube' ? mood === 'youtube' &&  Array.isArray(homeSong) &&  homeSong.map((item, id) => (
-            <section key={id} style={{transitionDelay: '1s'} && (type === 'video' ? {width: '100%'}: null ||
-                       type === 'playlist' ? {marginLeft: ''} : null)}> 
+            <section key={id} style={{transitionDelay: '1s'} && (type === 'video' ? {width: '100%'}: null)}>
             {type==='video' && <Music video={item} idx={id} page='0'></Music>}
+            </section>
+          )) : null } 
+             { mood === 'youtube' ? mood === 'youtube' &&  Array.isArray(homePlaylist) &&  homePlaylist.map((item, id) => (
+            <section key={id} style={{transitionDelay: '1s'} && (type === 'playlist' ? {marginLeft: ''} : null)}> 
             {type==='playlist'&& <FeatureCard playlist={item} idx={id} ></FeatureCard>}
             </section>
           )) : null } 

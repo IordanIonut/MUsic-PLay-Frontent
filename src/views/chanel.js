@@ -15,15 +15,14 @@ const Chanel = () => {
   const [videos, setVideo] = React.useState([]);
   const [live, setLive] = React.useState([]);
   const [playlist, setPlaylist] = React.useState([]);
-
   const [type, setType] = React.useState("youtube");
   const mood = Cookies.get('mood') || 'youtube';
-  
+  const {id} = useParams();
+
   Cookies.remove("idSongPlayList");
   Cookies.remove("playlistActivate");
   Cookies.remove("idChannel");
 
-  const {id} = useParams();
 
   const token = localStorage.getItem('token') || undefined;
   const [idSp, setIdSp]=useState('');
@@ -51,19 +50,24 @@ const Chanel = () => {
   const storeData = ((video, text, mood) => {
     let data = new Date().toLocaleString();
     const datas = [{id: video, data: data, mood: mood}]
-    var localDatas = localStorage.getItem(text);
-    if(!localDatas) {
-        localStorage.setItem(text,JSON.stringify(datas));
-    } else {
-        var items = [];
-        items = JSON.parse(localStorage.getItem(text));
-        items.unshift(datas);
-        var arrayUniqueByKey = [...new Map(items.map(item => [item?.[0]?.id?.id, item])).values()];
-        arrayUniqueByKey = arrayUniqueByKey.filter(item => item?.[0]?.id?.length != 0);
-        arrayUniqueByKey = arrayUniqueByKey.filter(item => item?.id?.length != 0);
-        localStorage.setItem(text,JSON.stringify(arrayUniqueByKey));
-    }
-    console.log(datas)
+    var localDatas = localStorage.getItem(`${mood}_${text}`);
+      if(!localDatas) {
+          localStorage.setItem(`${mood}_${text}`,JSON.stringify(datas));
+      } else {
+          var items = [];
+          items = JSON.parse(localStorage.getItem(`${mood}_${text}`));
+          items.unshift(datas);
+          var arrayUniqueByKey = []
+          if(mood === 'youtube')
+            arrayUniqueByKey =  [...new Map(items.map(item => [item?.[0]?.id?.id, item])).values()];
+          if(mood === 'appleMusic')
+            arrayUniqueByKey =  [...new Map(items.map(item => [item?.[0]?.id?.id, item])).values()];
+          if(mood === 'spotify')
+            arrayUniqueByKey = [...new Map(items.map(item => [item?.[0]?.id?.data?.artist?.id, item])).values()];
+          arrayUniqueByKey = arrayUniqueByKey.filter(item => item?.[0]?.id?.length != 0);
+          arrayUniqueByKey = arrayUniqueByKey.filter(item => item?.id?.length != 0);
+          localStorage.setItem(`${mood}_${text}`,JSON.stringify(arrayUniqueByKey));
+      }
   });
 
   useEffect(() =>{
@@ -86,37 +90,64 @@ const Chanel = () => {
     if(token === undefined){
       if(mood === 'youtube')
         storeData(channelDetail,'channel','youtube');
+      if(mood === 'appleMusic')
+        storeData(videos?.artists?.[id],'channel','appleMusic');
+      if(mood === 'spotify')
+        storeData(channelDetail,'channel','spotify');
     }else{
       if(mood === 'youtube' && channelDetail?.length !== 0){
           const rezult = {description: channelDetail, mood: 'youtube', type: 'channel', idPage: id};
-          ApiDataBasePost(`content/add`, rezult).catch((error) => {console.log(error);});
+          ApiDataBasePost(`content/add`, rezult).catch((error) => {console.log(error?.message);});
+      }
+      if(mood === 'appleMusic' && videos?.length !== 0){
+        console.log(videos?.artists?.[id])
+        const rezult = {description: videos?.artists?.[id], mood: 'appleMusic', type: 'channel', idPage: id};
+        ApiDataBasePost(`content/add`, rezult).catch((error) => {console.log(error?.message);});
+    }
+      if(mood === 'spotify' && channelDetail?.length !== 0){
+        const aa = channelDetail;
+        delete aa?.data?.artist?.discography;
+        delete aa?.data?.artist?.goods;
+        delete aa?.data?.artist?.relatedContent;
+        const rezult = {description: aa, mood: 'spotify', type: 'channel', idPage: id};
+        ApiDataBasePost(`content/add`, rezult).catch((error) => {console.log(error?.message);});
+    }
+    }
+  },[videos, token]);
+
+  useEffect(() =>{
+    if(token){
+      ApiDataBaseGet(`content/last`);
+      ApiDataBaseGet(`content/last`);
+      ApiDataBaseGet(`content/last`);
+      ApiDataBaseGet(`content/last`);
+      ApiDataBaseGet(`content/last`);
+      ApiDataBaseGet(`content/last`);
+      ApiDataBaseGet(`content/last`);
+      ApiDataBaseGet(`content/last`);
+      ApiDataBaseGet(`content/last`);
+      ApiDataBaseGet(`content/last`);
+      ApiDataBaseGet(`content/last`);
+      ApiDataBaseGet(`content/last`);
+      ApiDataBaseGet(`content/last`);
+      ApiDataBaseGet(`content/last`);
+      ApiDataBaseGet(`content/last`);
+      ApiDataBaseGet(`content/last`);
+      ApiDataBaseGet(`content/last`);
+      ApiDataBaseGet(`content/last`);
+      ApiDataBaseGet(`content/last`);
+      if(mood === 'youtube' && channelDetail?.length !== 0){
+        ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=channel&description=${id}`).then((data1) => {console.log(data1);}).catch((err) => {console.log(err?.message);});   
+      }
+      if(mood === 'spotify' && channelDetail?.length !== 0){
+        ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=channel&description=${id}`).then((data1) => {console.log(data1);}).catch((err) => {console.log(err?.message);});   
+      }
+      if(mood === 'appleMusic' && videos?.length !== 0){
+        ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=channel&description=${id}`).then((data1) => {console.log(data1);}).catch((err) => {console.log(err?.message);});   
       }
     }
   },[channelDetail, token]);
 
-  useEffect(() =>{
-    if(token){
-      if(mood === 'youtube' && channelDetail?.length !== 0){
-        ApiDataBaseGet(`content/last`);
-        ApiDataBaseGet(`content/last`);
-        ApiDataBaseGet(`content/last`);
-        ApiDataBaseGet(`content/last`);
-        ApiDataBaseGet(`content/last`);
-        ApiDataBaseGet(`content/last`);
-        ApiDataBaseGet(`content/last`);
-        ApiDataBaseGet(`content/last`);
-        ApiDataBaseGet(`content/last`);
-        ApiDataBaseGet(`content/last`);
-        ApiDataBaseGet(`content/last`);
-        ApiDataBaseGet(`content/last`);
-        ApiDataBaseGet(`content/last`);
-        ApiDataBaseGet(`content/last`);
-        ApiDataBaseGet(`content/last`);
-        ApiDataBaseGet(`content/last`);
-            ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=channel&description=${id}`).then((data1) => {console.log(data1);}).catch((err) => {console.log(err);});   
-      }
-    }
-  },[channelDetail, token]);
   useEffect(() =>{
     styleChangeOnBar(mood);
   },[mood]);
@@ -197,7 +228,7 @@ const Chanel = () => {
           </button>
         </div>
         <div className="home-account posibili">
-        <Link to={token ? `/account` : `/auth/login`}
+        <Link to={token ? `/account/date` : `/auth/login`}
             id="account"
             name="account"
             type="button"
@@ -243,22 +274,22 @@ const Chanel = () => {
               <path d="M516 792q96-86 142-130t100-104 75-106 21-90q0-64-43-106t-107-42q-50 0-93 28t-59 72h-80q-16-44-59-72t-93-28q-64 0-107 42t-43 106q0 44 21 90t75 106 100 104 142 130l4 4zM704 128q100 0 167 68t67 166q0 58-22 113t-81 123-107 114-154 142l-62 56-62-54q-138-124-199-186t-113-146-52-162q0-98 67-166t167-68q116 0 192 90 76-90 192-90z"></path>
             </svg>
           </Link>: null}
-          <Link id="playList" className="home-button07 navbar button account" to="/playList">
+          {token ?<Link id="playList" className="home-button07 navbar button account" to="/playList">
             <svg viewBox="0 0 1024 1024" name='img1' className="home-icon022">
               <path d="M918 490l64 64-298 300-194-192 64-64 130 128zM86 682v-84h340v84h-340zM598 256v86h-512v-86h512zM598 426v86h-512v-86h512z"></path>
             </svg>
             <svg viewBox="0 0 1024 1024" name='img2' className="home-icon020">
               <path d="M598 598l212 128-212 128v-256zM170 598h342v84h-342v-84zM170 256h512v86h-512v-86zM170 426h512v86h-512v-86z"></path>
             </svg>
-           </Link>
-          {token ? <Link id="history" className="navbar button account" to="/history">
+           </Link> : null}
+          <Link id="history" className="navbar button account" to="/history">
             <svg xmlns="http://www.w3.org/2000/svg" name='img2' className="home-icon024" viewBox="0 0 16 16">
               <path d="M2 1.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-1v1a4.5 4.5 0 0 1-2.557 4.06c-.29.139-.443.377-.443.59v.7c0 .213.154.451.443.59A4.5 4.5 0 0 1 12.5 13v1h1a.5.5 0 0 1 0 1h-11a.5.5 0 1 1 0-1h1v-1a4.5 4.5 0 0 1 2.557-4.06c.29-.139.443-.377.443-.59v-.7c0-.213-.154-.451-.443-.59A4.5 4.5 0 0 1 3.5 3V2h-1a.5.5 0 0 1-.5-.5zm2.5.5v1a3.5 3.5 0 0 0 1.989 3.158c.533.256 1.011.791 1.011 1.491v.702s.18.149.5.149.5-.15.5-.15v-.7c0-.701.478-1.236 1.011-1.492A3.5 3.5 0 0 0 11.5 3V2h-7z"/>
             </svg>
             <svg xmlns="http://www.w3.org/2000/svg" name='img1' className="home-icon026" viewBox="0 0 16 16">
               <path d="M2.5 15a.5.5 0 1 1 0-1h1v-1a4.5 4.5 0 0 1 2.557-4.06c.29-.139.443-.377.443-.59v-.7c0-.213-.154-.451-.443-.59A4.5 4.5 0 0 1 3.5 3V2h-1a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1h-1v1a4.5 4.5 0 0 1-2.557 4.06c-.29.139-.443.377-.443.59v.7c0 .213.154.451.443.59A4.5 4.5 0 0 1 12.5 13v1h1a.5.5 0 0 1 0 1h-11zm2-13v1c0 .537.12 1.045.337 1.5h6.326c.216-.455.337-.963.337-1.5V2h-7zm3 6.35c0 .701-.478 1.236-1.011 1.492A3.5 3.5 0 0 0 4.5 13s.866-1.299 3-1.48V8.35zm1 0v3.17c2.134.181 3 1.48 3 1.48a3.5 3.5 0 0 0-1.989-3.158C8.978 9.586 8.5 9.052 8.5 8.351z"/>
             </svg>
-          </Link> :null} 
+          </Link>
           <Link id="live" className="navbar button account" to="/live">
             <svg viewBox="0 0 1024 1024" name='img1' className="home-icon028">
               <path d="M384 512c0-70.692 57.308-128 128-128s128 57.308 128 128c0 70.692-57.308 128-128 128s-128-57.308-128-128zM664.348 230.526c99.852 54.158 167.652 159.898 167.652 281.474s-67.8 227.316-167.652 281.474c44.066-70.126 71.652-170.27 71.652-281.474s-27.586-211.348-71.652-281.474zM288 512c0 111.204 27.584 211.348 71.652 281.474-99.852-54.16-167.652-159.898-167.652-281.474s67.8-227.314 167.652-281.474c-44.068 70.126-71.652 170.27-71.652 281.474zM96 512c0 171.9 54.404 326.184 140.652 431.722-142.302-90.948-236.652-250.314-236.652-431.722s94.35-340.774 236.652-431.722c-86.248 105.538-140.652 259.822-140.652 431.722zM787.352 80.28c142.298 90.946 236.648 250.312 236.648 431.72s-94.35 340.774-236.648 431.72c86.244-105.536 140.648-259.82 140.648-431.72s-54.404-326.184-140.648-431.72z"></path>

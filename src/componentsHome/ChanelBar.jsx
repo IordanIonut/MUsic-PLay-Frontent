@@ -98,7 +98,7 @@ const ChanelBar = ({channelDetail,videos, live, playlist, mood}) => {
               </svg>
             </button>
           </div>
-          {mood !== 'appleMusic' ? <div className="home-play-list06 posibili buttonChange" name="live1" onClick={() => {setType('live');
+          {(mood != 'appleMusic' && mood !='spotify') ? <div className="home-play-list06 posibili buttonChange" name="live1" onClick={() => {setType('live');
           styleChangeOn('live1'); styleChangeOf('playlist'); styleChangeOf('video');}}>
             <button id="live1"  className="home-button23 button account">
               <svg xmlns="http://www.w3.org/2000/svg" className="home-icon072" viewBox="0 0 16 16">
@@ -130,14 +130,9 @@ const ChanelBar = ({channelDetail,videos, live, playlist, mood}) => {
               <Music video={item} idx={idx} page='0' mood={mood}></Music>
             </section>
           ))}
-      {mood==='spotify' && type === 'live' && Array.isArray(channelDetail?.data?.artist?.relatedContent?.discoveredOn?.items) && channelDetail?.data?.artist?.relatedContent?.discoveredOn?.items.map((item, idx) => (
+      {mood==='spotify' && type === 'playlist' && Array.isArray(channelDetail?.data?.artist?.relatedContent?.discoveredOn?.items) && channelDetail?.data?.artist?.relatedContent?.discoveredOn?.items.map((item, idx) => (
             <section key={idx} style={{transitionDelay: '1s'} && (type === 'live' ? {marginLeft: ''}  : null)}>
               <FeatureCard playlist={item} idx={idx}></FeatureCard>
-            </section>
-      ))}
-      {mood==='spotify' && type === 'playlist'  && Array.isArray(videos?.data?.artist?.discography?.popularReleases?.items)  && videos?.data?.artist?.discography?.popularReleases?.items.map((item, idx) => (
-            <section key={idx} style={{transitionDelay: '1s'} && (type === 'playlist' ? {marginLeft: ''} : null)}>
-              <FeatureCard playlist={item} idx={idx} ></FeatureCard>
             </section>
       ))}
        {mood==='appleMusic' && type === 'video' && Array.isArray(video) && video.map((item, idx) => (

@@ -26,8 +26,6 @@ const SearchBar = ({selectedFiltre,mood}) => {
           ex = 'playlists';
         if(type === 'channel')
           ex = 'artists';
-        if(type === 'live')
-          ex = 'episode';
         if(type === 'playlist' || type === 'channel') 
           ApiSpotify1(`search/?q=${selectedFiltre}&type=${ex}`).then((data) => setVideo(data));
         else
@@ -49,7 +47,7 @@ const SearchBar = ({selectedFiltre,mood}) => {
       document.getElementById(idClass).classList.remove("hoverType");
     });
 
-  return (
+    return (
     <section className="home-seach music-list"style={{display: 'flex', alignContent: 'baseline'}}>
       <span className="home-text62 text">
         <br></br>
@@ -71,7 +69,7 @@ const SearchBar = ({selectedFiltre,mood}) => {
               </svg>
             </button>
           </div> : null }
-          {mood != 'appleMusic' ? <div className="home-play-list06 posibili buttonChange" name="live1" onClick={() => {setType('live');
+          {(mood != 'appleMusic') && (mood != 'spotify') ? <div className="home-play-list06 posibili buttonChange" name="live1" onClick={() => {setType('live');
           styleChangeOn('live1'); styleChangeOf('playlist'); styleChangeOf('video'); styleChangeOf('channel');}}>
             <button id="live1"  className="home-button23 button account">
               <svg xmlns="http://www.w3.org/2000/svg" className="home-icon072" viewBox="0 0 16 16">
@@ -103,7 +101,7 @@ const SearchBar = ({selectedFiltre,mood}) => {
           ))}
           {mood === 'spotify' &&  Array.isArray(videos?.playlists?.items) && videos?.playlists?.items.map((item, id) => (
             <section key={id} style={{transitionDelay: '1s'} && type === 'playlist' ? {marginLeft: ''} : null}> 
-              {type==='playlist'&& <FeatureCard playlist={item} idx={id} mood={mood}></FeatureCard>}
+              {type==='playlist'&& <FeatureCard playlist={item} text={undefined} idx={id} mood={mood}></FeatureCard>}
             </section>
           ))}
           {mood === 'spotify' && Array.isArray(videos?.tracks?.items) && videos?.tracks?.items.map((item, id) => (

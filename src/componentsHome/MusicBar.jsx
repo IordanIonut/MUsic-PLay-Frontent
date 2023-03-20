@@ -3,15 +3,21 @@ import '../views/home.css';
 import { Link } from 'react-router-dom';
 import { ApiDataBaseGet, ApiDataBasePost } from '../utils/fetchAPI';
 import colors from '../utils/colors';
-export const MusicBar = ({previous, playing, muted, onProgress, onDuration, loop, onPlayStop, onMute, onLoop, handleSeek, url, artist, idSp, id, token,
-   name, thumbnail, next, onRandome}) => {
+import Cookies from 'js-cookie';
+
+
+export const MusicBar = ({previous, playing, muted, onProgress, onDuration, loop, onPlayStop, onMute, onLoop, handleSeek, url, artist, idSp, id, token, related,
+   name, thumbnail, next, onRandome, playlist, mood}) => {
   const currentTimeFormatted = onProgress && typeof onProgress === 'number' ? new Date(onProgress * 1000).toISOString().substr(11, 8) : '00:00:00';
   const durationFormatted = onDuration && typeof onDuration === 'number' ? new Date(onDuration * 1000).toISOString().substr(11, 8) : '00:00:00';
   const [count, setCount] = useState(0);
   const [all, setAll] = useState([]);
   const [sameID, setSameID] = useState('');
   const [check, setCheck] = useState(false);
-  
+  const idSongPlayList = Cookies.get('idSongPlayList') || '';
+  const [idx, setIdx] = useState('');
+  const idSong = idSongPlayList.split(',0,');
+
   const style=((idClass)=>{
     const element = document.getElementById(idClass);
     if(idClass === 'random')
@@ -32,64 +38,95 @@ export const MusicBar = ({previous, playing, muted, onProgress, onDuration, loop
       } else {
         document.getElementById(idClass).classList.add("hover112");
       }
-    if(idClass === 'save'){
-      if(check === false && sameID === '' && count === 0){
-        document.getElementById(idClass).classList.add("hover113");
-        setCount(count + 1);
-        setCheck(true);
-       // console.log("111111111111111111111111111111111");
-      }
-      if (element.classList.contains("hover113"))  {
-        setCheck(true);
-        document.getElementById(idClass).classList.add("hover113");
-        //console.log('222222222222222222222222222222222');
-      }else if(!element.classList.contains("hover113") && check){
-        document.getElementById(idClass).classList.remove("hover113");
-        setCheck(false);
-       // console.log("333333333333333333333333333333333333");
+    if(token){
+      if(idClass === 'save'){
+        if(check === false && sameID === '' && count === 0){
+          document.getElementById(idClass).classList.add("hover113");
+          //setCount(1);
+          //setCheck(true);
+          console.log("111111111111111111111111111111111");
+        }
+        if (element.classList.contains("hover113"))  {
+          setCheck(false);
+          document.getElementById(idClass).classList.add("hover113");
+          console.log('222222222222222222222222222222222');
+        }else if(!element.classList.contains("hover113") && check){
+          document.getElementById(idClass).classList.remove("hover113");
+          setCheck(true);
+          console.log("333333333333333333333333333333333333");
+        }
       }
     }
   });
+  
   const handleClick = () => {
     if (count % 2 === 0) {
       let ran = Math.floor(Math.random() * 142);
-        ApiDataBaseGet(`content/last`).then((data) => {
-          const val={content_id: {content_id: data?.content_id},  fill: ran, user_id: {user_id: idSp}};
+        ApiDataBaseGet(`content/last`).then((data) => {let aa = null;
+          if(!id?.includes("|"))
+            aa = data?.content_id;
+          else
+            aa = data?.description?.[0]?.content_id?.content_id;
+          const val={content_id: {content_id: aa},  fill: ran, user_id: {user_id: idSp}};
+          console.log(val);
           ApiDataBasePost(`favorite/add`, val).then((data) => {
-            ApiDataBaseGet(`favorite/all`).then((data) =>{setAll(data); /*console.log("4444444444444444444444")*/;setSameID('')})}).catch((err) => {console.log(err?.message)})})
+            ApiDataBaseGet(`favorite/all`).then((data) =>{setAll(data); console.log("4444444444444444444444");
+            setSameID('')})}).catch((err) => {console.log(err?.message)})})
         .catch((err) => {console.log(err)});
     } else {
-      ApiDataBaseGet(`content/last`).then((data) => {
-      ApiDataBaseGet(`favorite/delete/search?userId=${idSp}&idPage=${data?.idPage}`).then((data) => {//console.log("delete : 555555555555555555555555555555"); 
-      console.log("countqw          "+count);setCheck(false);setCount(0);setAll([]);setSameID('');}).catch((err) => {console.log(err)})});
+      ApiDataBaseGet(`content/last`).then((data) => {let val = null;
+        if(!id?.includes("|"))
+          val = data?.idPage;
+        else
+          val = data?.description?.[0]?.content_id?.idPage;
+      ApiDataBaseGet(`favorite/delete/search?userId=${idSp}&idPage=${val}`).then((data) => {console.log("delete : 555555555555555555555555555555"); 
+      console.log("countqw          "+count);setCheck(false);setCount(0);setAll([]);setSameID('');}).catch((err) => {console.log(err?.message)})});
       setAll([]);setSameID('');
     }
   };
 
+  useEffect(() => {
+    const idSong = idSongPlayList.split(',0,');
+    if(mood === 'youtube'){
+      if(idSongPlayList === '' && playlist === 1){
+        if(!id?.includes("|"))
+          setIdx(related?.videos?.[0]?.id);
+        else
+          setIdx(related?.[0]?.content_id?.idPage);
+      }else if(idSongPlayList === ''){
+        setIdx(id);
+      }else{
+        setIdx(idSong[0]);
+      }
+    }
+  },[idSongPlayList, related]);
+
   useEffect(() =>{
-    if(id !== undefined && check){
-      ApiDataBaseGet(`favorite/all`).then((data) =>{setAll(data);setSameID('');setCount(0);});
-      style('save');
-      //console.log("6666666666666666666666666666666");
+    if(token){
+      if(idx != undefined && check){
+        ApiDataBaseGet(`favorite/all`).then((data) =>{setAll(data);setSameID('');setCount(0);});
+        style('save');
+        console.log("6666666666666666666666666666666");
+      }
+      else{
+        console.log("77777777777777777777777777777");
+        ApiDataBaseGet(`favorite/all`).then((data) =>{setAll(data);setCount(0);setSameID('')});
+      }
     }
-    else{
-      //console.log("77777777777777777777777777777");
-      ApiDataBaseGet(`favorite/all`).then((data) =>{setAll(data);setSameID('');setCount(0);setCheck(true);});
-    }
-  }, [id]);
+  }, [idx]);
 
   useEffect(() =>{
     for (let i = 0; i < all?.length; i++) {
-        if (all?.[i]?.content_id?.idPage === id) {
+        if (all?.[i]?.content_id?.idPage === idx) {
             setSameID(all?.[i]?.fill);
-            //console.log("culoare: "+sameID);
-            //console.log("count: "+count);
-            setCount(1);              
+            console.log("culoare: "+sameID);
+            console.log("count: "+count);
+            setCount(1);
             style('save');
-           // console.log('8888888888888888888888888888')
+            console.log('8888888888888888888888888888')
           }
         }
-  },[id,sameID, check, all]);
+  },[idx, sameID, check, all]);
 
   return (
     <section className="home-bar bar">
@@ -138,12 +175,10 @@ export const MusicBar = ({previous, playing, muted, onProgress, onDuration, loop
                 <path d="M726 726v-172h84v256h-512v128l-170-170 170-170v128h428zM298 298v172h-84v-256h512v-128l170 170-170 170v-128h-428z"></path>
               </svg>
             </button>
-            {token !== undefined ? <button id="save" className="home-button41 navbar button music1 account hover113" onClick={()=>{handleClick();}}>
-              { check && sameID !== '' ? <svg viewBox="0 0 1024 1024"  className="home-icon120">
+            {token != undefined ? <button id="save" className="home-button41 navbar button music1 account hover113" onClick={()=>{handleClick();}}>
+              <svg viewBox="0 0 1024 1024"  className="home-icon120">
                 <path fill={colors?.[sameID]?.hex} d="M512 910l-62-56q-106-96-154-142t-107-114-81-123-22-113q0-98 67-166t167-68q116 0 192 90 76-90 192-90 100 0 167 68t67 166q0 78-52 162t-113 146-199 186z"></path>
-              </svg> : <svg viewBox="0 0 1024 1024"  className="home-icon120">
-                <path d="M512 910l-62-56q-106-96-154-142t-107-114-81-123-22-113q0-98 67-166t167-68q116 0 192 90 76-90 192-90 100 0 167 68t67 166q0 78-52 162t-113 146-199 186z"></path>
-              </svg>}
+              </svg> 
             </button> : null}
             <button id="volume" className="home-button42 navbar button music account hover111" onClick={()=>{onMute();style('volume')}}>
               {muted ? <svg  viewBox="0 0 16 16" className="home-icon122">
@@ -153,15 +188,7 @@ export const MusicBar = ({previous, playing, muted, onProgress, onDuration, loop
               </svg>}
             </button>
           </div>
-          <input
-            className="home-container7"
-            type="range"
-            min={0}
-            max={onDuration}
-            value={onProgress}
-            onChange={handleSeek}
-            step={0.01}
-          />
+          <input className="home-container7" type="range" min={0} max={onDuration} value={onProgress} onChange={handleSeek} step={0.01}/>
         </div>
       </section>
   )

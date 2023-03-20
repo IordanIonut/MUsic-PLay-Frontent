@@ -3,6 +3,7 @@ import '../views/home.css'
 import { ApiDataBaseGet } from "../utils/fetchAPI";
 import Music from "../components/music";
 import FeatureCard from "../components/feature-card";
+import ChanelCard from "../components/chanel-card";
 
 const FavoriteBar = ({mood, idSp, userDate})=>{
   const [type, setType] = React.useState("video");
@@ -17,7 +18,7 @@ const FavoriteBar = ({mood, idSp, userDate})=>{
   });
 
   useEffect(() =>{
-    if(idSp !== ''){
+    if(idSp != ''){
       if(type === 'video')
         ApiDataBaseGet(`favorite/search?userId=${idSp}&type=video&mood=${mood}`).then((data) =>{setArrayBD(data)}).catch((err) =>{console.log(err?.message)});
       if(type === 'playlist')
@@ -26,7 +27,6 @@ const FavoriteBar = ({mood, idSp, userDate})=>{
         ApiDataBaseGet(`favorite/search?userId=${idSp}&type=channel&mood=${mood}`).then((data) =>{setArrayBD(data)}).catch((err) =>{console.log(err?.message)});;
     }
   }, [type, idSp, mood]);
-
   
     return(
       <section className="home-history"style={{display: 'flex', alignContent: 'baseline'}}>

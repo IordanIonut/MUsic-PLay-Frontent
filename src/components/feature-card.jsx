@@ -9,14 +9,23 @@ const FeatureCard = ({playlist, text, mood, idxx, userDate, count}) => {
 
   useEffect(() =>{
     if(mood === 'spotify'){
-      let c = playlist?.data?.uri.split(':');
-      setId(c[2]);
+      if(text != '0'){
+        let c = playlist?.data?.uri?.split(':');
+        setId(c[2]);
+    }
   }
   },[]);
 
   useEffect(()=>{
     if(mood === 'appleMusic'){
         const a = playlist?.artwork?.url.split('{w}x{h}');
+        setImage(a?.[0] + "1425x1425" + a?.[1]);
+    }
+  },[playlist]);
+
+  useEffect(()=>{
+    if(mood === 'appleMusic' && text === "1"){
+        const a = playlist?.attributes?.artwork?.url.split('{w}x{h}');
         setImage(a?.[0] + "1425x1425" + a?.[1]);
     }
   },[playlist]);
@@ -58,7 +67,6 @@ const FeatureCard = ({playlist, text, mood, idxx, userDate, count}) => {
           image ? image : null}
         className="feature-card-image"/> : <div className="feature-card-image" style={{backgroundColor: 
           `${playlist?.[2] || playlist?.[0]?.playlist_id?.fill}`}}></div>}
-      
       <div className="text-card" style={{ overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis'}}>
         <span className="feature-card-text1">{playlist?.title ? playlist?.title : null || 
           playlist?.[0]?.id?.title ? playlist?.[0]?.id?.title : null ||
@@ -66,7 +74,7 @@ const FeatureCard = ({playlist, text, mood, idxx, userDate, count}) => {
           playlist?.name ? playlist?.name : null ||
           playlist?.releases?.items?.[0]?.name ? playlist?.releases?.items?.[0]?.name : null || 
           playlist?.value?.attributes?.name ? playlist?.value?.attributes?.name : null ||
-          playlist?.[3] ?  playlist?.[3] : null ||
+          playlist?.[3] ?  playlist?.[3] : null || playlist?.attributes?.name ? playlist?.attributes?.name : null ||
           playlist?.[0]?.playlist_id?.name ? playlist?.[0]?.playlist_id?.name : null}
         </span>
         <span id="artist" className="feature-card-text2">
@@ -78,14 +86,14 @@ const FeatureCard = ({playlist, text, mood, idxx, userDate, count}) => {
           playlist?.owner?.display_name ? playlist?.owner?.display_name : null ||
           playlist?.artistName ? playlist?.artistName : null ||
           playlist?.value?.attributes?.artistName  ? playlist?.value?.attributes?.artistName : null ||
-          userDate?.name ? userDate?.name : null || 
+          userDate?.name ? userDate?.name : null || playlist?.attributes?.artistName ? playlist?.attributes?.artistName : null ||
           playlist?.[0]?.playlist_id?.user_id?.name ? playlist?.[0]?.playlist_id?.user_id?.name : null}
         </span>
       </div>
       <span className="feature-card-text3" style={{paddingTop: '30px'}}>
         <span className="">{playlist?.videoCount ? playlist?.videoCount : null || playlist?.video_count ? playlist?.video_count : null || 
           playlist?.[0]?.id?.video_count ? playlist?.[0]?.id?.video_count :  null || playlist?.[9] ? playlist?.[9] : null 
-            || playlist?.tracks?.total ? playlist?.tracks?.total : null || count ? count : null ||
+            || playlist?.tracks?.total ? playlist?.tracks?.total : null || count ? count : null || playlist?.attributes?.trackCount ? playlist?.attributes?.trackCount+"Videos" : null ||
           playlist?.videoCountText ? playlist?.videoCountText.replace('videos','') : null || playlist?.trackCount? playlist?.trackCount+" Videos" : null} 
           {mood !== 'appleMusic' ? ' Videos' : playlist?.value?.attributes?.releaseDate}
         </span>

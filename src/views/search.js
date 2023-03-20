@@ -121,7 +121,7 @@ const Search = () => {
           </button>
         </div>
           <div className="home-account posibili">
-          <Link to={token ? `/account` : `/auth/login`}
+          <Link to={token ? `/account/date` : `/auth/login`}
             id="account"
             name="account"
             type="button"

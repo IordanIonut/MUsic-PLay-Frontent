@@ -83,6 +83,7 @@ function millisToMinutesAndSeconds(millis) {
                 video?.podcast?.cover?.[2]?.url ? video?.podcast?.cover?.[2]?.url : null || 
                 video?.track?.album?.coverArt?.sources?.[2]?.url ? video?.track?.album?.coverArt?.sources?.[2]?.url : null ||
                 video?.trackMetadata?.displayImageUri ? video?.trackMetadata?.displayImageUri : null ||
+                video?.album?.images?.[0]?.url ? video?.album?.images?.[0]?.url : null ||
                 video?.images?.coverarthq ? video?.images?.coverarthq : null ||
                 image ? image : null}
           className="music-image"
