@@ -212,7 +212,7 @@ const Search = () => {
               </svg>
             </Link>
           </section>
-            <SearchBar selectedFiltre={searchTerm} mood={mood}></SearchBar>
+            <SearchBar idSp={idSp} selectedFiltre={searchTerm} mood={mood}></SearchBar>
         </div>
         <MusicBar></MusicBar>
       </div>

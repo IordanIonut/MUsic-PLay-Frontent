@@ -668,16 +668,16 @@ const Home = () => {
             </svg>
           </Link>
         </section>
-            {statusHomeButton? <HomeBar mood={mood}></HomeBar>:null}
-            {statusTredingButton? <TredingBar trending={trending} mood={mood}></TredingBar>  :null}
+            {statusHomeButton? <HomeBar token={token} mood={mood} idSp={idSp}></HomeBar>:null}
+            {statusTredingButton? <TredingBar trending={trending} token={token} mood={mood} idSp={idSp}></TredingBar>  :null}
             {statusFavoriteButton? <FavoriteBar mood={mood} idSp={idSp} userDate={userDate}></FavoriteBar> :null}
             {statusPlayListButton? <PlayListBar mood={mood} idSp={idSp} userDate={userDate}></PlayListBar> :null}
             {statusHistoryButton? <HistoryBar mood={mood} idSp={idSp} userDate={userDate}></HistoryBar> :null}
             {statusLiveButton? <LiveBar></LiveBar> :null}
             {statusQrButton? <QrBar></QrBar> :null}
-            {statusSendButton? <SendBar></SendBar> :null}
-            {statusFiltreButton? <FiltreBar selectedFiltre={selectedFiltre} setStatusSearchButtons={setStatusSearchButtons} setStatusFiltreButtons={setStatusFiltreButtons} setSelectedFiltre={setSelectedFiltre}> </FiltreBar> :null}
-            {statusSearcheButton? <SearchBar selectedFiltre={selectedFiltre} mood={mood}></SearchBar> :null}
+            {statusSendButton? <SendBar mood={mood} idSp={idSp}></SendBar> :null}
+            {statusFiltreButton? <FiltreBar selectedFiltre={selectedFiltre} idSp={idSp} setStatusSearchButtons={setStatusSearchButtons} setStatusFiltreButtons={setStatusFiltreButtons} setSelectedFiltre={setSelectedFiltre}> </FiltreBar> :null}
+            {statusSearcheButton? <SearchBar idSp={idSp} selectedFiltre={selectedFiltre} mood={mood}></SearchBar> :null}
             {statusVideoButton? <VideoBar></VideoBar> :null}
 
       </div>

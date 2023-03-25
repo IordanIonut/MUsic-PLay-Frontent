@@ -1,9 +1,17 @@
 import React, {useEffect, useState} from "react";
 import Music from "../components/music";
 import '../views/home.css'
+import { ApiDataBaseGet } from "../utils/fetchAPI";
 
-const TredingBar = ({trending, mood})=>{
-   
+const TredingBar = ({trending, token, mood, idSp})=>{
+   const [same, setSame] = useState([]);
+
+   useEffect(() =>{
+      if(token){
+            ApiDataBaseGet(`favorite/search?userId=${idSp}&type=video&mood=${mood}`).then((data) =>{setSame(data)}).catch((err) =>{console.log(err?.message)});
+      }
+    }, [idSp, mood]);
+
     return(
       <section className="home-seach music-list" style={{display: 'flex', alignContent: 'baseline'}}>
       <span className="home-text47 text">
@@ -13,7 +21,7 @@ const TredingBar = ({trending, mood})=>{
       <div className="home-card2 music-card">
       {mood === 'youtube' && trending.map((item, idx) => (
             <section key={idx} style={{width: '100%', transitionDelay: '1s' }}> 
-            {<Music video={item} idx={idx}></Music>}
+            {<Music video={item} color={same?.find((s) => s?.content_id?.idPage === item?.videoId)}  idx={idx}></Music>}
             </section>
       ))}
       {mood === 'spotify' && trending.map((item, idx) => (

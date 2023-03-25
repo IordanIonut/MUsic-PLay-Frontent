@@ -9,7 +9,7 @@ const FeatureCard = ({playlist, text, mood, idxx, userDate, count}) => {
 
   useEffect(() =>{
     if(mood === 'spotify'){
-      if(text != '0'){
+      if(text != '2'){
         let c = playlist?.data?.uri?.split(':');
         setId(c[2]);
     }
@@ -31,7 +31,7 @@ const FeatureCard = ({playlist, text, mood, idxx, userDate, count}) => {
   },[playlist]);
 
   return (
-    <div className={`feature-card-feature-card card-music`} style={(playlist?.id || playlist?.playParams?.id) && text === '0' ?{opacity: '0.6', transform: 'scale(1.02)', pointerEvents: 'none'}: null}>
+    <div className={`feature-card-feature-card card-music`} style={(playlist?.id || playlist?.[0]?.content_id?.idPage || playlist?.playParams?.id) && text === '0' ?{opacity: '0.6', transform: 'scale(1.02)', pointerEvents: 'none'}: null}>
       <Link to={ playlist?.playlistId ? `/video/${playlist?.playlistId}` : null || playlist?.id ? `/video/${playlist?.id}` : null ||
           playlist?.[0]?.id?.id ? `/video/${playlist?.[0]?.id?.id}`: null || playlist?.data?.id?.id ? `/video/${playlist?.data?.id}` : null ||
           playlist?.data?.uri ? `/video/${id}` : null ||

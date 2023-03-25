@@ -5,8 +5,9 @@ import start from "../utils/startSong";
 import startPlayList from "../utils/startPlayList";
 import Music from '../components/music';
 import FeatureCard from '../components/feature-card';
+import { ApiDataBaseGet } from '../utils/fetchAPI';
 
-const HomeBar = ({mood})=>{
+const HomeBar = ({mood, token, idSp})=>{
   const [type, setType] = React.useState("video");
   const [homeSong, setHomeSong] = useState([]);
   const [homePlaylist, setPlaylist] = useState([]);
@@ -16,6 +17,8 @@ const HomeBar = ({mood})=>{
   const appleMusic_playlist=JSON.parse(localStorage.getItem('appleMusic_playlist'));
   const youtube_video=JSON.parse(localStorage.getItem('youtube_video'));
   const youtube_playlist=JSON.parse(localStorage.getItem('youtube_playlist'));
+  const [arrayDB, setArrayBD] = useState([]);
+  const [same, setSame] = useState([]);
 
     function handleGetRandomNumbers(aaa, bbb, text) {
       const result = [];
@@ -27,14 +30,15 @@ const HomeBar = ({mood})=>{
       if(original2?.length === null){
         original2 = original1.splice();
       }
-      const number = original2?.length / 3 - 1;
+      const number = original2?.length / 2 - 1;
       const randomNumbers = [];
       for (let i = 0; i < 300; i++) {
         randomNumbers.push(Math.floor(Math.random() * 3));
       }
       for (let i = 0; i < 150; i++) {
         if(randomNumbers[i]  === 0) {
-          if (!original1.length) continue;
+          if (!original1.length) 
+            continue;
           const randomIndex = Math.floor(Math.random() * original1.length);
           const randomElement = original1[randomIndex];
           if (!set.has(randomElement)) {
@@ -66,11 +70,40 @@ const HomeBar = ({mood})=>{
     }
 
     useEffect(() =>{
-    if(mood === 'youtube'){
-      handleGetRandomNumbers(songStart, youtube_video, "video");
-      handleGetRandomNumbers(playlistStart, youtube_playlist, "playlist");
-    }else if(mood === 'spotify'){
-      
+      if(idSp !== ''){
+        if(type === 'video')
+          ApiDataBaseGet(`history/search/all?user_id=${idSp}&mood=${mood}&type=video`).then((data) =>{setArrayBD(data)}).catch((err) =>{console.log("err1")});
+        if(type === 'playlist')
+          ApiDataBaseGet(`history/search/all?user_id=${idSp}&mood=${mood}&type=playlist`).then((data) =>{setArrayBD(data)}).catch((err) =>{console.log("err2")});;
+        if(type === 'channel')
+          ApiDataBaseGet(`history/search/all?user_id=${idSp}&mood=${mood}&type=channel`).then((data) =>{setArrayBD(data)}).catch((err) =>{console.log("err3")});;
+      }
+    }, [type, idSp, mood]);
+
+    useEffect(() =>{
+      if(idSp != ''){
+        if(type === 'video')
+          ApiDataBaseGet(`favorite/search?userId=${idSp}&type=video&mood=${mood}`).then((data) =>{setSame(data)}).catch((err) =>{console.log(err?.message)});
+        if(type === 'playlist')
+          ApiDataBaseGet(`favorite/search?userId=${idSp}&type=playlist&mood=${mood}`).then((data) =>{setSame(data)}).catch((err) =>{console.log(err?.message)});
+        if(type === 'channel')
+          ApiDataBaseGet(`favorite/search?userId=${idSp}&type=channel&mood=${mood}`).then((data) =>{setSame(data)}).catch((err) =>{console.log(err?.message)});
+        }
+    }, [arrayDB]);
+
+    useEffect(() =>{
+    if(token != undefined){
+      if(mood === 'youtube'){
+        handleGetRandomNumbers(songStart, arrayDB, "video");
+        handleGetRandomNumbers(playlistStart, arrayDB, "playlist");
+      }else if(mood === 'spotify'){
+      }
+    }
+    if(token === undefined){
+      if(mood === 'youtube'){
+        handleGetRandomNumbers(songStart, youtube_video, "video");
+        handleGetRandomNumbers(playlistStart, youtube_playlist, "playlist");
+      }
     }
    },[mood]);
 
@@ -117,7 +150,7 @@ const HomeBar = ({mood})=>{
           <div className="home-card2 music-card">
           { mood === 'youtube' ? mood === 'youtube' &&  Array.isArray(homeSong) &&  homeSong.map((item, id) => (
             <section key={id} style={{transitionDelay: '1s'} && (type === 'video' ? {width: '100%'}: null)}>
-            {type==='video' && <Music video={item} idx={id} page='0'></Music>}
+            {type==='video' && <Music color={same?.find((s) => s?.content_id?.idPage === item?.[0]?.id?.id)} video={item} idx={id} page='0'></Music>}
             </section>
           )) : null } 
              { mood === 'youtube' ? mood === 'youtube' &&  Array.isArray(homePlaylist) &&  homePlaylist.map((item, id) => (

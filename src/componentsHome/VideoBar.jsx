@@ -12,7 +12,7 @@ import {setAuthor, setName, setThumbnail, setUrl, playVideo, pauseVideo} from '.
 import { useDispatch, useSelector } from 'react-redux';
 import colors from '../utils/colors';
 
-const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, idxx, previous, token, idSp, setRelated,
+const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, idxx, previous, token, idSp, setRelated, same12,
   playerRef, playing, muted, loop, onProgress, onDuration, next }) => { 
   const [like, setLike] = useState([]);
   const idSearch=id;
@@ -32,6 +32,16 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
   const [option, setOption] = useState([]);
   const [same, setSame] = useState([]);
   const [youtube, setYouTube] = useState([]);
+
+  function formatNumber(num) {
+    if (num >= 1000000) {
+      return (num / 1000000)?.toFixed(0)+ 'M';
+    } else if (num >= 1000) {
+      return (num / 1000)?.toFixed(0) + 'K';
+    } else {
+      return num?.toString();
+    }
+  }
 
   function millisToMinutesAndSeconds(millis) {
     var minutes = Math?.floor(millis / 60000);
@@ -59,16 +69,31 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
 
   useEffect(() => {
     ApiDataBaseGet(`playList/user_id?user_id=${idSp}&mood=${mood}`).then((data) => {setOption(data)});
-    if(idSongPlayList === '' && playlist === 1){
-      if(!id?.includes("|")){
-        ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${related?.videos?.[0]?.id}&mood=${mood}`).then((data) => {setSame(data)});
+    if(mood === 'youtube') {
+      if(idSongPlayList === '' && playlist === 1){
+        if(!id?.includes("|")){
+          ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${related?.videos?.[0]?.id}&mood=${mood}`).then((data) => {setSame(data)});
+        }else{
+          ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${related?.[0]?.content_id?.idPage}&mood=${mood}`).then((data) => {setSame(data)});
+        }
+      }else if(idSongPlayList === ''){
+        ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${idSearch}&mood=${mood}`).then((data) => {setSame(data)});
       }else{
-        ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${related?.[0]?.content_id?.idPage}&mood=${mood}`).then((data) => {setSame(data)});
+        ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${idSong[0]}&mood=${mood}`).then((data) => {setSame(data)});
       }
-    }else if(idSongPlayList === ''){
-      ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${idSearch}&mood=${mood}`).then((data) => {setSame(data)});
-    }else{
-      ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${idSong[0]}&mood=${mood}`).then((data) => {setSame(data)});
+    }
+    if(mood === 'spotify'){
+      if(idSongPlayList === '' && playlist === 1){
+        if(!id?.includes("|")){
+          ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${related?.tracks?.items?.[0]?.track?.id}&mood=${mood}`).then((data) => {setSame(data)});
+        }else{
+          ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${related?.[0]?.content_id?.idPage}&mood=${mood}`).then((data) => {setSame(data)});
+        }
+        }else if(idSongPlayList === ''){
+          ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${idSearch}&mood=${mood}`).then((data) => {setSame(data)});
+        }else{
+        ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${idSong[0]}`).then((data) => {setSame(data)});
+      }
     }
     if(mood === 'youtube'){
       if(idSongPlayList === '' && playlist === 1){
@@ -121,7 +146,7 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
           let a = related?.tracks?.items?.[0]?.sharing_info?.uri.split(":");
           ApiSpotify5(`track_lyrics/?id=${a?.[2]}`).then((data2) => setDescription(data2?.lyrics));
         }else{
-          ApiSpotify5(`track_lyrics/?id=${related?.[0]?.content_id?.idPage}`).then((data2) => setDescription(data2?.lyrics));
+          //ApiSpotify5(`track_lyrics/?id=${related?.[0]?.content_id?.idPage}`).then((data2) => setDescription(data2?.lyrics));
         }
       }else if(idSongPlayList === ''){
         ApiSpotify5(`track_lyrics/?id=${idSearch}`).then((data2) => setDescription(data2?.lyrics));
@@ -144,26 +169,6 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
     if(mood === 'spotify')
       ApiSpotify4(`get_single_artist/?artist_id=${videos?.[0]?.artists?.[0]?.id}`).then((data) => setArtist(data));
   },[videos?.[0]?.artists?.[0]?.id]);
-
-  useEffect(() =>{
-    if(token && !id?.includes("|")){
-      if(mood === 'youtube' && videos?.length !== 0 ){
-        if(id.length  >= 11 && playlist === 1){
-          let res = null;
-          if(idSong[0])
-            res = related?.videos?.find(obj => obj?.id ===  idSong[0]);
-          let rezult;
-          if(res === null){
-            rezult = {description: related?.videos?.[0], mood: 'youtube', type: 'video', idPage: related?.videos?.[0]?.id};
-          }else{
-            rezult = {description: res, mood: 'youtube', type: 'video', idPage: idSong[0]};
-          }
-          if(rezult?.description != null)
-            ApiDataBasePost(`content/add`, rezult).then((data) => {}).catch((error) => {console.log(error?.message);});
-        }
-      }
-    }
-  },[related, idSongPlayList]);
 
   function copyToClipboard(text) {
     const dummy = document.createElement("textarea");
@@ -195,7 +200,7 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
       if(mood === 'spotify'){
         if(idSongPlayList === '' && playlist === 1){
           if(!id?.includes("|")){
-            copyToClipboard(related?.external_urls?.spotifyrelated?.tracks?.items?.[0]?.sharing_info?.share_url);
+            copyToClipboard(related?.tracks?.items?.[0]?.sharing_info?.share_url);
             var text = related?.tracks?.items?.[0]?.sharing_info?.share_url;
           }else{
             copyToClipboard("https://open.spotify.com/track/"+related?.[0]?.content_id?.idPage);
@@ -231,7 +236,7 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
         timer: 2000,
         buttons: false
       });
-    };
+  };
 
 
     const handleConfirm = () => {
@@ -241,31 +246,61 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
         ApiDataBaseGet(`playlistContent/mood/name/user_id/playlist_id?mood=${content?.[0]}&name=${content?.[1]}&user_id=${idSp}&playlist_id=${content?.[3]}`).then((data1) => {setRelated(data1);}).catch((err1) => console.error(err1?.message));
       }
       ApiDataBaseGet(`playList/user_id?user_id=${idSp}&mood=${mood}`).then((data) => {setOption(data)});
-      if(idSongPlayList === '' && playlist === 1){
-        if(!id?.includes("|")){
-          ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${related?.videos?.[0]?.id}&mood=${mood}`).then((data) => {setSame(data)});
+      if(mood === 'youtube'){
+        if(idSongPlayList === '' && playlist === 1){
+          if(!id?.includes("|")){
+            ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${related?.videos?.[0]?.id}&mood=${mood}`).then((data) => {setSame(data)});
+          }else{
+            ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${related?.[0]?.content_id?.idPage}&mood=${mood}`).then((data) => {setSame(data)});
+          }
+        }else if(idSongPlayList === ''){
+          ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${idSearch}&mood=${mood}`).then((data) => {setSame(data)});
         }else{
-          ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${related?.[0]?.content_id?.idPage}&mood=${mood}`).then((data) => {setSame(data)});
+          ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${idSong[0]}&mood=${mood}`).then((data) => {setSame(data)});
         }
-      }else if(idSongPlayList === ''){
-        ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${idSearch}&mood=${mood}`).then((data) => {setSame(data)});
-      }else{
-        ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${idSong[0]}&mood=${mood}`).then((data) => {setSame(data)});
+      }
+      if(mood === 'spotify'){
+        if(idSongPlayList === '' && playlist === 1){
+          if(!id?.includes("|")){
+            ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${related?.tracks?.items?.[0]?.track?.id}&mood=${mood}`).then((data) => {setSame(data)});
+          }else{
+            ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${related?.[0]?.content_id?.idPage}&mood=${mood}`).then((data) => {setSame(data)});
+          }
+          }else if(idSongPlayList === ''){
+            ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${idSearch}&mood=${mood}`).then((data) => {setSame(data)})
+          }else{
+          ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${idSong[0]}&mood=${mood}`).then((data) => {setSame(data)})
+        }
       }
     };
  
     const handleConfirm1 = () => {
       ApiDataBaseGet(`playList/user_id?user_id=${idSp}&mood=${mood}`).then((data) => {setOption(data)});
-    if(idSongPlayList === '' && playlist === 1){
-      if(!id?.includes("|")){
-        ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${related?.videos?.[0]?.id}&mood=${mood}`).then((data) => {setSame(data)});
-      }else{
-        ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${related?.[0]?.content_id?.idPage}&mood=${mood}`).then((data) => {setSame(data)});
+      if(mood === 'youtube'){
+        if(idSongPlayList === '' && playlist === 1){
+          if(!id?.includes("|")){
+            ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${related?.videos?.[0]?.id}&mood=${mood}`).then((data) => {setSame(data)});
+          }else{
+            ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${related?.[0]?.content_id?.idPage}&mood=${mood}`).then((data) => {setSame(data)});
+          }
+        }else if(idSongPlayList === ''){
+          ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${idSearch}&mood=${mood}`).then((data) => {setSame(data)});
+        }else{
+          ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${idSong[0]}&mood=${mood}`).then((data) => {setSame(data)});
+        }
       }
-      }else if(idSongPlayList === ''){
-        ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${idSearch}&mood=${mood}`).then((data) => {setSame(data)});
-      }else{
-        ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${idSong[0]}&mood=${mood}`).then((data) => {setSame(data)});
+      if(mood === 'spotify'){
+        if(idSongPlayList === '' && playlist === 1){
+          if(!id?.includes("|")){
+            ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${related?.tracks?.items?.[0]?.track?.id}&mood=${mood}`).then((data) => {setSame(data)});
+          }else{
+            ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${related?.[0]?.content_id?.idPage}&mood=${mood}`).then((data) => {setSame(data)});
+          }
+          }else if(idSongPlayList === ''){
+            ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${idSearch}&mood=${mood}`).then((data) => {setSame(data)})
+          }else{
+          ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${idSong[0]}&mood=${mood}`).then((data) => {setSame(data)})
+        }
       }
     };
 
@@ -331,24 +366,37 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
       }).then((result) => {
         if (result.isConfirmed) {
           ApiDataBaseGet(`content/last`).then((data) => {
-            if(idSongPlayList === '' && playlist === 1){
-              if(!id?.includes("|")){
-                ApiDataBaseGet(`playList/delete?user_id=${idSp}&id_page=${related?.videos?.[0]?.id}&mood=${mood}&playlist_id=${result?.value?.[0]}&content_id=${data?.content_id}`).then((data) =>{handleConfirm();}).catch((err) =>{console.log(err?.message)});
-                console.log("1");
-              }else{
-                ApiDataBaseGet(`playList/delete?user_id=${idSp}&id_page=${videos?.[0]?.content_id?.idPage}&mood=${mood}&playlist_id=${result?.value?.[0]}&content_id=${data?.content_id}`).then((data) =>{handleConfirm();}).catch((err) =>{console.log(err?.message)});
-                console.log("2");
+            if(mood === 'youtube'){
+              if(idSongPlayList === '' && playlist === 1){
+                if(!id?.includes("|")){
+                  ApiDataBaseGet(`playList/delete?user_id=${idSp}&id_page=${related?.videos?.[0]?.id}&mood=${mood}&playlist_id=${result?.value?.[0]}&content_id=${data?.content_id}`).then((data) =>{handleConfirm();}).catch((err) =>{console.log(err?.message)});
+                }else{
+                  ApiDataBaseGet(`playList/delete?user_id=${idSp}&id_page=${videos?.[0]?.content_id?.idPage}&mood=${mood}&playlist_id=${result?.value?.[0]}&content_id=${data?.content_id}`).then((data) =>{handleConfirm();}).catch((err) =>{console.log(err?.message)});
+                }
+                }else if(idSongPlayList === ''){
+                  ApiDataBaseGet(`playList/delete?user_id=${idSp}&id_page=${idSearch}&mood=${mood}&playlist_id=${result?.value?.[0]}&content_id=${data?.content_id}`).then((data) =>{handleConfirm();}).catch((err) =>{console.log(err?.message)});
+                }else{
+                ApiDataBaseGet(`playList/delete?user_id=${idSp}&id_page=${idSong[0]}&mood=${mood}&playlist_id=${result?.value?.[0]}&content_id=${data?.content_id}`).then((data) =>{handleConfirm();}).catch((err) =>{console.log(err?.message)});
               }
-              }else if(idSongPlayList === ''){
-                ApiDataBaseGet(`playList/delete?user_id=${idSp}&id_page=${idSearch}&mood=${mood}&playlist_id=${result?.value?.[0]}&content_id=${data?.content_id}`).then((data) =>{handleConfirm();}).catch((err) =>{console.log(err?.message)});
-                console.log("3");
-              }else{
-              ApiDataBaseGet(`playList/delete?user_id=${idSp}&id_page=${idSong[0]}&mood=${mood}&playlist_id=${result?.value?.[0]}&content_id=${data?.content_id}`).then((data) =>{handleConfirm();}).catch((err) =>{console.log(err?.message)});
-              console.log("4");
+          }
+            if(mood === 'spotify'){
+              if(idSongPlayList === '' && playlist === 1){
+                if(!id?.includes("|")){
+                  ApiDataBaseGet(`playList/delete?user_id=${idSp}&id_page=${related?.tracks?.items?.[0]?.track?.id}&mood=${mood}&playlist_id=${result?.value?.[0]}&content_id=${data?.content_id}`).then((data) =>{handleConfirm();}).catch((err) =>{console.log(err?.message)});
+                console.log(related?.tracks?.items?.[0]?.track?.id)
+                }else{
+                  ApiDataBaseGet(`playList/delete?user_id=${idSp}&id_page=${videos?.[0]?.content_id?.idPage}&mood=${mood}&playlist_id=${result?.value?.[0]}&content_id=${data?.content_id}`).then((data) =>{handleConfirm();}).catch((err) =>{console.log(err?.message)});
+                  console.log(videos?.[0]?.content_id?.idPage);
+                }
+                }else if(idSongPlayList === ''){
+                  ApiDataBaseGet(`playList/delete?user_id=${idSp}&id_page=${idSearch}&mood=${mood}&playlist_id=${result?.value?.[0]}&content_id=${data?.content_id}`).then((data) =>{handleConfirm();}).catch((err) =>{console.log(err?.message)});
+                  console.log(idSearch);
+                }else{
+                ApiDataBaseGet(`playList/delete?user_id=${idSp}&id_page=${idSong[0]}&mood=${mood}&playlist_id=${result?.value?.[0]}&content_id=${data?.content_id}`).then((data) =>{handleConfirm();}).catch((err) =>{console.log(err?.message)});
+                console.log(idSong[0]);
+              }
             }
-            handleConfirm();
           }).catch((err) => console.log(err?.message));
-          handleConfirm();
         }
         if(result.isDenied){
           Swal.fire({
@@ -598,8 +646,8 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
         
      {mood === 'spotify' || mood === 'appleMusic' ? <img style={{display: 'flex'}}
           alt="image"
-          src={videos?.[0]?.album?.images?.[0]?.url || description?.album?.images?.[0]?.url || (mood === 'spotify' ? idSong[1] : null) || 
-              related?.tracks?.items?.[0]?.track?.album?.images?.[0]?.url || videos?.images?.coverarthq || image}
+          src={ (mood === 'spotify' ? idSong[1] : null) || videos?.[0]?.album?.images?.[0]?.url || related?.[0]?.content_id?.description?.[0]?.album?.images?.[0]?.url || description?.album?.images?.[0]?.url  || 
+              related?.tracks?.items?.[0]?.track?.album?.images?.[0]?.url || videos?.images?.coverarthq || image || related?.[0]?.content_id?.description?.track?.album?.images?.[0]?.url}
           className="home-image3"/> : null}
       </div>
       <div className="home-test">
@@ -609,8 +657,8 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
                idSong[2] ? idSong[2] : null ): idSong[2]) : null ||
         mood === 'spotify' && playlist === 0 ? (videos?.[0]?.name ? videos?.[0]?.name : null ||
              related?.tracks?.items?.[0]?.track?.name ? related?.tracks?.items?.[0]?.track?.name : null) : null ||  
-        mood === 'spotify' &&  idSongPlayList === '' && playlist === 1 ? (related?.videos?.[0]?.title ? related?.videos?.[0]?.title : null || 
-          related?.tracks?.items?.[0]?.track?.name  ? related?.tracks?.items?.[0]?.track?.name : null ||
+        mood === 'spotify' &&  idSongPlayList === '' && playlist === 1 ? (related?.videos?.[0]?.title ? related?.videos?.[0]?.title : null || related?.[0]?.content_id?.description?.[0]?.name ? related?.[0]?.content_id?.description?.[0]?.name : null ||
+          related?.tracks?.items?.[0]?.track?.name  ? related?.tracks?.items?.[0]?.track?.name : null || related?.[0]?.content_id?.description?.track?.name ? related?.[0]?.content_id?.description?.track?.name : null ||
               views?.title ? views?.title : null || idSong[2] ? idSong[2] : null) : idSong[2] || 
         mood === 'appleMusic' ? (videos?.title ? videos?.title : null || 
             idSongPlayList === '' && playlist === 1 && related?.data?.[0]?.relationships?.tracks?.data?.[0]?.attributes?.name ?
@@ -661,7 +709,9 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
            `/channel/${related?.videos?.[0]?.channel?.id || related?.[0]?.content_id?.description?.channel?.id}`  :`/channel/${idSong[5]}`) : null ||
            mood === 'spotify' && playlist === 0 ? (videos?.[0]?.artists?.[0]?.id ? `/channel/${videos?.[0]?.artists?.[0]?.id}` : null || 
             related?.tracks?.items?.[0]?.track?.artists?.[0]?.id ? `/channel/${related?.tracks?.items?.[0]?.track?.artists?.[0]?.id}` : null) : null ||
-           mood === 'spotify' &&  idSongPlayList === '' && playlist === 1 ? (`/channel/${related?.tracks?.items?.[0]?.track?.artists?.[0]?.id}` || `/channel/${idSong[5]}` ) : idSong[5] ||
+           mood === 'spotify' &&  idSongPlayList === '' && playlist === 1 ? ( related?.tracks?.items?.[0]?.track?.artists?.[0]?.id ? `/channel/${related?.tracks?.items?.[0]?.track?.artists?.[0]?.id}` : null  || 
+              related?.[0]?.content_id?.description?.track?.artists?.[0]?.id ? `/channel/${related?.[0]?.content_id?.description?.track?.artists?.[0]?.id}` : null ||
+              related?.[0]?.content_id?.description?.[0]?.artists?.[0]?.id ? `/channel/${related?.[0]?.content_id?.description?.[0]?.artists?.[0]?.id}` : null ||  `/channel/${idSong[5]}` ) : idSong[5] ||
             mood === 'appleMusic' ? (videos?.artists?.[0]?.adamid ? `/channel/${videos?.artists?.[0]?.adamid}` : null ||
             idSongPlayList === '' && playlist === 1 && artist?.[0]?.id ? `/channel/${artist?.[0]?.id}`: `/channel/${idSong[5]}`) : null}>
           <div className="home-button19 button">
@@ -670,8 +720,9 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
               src={ mood === 'youtube' ? (playlist === 0 && views  ? videos?.channel?.icon : null  ||
                 idSongPlayList === '' && playlist === 1 ? related?.videos?.[0]?.thumbnail?.url || related?.[0]?.content_id?.description?.thumbnail?.url : idSong[1]) : null || 
                 mood === 'spotify' && playlist === 0 ? (artist?.images?.[0]?.url ? artist?.images?.[0]?.url : null || 
-                  channel?.images?.[0]?.url ? channel?.images?.[0]?.url : null) : null ||
-                mood === 'spotify' &&  idSongPlayList === '' && playlist === 1 ? (related?.tracks?.items?.[0]?.track?.album?.images?.[0]?.url || idSong[1] ) : idSong[1] ||
+                  channel?.images?.[0]?.url ? channel?.images?.[0]?.url : null) : null || 
+                mood === 'spotify' &&  idSongPlayList === '' && playlist === 1 ? (related?.tracks?.items?.[0]?.track?.album?.images?.[0]?.url || 
+                  related?.[0]?.content_id?.description?.[0]?.album?.images?.[0]?.url || related?.[0]?.content_id?.description?.track?.album?.images?.[0]?.url || idSong[1] ) : idSong[1] ||
                 mood === 'appleMusic' ? (videos?.images?.background ? videos?.images?.background : null || 
                   idSongPlayList === '' && playlist === 1 && image1 ? image1 : idSong[1])  : null}
               className="home-image4"
@@ -687,7 +738,8 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
                       mood === 'spotify' && playlist === 0 ? (videos?.[0]?.artists?.[0]?.name ? videos?.[0]?.artists?.[0]?.name : null || 
                         related?.tracks?.items?.[0]?.track?.artists?.[0]?.name ? related?.tracks?.items?.[0]?.track?.artists?.[0]?.name : null) : null ||
                     mood === 'spotify' &&  idSongPlayList === '' && playlist === 1 ? (related?.tracks?.items?.[0]?.track?.artists?.[0]?.name?.slice(0,20) ? related?.tracks?.items?.[0]?.track?.artists?.[0]?.name?.slice(0,20) : null ||
-                      idSong[3] ? idSong[3].slice(0,20) :null ) : idSong[3] ||
+                    related?.[0]?.content_id?.description?.track?.artists?.[0]?.name ? related?.[0]?.content_id?.description?.track?.artists?.[0]?.name : null ||
+                    related?.[0]?.content_id?.description?.[0]?.artists?.[0]?.name ? related?.[0]?.content_id?.description?.[0]?.artists?.[0]?.name : null || idSong[3] ? idSong[3].slice(0,20) :null ) : idSong[3] ||
                   mood === 'appleMusic' ? (videos?.subtitle ? videos?.subtitle : null || 
                     idSongPlayList === '' && playlist === 1 && artist?.[0]?.attributes?.name ? artist?.[0]?.attributes?.name : idSong[3]) : null}</span>
             <span className="home-text12">{videos ? videos?.author?.stats?.subscribersText : null || views ? views?.statistics?.subscriberCount : null}
@@ -699,10 +751,12 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
             <path d="M512 192c-223.318 0-416.882 130.042-512 320 95.118 189.958 288.682 320 512 320 223.312 0 416.876-130.042 512-320-95.116-189.958-288.688-320-512-320zM764.45 361.704c60.162 38.374 111.142 89.774 149.434 150.296-38.292 60.522-89.274 111.922-149.436 150.296-75.594 48.218-162.89 73.704-252.448 73.704-89.56 0-176.858-25.486-252.452-73.704-60.158-38.372-111.138-89.772-149.432-150.296 38.292-60.524 89.274-111.924 149.434-150.296 3.918-2.5 7.876-4.922 11.86-7.3-9.96 27.328-15.41 56.822-15.41 87.596 0 141.382 114.616 256 256 256 141.382 0 256-114.618 256-256 0-30.774-5.452-60.268-15.408-87.598 3.978 2.378 7.938 4.802 11.858 7.302v0zM512 416c0 53.020-42.98 96-96 96s-96-42.98-96-96 42.98-96 96-96 96 42.982 96 96z"></path>
           </svg> : null }
           <span className="home-text14">
-            <span>{like?.viewCount ? like?.viewCount  : null || 
-              videos?.[0]?.popularity ? videos?.[0]?.popularity : null || 
-              idSong[6] ?   idSong[6] : null ||
-              related?.tracks?.items?.[0]?.track?.popularity ? related?.tracks?.items?.[0]?.track?.popularity : idSong[6]}
+            <span>{like?.viewCount ? formatNumber(like?.viewCount)  : null || idSong[6] ?   formatNumber(idSong[6]) : null ||
+              videos?.[0]?.popularity ? formatNumber(videos?.[0]?.popularity) : null || 
+              related?.[0]?.content_id?.description?.track?.popularity ? formatNumber(related?.[0]?.content_id?.description?.track?.popularity) : null ||
+              related?.[0]?.content_id?.description?.[0]?.popularity ? formatNumber(related?.[0]?.content_id?.description?.[0]?.popularity) : null ||
+              idSong[6] ?   formatNumber(idSong[6]) : null ||
+              related?.tracks?.items?.[0]?.track?.popularity ? formatNumber(related?.tracks?.items?.[0]?.track?.popularity) : idSong[6]}
             </span>
             <br></br>
           </span>
@@ -715,7 +769,9 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
             idSongPlayList === '' && playlist === 1 ? related?.videos?.[0]?.duration_formatted || related?.[0]?.content_id?.description?.duration_formatted : idSong[4]) : null || 
             mood === 'spotify' && playlist === 0 ? (videos?.[0]?.duration_ms ? millisToMinutesAndSeconds(videos?.[0]?.duration_ms) : null || 
               related?.tracks?.items?.[0]?.track?.duration_ms ? millisToMinutesAndSeconds(related?.tracks?.items?.[0]?.track?.duration_ms) : null) : null ||  
-            mood === 'spotify' &&  idSongPlayList === '' && playlist === 1 ? (millisToMinutesAndSeconds(related?.tracks?.items?.[0]?.track?.duration_ms) || idSong[4]) : idSong[4] || 
+            mood === 'spotify' &&  idSongPlayList === '' && playlist === 1 ? (related?.tracks?.items?.[0]?.track?.duration_ms ?  millisToMinutesAndSeconds(related?.tracks?.items?.[0]?.track?.duration_ms) : null || 
+            related?.[0]?.content_id?.description?.track?.duration_ms ? millisToMinutesAndSeconds(related?.[0]?.content_id?.description?.track?.duration_ms) : null || 
+            related?.[0]?.content_id?.description?.[0]?.duration_ms ? millisToMinutesAndSeconds(related?.[0]?.content_id?.description?.[0]?.duration_ms) : null || idSong[4] ? idSong[4] : null) : idSong[4] ||  
             mood === 'appleMusic' ? (videos?.releasedate ? "   "+videos?.releasedate : null || 
               idSongPlayList === '' && playlist === 1 && related?.data?.[0]?.relationships?.tracks?.data?.[0]?.attributes?.releaseDate ? related?.data?.[0]?.relationships?.tracks?.data?.[0]?.attributes?.releaseDate : idSong[4]) : null}</span> 
         </div>
@@ -723,11 +779,11 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
           <svg viewBox="0 0 877.7142857142857 1024" className="home-icon058">
             <path d="M146.286 768c0-20-16.571-36.571-36.571-36.571s-36.571 16.571-36.571 36.571 16.571 36.571 36.571 36.571 36.571-16.571 36.571-36.571zM804.571 438.857c0-38.857-34.857-73.143-73.143-73.143h-201.143c0-66.857 54.857-115.429 54.857-182.857 0-66.857-13.143-109.714-91.429-109.714-36.571 37.143-17.714 124.571-73.143 182.857-16 16.571-29.714 34.286-44 52-25.714 33.143-93.714 130.857-138.857 130.857h-18.286v365.714h18.286c32 0 84.571 20.571 115.429 31.429 62.857 21.714 128 41.714 195.429 41.714h69.143c64.571 0 109.714-25.714 109.714-95.429 0-10.857-1.143-21.714-2.857-32 24-13.143 37.143-45.714 37.143-72 0-13.714-3.429-27.429-10.286-39.429 19.429-18.286 30.286-41.143 30.286-68 0-18.286-8-45.143-20-58.857 26.857-0.571 42.857-52 42.857-73.143zM877.714 438.286c0 33.143-9.714 65.714-28 93.143 3.429 12.571 5.143 26.286 5.143 39.429 0 28.571-7.429 57.143-21.714 82.286 1.143 8 1.714 16.571 1.714 24.571 0 36.571-12 73.143-34.286 101.714 1.143 108-72.571 171.429-178.286 171.429h-73.714c-81.143 0-156.571-24-232-50.286-16.571-5.714-62.857-22.857-78.857-22.857h-164.571c-40.571 0-73.143-32.571-73.143-73.143v-365.714c0-40.571 32.571-73.143 73.143-73.143h156.571c22.286-14.857 61.143-66.286 78.286-88.571 19.429-25.143 39.429-49.714 61.143-73.143 34.286-36.571 16-126.857 73.143-182.857 13.714-13.143 32-21.143 51.429-21.143 59.429 0 116.571 21.143 144.571 76.571 17.714 34.857 20 68 20 106.286 0 40-10.286 74.286-27.429 109.714h100.571c78.857 0 146.286 66.857 146.286 145.714z"></path>
           </svg>
-          <span className="home-text18">{like?.likes}</span>
+          <span className="home-text18">{formatNumber(like?.likes)}</span>
           <svg viewBox="0 0 877.7142857142857 1024" className="home-icon060">
             <path d="M146.286 256c0-20-16.571-36.571-36.571-36.571s-36.571 16.571-36.571 36.571 16.571 36.571 36.571 36.571 36.571-16.571 36.571-36.571zM804.571 585.143c0-21.143-16-72.571-42.857-73.143 12-13.714 20-40.571 20-58.857 0-26.857-10.857-49.714-30.286-68 6.857-12 10.286-25.714 10.286-39.429 0-26.286-13.143-58.857-37.143-72 1.714-10.286 2.857-21.143 2.857-32 0-66.857-42.286-95.429-105.714-95.429h-73.143c-67.429 0-132.571 20-195.429 41.714-30.857 10.857-83.429 31.429-115.429 31.429h-18.286v365.714h18.286c45.143 0 113.143 97.714 138.857 130.857 14.286 17.714 28 35.429 44 52 55.429 58.286 36.571 145.714 73.143 182.857 78.286 0 91.429-42.857 91.429-109.714 0-67.429-54.857-116-54.857-182.857h201.143c38.286 0 73.143-34.286 73.143-73.143zM877.714 585.714c0 78.857-67.429 145.714-146.286 145.714h-100.571c17.143 35.429 27.429 69.714 27.429 109.714 0 37.714-2.286 72-20 106.286-28 55.429-85.143 76.571-144.571 76.571-19.429 0-37.714-8-51.429-21.143-57.143-56-39.429-146.286-73.143-183.429-21.714-22.857-41.714-47.429-61.143-72.571-17.143-22.286-56-73.714-78.286-88.571h-156.571c-40.571 0-73.143-32.571-73.143-73.143v-365.714c0-40.571 32.571-73.143 73.143-73.143h164.571c16 0 62.286-17.143 78.857-22.857 82.286-28.571 153.714-50.286 241.714-50.286h64c104 0 178.857 61.714 178.286 168.571v2.857c22.286 28.571 34.286 65.143 34.286 101.714 0 8-0.571 16.571-1.714 24.571 14.286 25.143 21.714 53.714 21.714 82.286 0 13.143-1.714 26.857-5.143 39.429 18.286 27.429 28 60 28 93.143z"></path>
           </svg>
-          <span className="home-text19">{like?.dislikes}</span>
+          <span className="home-text19">{formatNumber(like?.dislikes)}</span>
         </div>  : null}
       </figure>
     </div>
@@ -738,7 +794,7 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
         {relatedPlayList?.[idx]?.type === 'playlist' && <FeatureCard playlist={item} text='1' idx={idx}></FeatureCard>}
         </div>
       ))}
-      {mood === 'spotify' && playlist === 1 && <FeatureCard playlist={videos} text='0'></FeatureCard>}
+      {mood === 'spotify' && playlist === 1 && <FeatureCard count={related?.length} playlist={videos} text='0'></FeatureCard>}
       {mood === 'spotify' && playlist === 0 && <FeatureCard playlist={relatedPlayList} text='1' idxx={idxx}></FeatureCard>}
       {mood === 'appleMusic' && playlist === 1 && <FeatureCard playlist={videos?.data?.[0]?.attributes} mood={mood} text='0'></FeatureCard>}
       {mood === 'appleMusic' && playlist === 0 && Array.isArray(play) && play.map((item, idx) => (
@@ -748,19 +804,19 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
       ))}
     </div>
     <div className="home-list1 music-list" >
-    {mood === 'youtube' && playlist === 0 && <Music1 video={videos} idx={-1} mood={mood} pointerEvents='none'></Music1>}
+    {mood === 'youtube' && playlist === 0 && <Music1  color={same12?.find((s) => s?.content_id?.idPage === videos?.id)} video={videos} idx={-1} mood={mood} pointerEvents='none'></Music1>}
       {mood === 'youtube' && playlist === 0 ? Array.isArray(related) && related.map((item, idx) => (
         <div key={idx} style={{width: '100%' }}> 
-        {  <Music1 video={item} playlist={playlist} idx={idx} mood={mood}></Music1>}
+        {  <Music1 color={same12?.find((s) => s?.content_id?.idPage === item?.videoId)}  video={item} playlist={playlist} idx={idx} mood={mood}></Music1>}
         </div>
       )) : mood === 'youtube' && Array.isArray(related.videos) && related?.videos.map((item, idx) => (
         <div key={idx} style={{width: '100%' }}> 
-        {  <Music1 video={item} idx={idx} playlist={playlist} idSearch={idSearch} mood={mood}></Music1>}
+        {  <Music1 color={same12?.find((s) => s?.content_id?.idPage === item?.id)} video={item} idx={idx} playlist={playlist} idSearch={idSearch} mood={mood}></Music1>}
         </div>
       ))}
       {mood === 'youtube' && playlist === 1 ? Array.isArray(related) && related.map((item, idx) => (
         <div key={idx} style={{width: '100%' }}> 
-        {  <Music1 video={item?.content_id?.description} idx={idx} playlist={playlist} idSearch={idSearch} mood={mood}></Music1>}
+        {  <Music1 color={same12?.find((s) => s?.content_id?.idPage === item?.content_id?.description?.id)} video={item?.content_id?.description} idx={idx} playlist={playlist} idSearch={idSearch} mood={mood}></Music1>}
         </div>
       )) : null}
       {mood === 'spotify' && playlist === 0 && <Music1 video={videos} albums={videos?.[0]?.album?.images?.[0]?.url} mood={mood} idx={-1} pointerEvents='none'></Music1>}
@@ -773,6 +829,11 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
         {  <Music1 video={item?.track} playlist={playlist} idx={idx} idSearch={idSearch} albums={videos?.[0]?.album?.images?.[0]?.url} mood={mood}></Music1>}
         </div> 
       ))}
+      {mood === 'spotify' && playlist === 1 ? Array.isArray(related) && related.map((item, idx) => (
+        <div key={idx} style={{width: '100%' }}> 
+        {  <Music1 video={item?.content_id?.description} text={!id?.includes("|")} idx={idx} playlist={playlist} idSearch={idSearch} mood={mood}></Music1>}
+        </div>
+      )) : null}
       {mood === 'appleMusic' && playlist === 0 && <Music1 video={videos} mood={mood} idx={-1} pointerEvents='none'></Music1>}
       {mood === 'appleMusic' && playlist === 0 ? Array.isArray(video) && video.map((item, idx) => (
         <div key={idx} style={{width: '100%' }}> 

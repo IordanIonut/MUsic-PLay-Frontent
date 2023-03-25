@@ -16,7 +16,6 @@ export const MusicBar = ({previous, playing, muted, onProgress, onDuration, loop
   const [check, setCheck] = useState(false);
   const idSongPlayList = Cookies.get('idSongPlayList') || '';
   const [idx, setIdx] = useState('');
-  const idSong = idSongPlayList.split(',0,');
 
   const style=((idClass)=>{
     const element = document.getElementById(idClass);
@@ -44,16 +43,16 @@ export const MusicBar = ({previous, playing, muted, onProgress, onDuration, loop
           document.getElementById(idClass).classList.add("hover113");
           //setCount(1);
           //setCheck(true);
-          console.log("111111111111111111111111111111111");
+         //console.log("111111111111111111111111111111111");
         }
         if (element.classList.contains("hover113"))  {
           setCheck(false);
           document.getElementById(idClass).classList.add("hover113");
-          console.log('222222222222222222222222222222222');
+           //console.log('222222222222222222222222222222222');
         }else if(!element.classList.contains("hover113") && check){
           document.getElementById(idClass).classList.remove("hover113");
           setCheck(true);
-          console.log("333333333333333333333333333333333333");
+         // console.log("333333333333333333333333333333333333");
         }
       }
     }
@@ -68,10 +67,9 @@ export const MusicBar = ({previous, playing, muted, onProgress, onDuration, loop
           else
             aa = data?.description?.[0]?.content_id?.content_id;
           const val={content_id: {content_id: aa},  fill: ran, user_id: {user_id: idSp}};
-          console.log(val);
-          ApiDataBasePost(`favorite/add`, val).then((data) => {
-            ApiDataBaseGet(`favorite/all`).then((data) =>{setAll(data); console.log("4444444444444444444444");
-            setSameID('')})}).catch((err) => {console.log(err?.message)})})
+          ApiDataBasePost(`favorite/add`, val).then((data) => {console.log(data);
+            ApiDataBaseGet(`favorite/all/user_id?user_id=${idSp}`).then((data) =>{setAll(data); //console.log("4444444444444444444444"); 
+            setSameID('as'); setCheck(true);})}).catch((err) => {console.log(err?.message)})})
         .catch((err) => {console.log(err)});
     } else {
       ApiDataBaseGet(`content/last`).then((data) => {let val = null;
@@ -79,7 +77,7 @@ export const MusicBar = ({previous, playing, muted, onProgress, onDuration, loop
           val = data?.idPage;
         else
           val = data?.description?.[0]?.content_id?.idPage;
-      ApiDataBaseGet(`favorite/delete/search?userId=${idSp}&idPage=${val}`).then((data) => {console.log("delete : 555555555555555555555555555555"); 
+      ApiDataBaseGet(`favorite/delete/search?userId=${idSp}&idPage=${val}`).then((data) => {//console.log("delete : 555555555555555555555555555555"); 
       console.log("countqw          "+count);setCheck(false);setCount(0);setAll([]);setSameID('');}).catch((err) => {console.log(err?.message)})});
       setAll([]);setSameID('');
     }
@@ -99,31 +97,45 @@ export const MusicBar = ({previous, playing, muted, onProgress, onDuration, loop
         setIdx(idSong[0]);
       }
     }
+      if(mood === 'spotify'){
+        if(idSongPlayList === '' && playlist === 1){
+          if(!id?.includes("|")){
+            let a = related?.tracks?.items?.[0]?.sharing_info?.uri.split(":");
+            setIdx(a?.[2]);
+          }else{
+            setIdx(related?.[0]?.content_id?.idPage);
+          }
+        }else if(idSongPlayList === ''){
+          setIdx(id);
+        }else{
+          setIdx(idSong[0]);
+        }
+      }
   },[idSongPlayList, related]);
 
   useEffect(() =>{
     if(token){
       if(idx != undefined && check){
-        ApiDataBaseGet(`favorite/all`).then((data) =>{setAll(data);setSameID('');setCount(0);});
+        ApiDataBaseGet(`favorite/all/user_id?user_id=${idSp}`).then((data) =>{setAll(data);setSameID('');setCount(0);}).catch((err) =>{console.log(err?.message);});
         style('save');
-        console.log("6666666666666666666666666666666");
+    //  console.log("6666666666666666666666666666666");
       }
       else{
-        console.log("77777777777777777777777777777");
-        ApiDataBaseGet(`favorite/all`).then((data) =>{setAll(data);setCount(0);setSameID('')});
+      //  console.log("77777777777777777777777777777");
+        ApiDataBaseGet(`favorite/all/user_id?user_id=${idSp}`).then((data) =>{setAll(data);setCount(0);setSameID('')}).catch((err) =>{console.log(err?.message);});
       }
     }
-  }, [idx]);
+  }, [idx, token]);
 
   useEffect(() =>{
     for (let i = 0; i < all?.length; i++) {
         if (all?.[i]?.content_id?.idPage === idx) {
             setSameID(all?.[i]?.fill);
-            console.log("culoare: "+sameID);
-            console.log("count: "+count);
+            //console.log("culoare: "+sameID);
+            //console.log("count: "+count);
             setCount(1);
             style('save');
-            console.log('8888888888888888888888888888')
+           // console.log('8888888888888888888888888888')
           }
         }
   },[idx, sameID, check, all]);

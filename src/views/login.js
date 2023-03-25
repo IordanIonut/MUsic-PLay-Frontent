@@ -45,9 +45,9 @@ const Login = () => {
       password: Yup.string()
         .matches(
           /^(?=.*\d)(?=.*[!@#$%^&*()\-_=+{};:,<.>])(?=.*[a-zA-Z]).{8,}$/,
-          'The password must contain at least one digit and a special character (!,@,#,$,%,&,*,(,),-_,+={},[],|,;,:,",\',,,.,/ or ?) and have at least 8 characters!'
-        )
-        .required('The password is mandatory!'),
+          'The password must contain at least one digit and a special character (!,@,#,$,%,&,*,(,),-_,+={},[],|,;,:,",\',,,.,/ or ?) and have at least 8 characters!')
+        .required('The password is mandatory!')
+        .min(8, 'The password need to have minimum 8 characters!'),
       email: Yup.string()
         .email('The email address is invalid!')
         .matches(/(yahoo|gmail)\.com$/, 'The email address must be of the type "yahoo.com" or "gmail.com"!')
@@ -134,9 +134,9 @@ const Login = () => {
       password: Yup.string()
         .matches(
           /^(?=.*\d)(?=.*[!@#$%^&*()\-_=+{};:,<.>])(?=.*[a-zA-Z]).{8,}$/,
-          'The password must contain at least one digit and a special character (!,@,#,$,%,&,*,(,),-_,+={},[],|,;,:,",\',,,.,/ or ?) and have at least 8 characters!'
-        )
-        .required('The password is mandatory!'),
+          'The password must contain at least one digit and a special character (!,@,#,$,%,&,*,(,),-_,+={},[],|,;,:,",\',,,.,/ or ?) and have at least 8 characters!')
+        .required('The password is mandatory!')
+        .min(8, 'The password need to have minimum 8 characters!'),
     }),
     onSubmit: (values) => {
       ApiDataBasePost(`users/login`, values)

@@ -3,13 +3,15 @@ import Music from "../components/music";
 import '../views/home.css'
 import '../style.css'
 import FeatureCard from '../components/feature-card';
+import { ApiDataBaseGet } from '../utils/fetchAPI';
 
-const ChanelBar = ({channelDetail,videos, live, playlist, mood}) => {
+const ChanelBar = ({channelDetail,videos, live, playlist, mood, idSp}) => {
   const [type, setType] = React.useState("video");
   const [video, setVideo] = React.useState([]);
   const [play, setPlay] = React.useState([]);
   const [artist, setArtist] = React.useState([]);
   const [image, setImage] = React.useState('');
+  const [same, setSame] = useState([]);
 
   const styleChangeOn=((idClass)=>{
     document.getElementById(idClass).classList.add("hoverType");
@@ -18,6 +20,16 @@ const ChanelBar = ({channelDetail,videos, live, playlist, mood}) => {
   const styleChangeOf=((idClass)=>{
     document.getElementById(idClass).classList.remove("hoverType");
   });
+
+  function formatNumber(num) {
+    if (num >= 1000000) {
+      return (num / 1000000)?.toFixed(0)+ 'M';
+    } else if (num >= 1000) {
+      return (num / 1000)?.toFixed(0) + 'K';
+    } else {
+      return num?.toString();
+    }
+  }
 
   useEffect(()=>{
     if(mood === 'appleMusic'){
@@ -50,6 +62,13 @@ const ChanelBar = ({channelDetail,videos, live, playlist, mood}) => {
     }
   },[artist]);
 
+  useEffect(() =>{
+    if(idSp !== ''){
+      if(type === 'video')
+        ApiDataBaseGet(`favorite/search?userId=${idSp}&type=video&mood=${mood}`).then((data) =>{setSame(data)}).catch((err) =>{console.log(err?.message)});
+    }
+  }, [type, idSp, mood, channelDetail]);
+
   return ( 
     <section className="home-seach music-list"style={{display: 'flex', alignContent: 'baseline'}}>
     <div className="home-artist1">
@@ -78,7 +97,7 @@ const ChanelBar = ({channelDetail,videos, live, playlist, mood}) => {
             <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zM8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z"/>
           </svg> :null}
           {mood !== 'appleMusic' ?  <span className="home-text21">
-            <span>{channelDetail?.statistics?.subscriberCount || channelDetail?.data?.artist?.stats?.followers}</span>
+            <span>{formatNumber(channelDetail?.statistics?.subscriberCount) || formatNumber(channelDetail?.data?.artist?.stats?.followers)}</span>
             <br></br>
           </span> : null}
         </div> 
@@ -112,7 +131,7 @@ const ChanelBar = ({channelDetail,videos, live, playlist, mood}) => {
       <div className="home-card2 music-card">
       {mood==='youtube' && type === 'video' && Array.isArray(videos) && videos.map((item, idx) => (
             <section key={idx} style={{transitionDelay: '1s'} && (type === 'video' ? {width: '100%'}: null)}>
-              <Music video={item} idx={idx} page='0'></Music>
+              <Music color={same?.find((s) => s?.content_id?.idPage === item?.videoId)} video={item} idx={idx} page='0'></Music>
             </section>
           ))}
       {mood==='youtube' && type === 'playlist' && Array.isArray(playlist) && playlist.map((item, idx) => (
@@ -122,7 +141,7 @@ const ChanelBar = ({channelDetail,videos, live, playlist, mood}) => {
       ))}
       {mood==='youtube' && type === 'live' && Array.isArray(live) && live.map((item, idx) => (
             <section key={idx} style={{transitionDelay: '1s'} && (type === 'live' ? {width: '100%'}: null)}>
-              <Music video={item} idx={idx} page='1'></Music>
+              <Music color={same?.find((s) => s?.content_id?.idPage === item?.videoId)} video={item} idx={idx} page='1'></Music>
             </section>
       ))}
       {mood==='spotify' && type === 'video' && Array.isArray(videos?.data?.artist?.discography?.topTracks?.items) && videos?.data?.artist?.discography?.topTracks?.items.map((item, idx) => (

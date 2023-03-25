@@ -22,13 +22,13 @@ const FavoriteBar = ({mood, idSp, userDate})=>{
       if(type === 'video')
         ApiDataBaseGet(`favorite/search?userId=${idSp}&type=video&mood=${mood}`).then((data) =>{setArrayBD(data)}).catch((err) =>{console.log(err?.message)});
       if(type === 'playlist')
-        ApiDataBaseGet(`favorite/search?userId=${idSp}&type=playlist&mood=${mood}`).then((data) =>{setArrayBD(data)}).catch((err) =>{console.log(err?.message)});;
+        ApiDataBaseGet(`favorite/search?userId=${idSp}&type=playlist&mood=${mood}`).then((data) =>{setArrayBD(data)}).catch((err) =>{console.log(err?.message)});
       if(type === 'channel')
-        ApiDataBaseGet(`favorite/search?userId=${idSp}&type=channel&mood=${mood}`).then((data) =>{setArrayBD(data)}).catch((err) =>{console.log(err?.message)});;
-    }
+        ApiDataBaseGet(`favorite/search?userId=${idSp}&type=channel&mood=${mood}`).then((data) =>{setArrayBD(data)}).catch((err) =>{console.log(err?.message)});
+      }
   }, [type, idSp, mood]);
-  
-    return(
+
+  return(
       <section className="home-history"style={{display: 'flex', alignContent: 'baseline'}}>
       <span className="home-text29 text">My Favorite</span>
       <div className="home-share2 posibili buttonChange" name="music">
@@ -59,7 +59,7 @@ const FavoriteBar = ({mood, idSp, userDate})=>{
       <div className="home-card2 music-card">
       {mood === 'youtube' && idSp && type === 'video' && Array.isArray(arrayDB) && arrayDB.map((item, idx) => (
             <section  key={idx} style={{width: '99%', transitionDelay: '1s' }}> 
-            {  Array.isArray(arrayDB)  &&  <Music video={item?.content_id?.description} idx={idx}></Music> }
+            {  Array.isArray(arrayDB)  &&  <Music color={item?.fill}  video={item?.content_id?.description} idx={idx}></Music> }
             </section>
           ))}
       {mood === 'youtube'  && idSp && type === 'playlist' && Array.isArray(arrayDB) && arrayDB.map((item, idx) => (
@@ -68,6 +68,36 @@ const FavoriteBar = ({mood, idSp, userDate})=>{
             </section>
           ))}
       {mood === 'youtube'  && idSp && type === 'channel' && Array.isArray(arrayDB) && arrayDB.map((item, idx) => (
+            <section key={idx} style={{width: '99%' , transitionDelay: '1s' }}> 
+            {Array.isArray(arrayDB)&&  <ChanelCard channelDetail={item?.content_id?.description} idx={idx}></ChanelCard> }
+            </section>
+          ))}
+      {mood === 'spotify' && idSp && type === 'video' && Array.isArray(arrayDB) && arrayDB.map((item, idx) => (
+            <section  key={idx} style={{width: '99%', transitionDelay: '1s' }}> 
+            {  Array.isArray(arrayDB)  &&  <Music  video={item?.content_id?.description} idx={idx}></Music> }
+            </section>
+          ))}
+      {mood === 'spotify'  && idSp && type === 'playlist' && Array.isArray(arrayDB) && arrayDB.map((item, idx) => (
+            <section key={idx} style={{marginLeft: '', transitionDelay: '1s'}}> 
+            {Array.isArray(arrayDB)&&  <FeatureCard playlist={item?.content_id?.description} idx={idx}></FeatureCard> }
+            </section>
+          ))}
+      {mood === 'spotify'  && idSp && type === 'channel' && Array.isArray(arrayDB) && arrayDB.map((item, idx) => (
+            <section key={idx} style={{width: '99%' , transitionDelay: '1s' }}> 
+            {Array.isArray(arrayDB)&&  <ChanelCard channelDetail={item?.content_id?.description} idx={idx}></ChanelCard> }
+            </section>
+          ))}
+    {mood === 'appleMusic' && idSp && type === 'video' && Array.isArray(arrayDB) && arrayDB.map((item, idx) => (
+            <section  key={idx} style={{width: '99%', transitionDelay: '1s' }}> 
+            {  Array.isArray(arrayDB)  &&  <Music  color={item?.fill}  video={item} idx={idx}></Music> }
+            </section>
+          ))}
+      {mood === 'appleMusic'  && idSp && type === 'playlist' && Array.isArray(arrayDB) && arrayDB.map((item, idx) => (
+            <section key={idx} style={{marginLeft: '', transitionDelay: '1s'}}> 
+            {Array.isArray(arrayDB)&&  <FeatureCard playlist={item?.content_id?.description} idx={idx}></FeatureCard> }
+            </section>
+          ))}
+      {mood === 'appleMusic'  && idSp && type === 'channel' && Array.isArray(arrayDB) && arrayDB.map((item, idx) => (
             <section key={idx} style={{width: '99%' , transitionDelay: '1s' }}> 
             {Array.isArray(arrayDB)&&  <ChanelCard channelDetail={item?.content_id?.description} idx={idx}></ChanelCard> }
             </section>

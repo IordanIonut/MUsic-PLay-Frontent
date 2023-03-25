@@ -4,12 +4,13 @@ import '../views/home.css'
 import '../components/music.css'
 import '../componentsHome/VideoBar'
 import ChanelCard from '../components/chanel-card';
-import { ApiYouTube4, ApiYouTube2, ApiSpotify1, ApiSpotify2, ApiShazam1} from '../utils/fetchAPI'
+import { ApiYouTube4, ApiYouTube2, ApiSpotify1, ApiSpotify2, ApiShazam1, ApiDataBaseGet} from '../utils/fetchAPI'
 import FeatureCard from '../components/feature-card';
 
-const SearchBar = ({selectedFiltre,mood}) => {
+const SearchBar = ({selectedFiltre, mood, idSp}) => {
   const [videos, setVideo] = React.useState([]);
   const [type, setType] = React.useState("video");
+  const [arrayDB, setArrayBD] = useState([]);
 
     useEffect(() =>{
       if(mood === 'youtube'){
@@ -42,6 +43,17 @@ const SearchBar = ({selectedFiltre,mood}) => {
     const styleChangeOn=((idClass)=>{
       document.getElementById(idClass).classList.add("hoverType");
     });
+
+    useEffect(() =>{
+      if(idSp != ''){
+        if(type === 'video')
+          ApiDataBaseGet(`favorite/search?userId=${idSp}&type=video&mood=${mood}`).then((data) =>{setArrayBD(data)}).catch((err) =>{console.log(err?.message)});
+        if(type === 'playlist')
+          ApiDataBaseGet(`favorite/search?userId=${idSp}&type=playlist&mood=${mood}`).then((data) =>{setArrayBD(data)}).catch((err) =>{console.log(err?.message)});
+        if(type === 'channel')
+          ApiDataBaseGet(`favorite/search?userId=${idSp}&type=channel&mood=${mood}`).then((data) =>{setArrayBD(data)}).catch((err) =>{console.log(err?.message)});
+        }
+    }, [type, idSp, mood]);
 
     const styleChangeOf=((idClass)=>{
       document.getElementById(idClass).classList.remove("hoverType");
@@ -93,15 +105,15 @@ const SearchBar = ({selectedFiltre,mood}) => {
                        type === 'live' ? {width: '100%'}: null ||
                        type === 'channel' ? {width: '100%'}: null ||
                        type === 'playlist' ? {marginLeft: ''} : null)}> 
-            {type==='video' && <Music video={item} idx={id} page='0'></Music>}
-            {type==='live' && <Music video={item} idx={id} page='1'></Music>}
+            {type==='video' && <Music color={arrayDB?.find((s) => s?.content_id?.idPage === item?.videoId)}  video={item} idx={id} page='0'></Music>}
+            {type==='live' && <Music color={arrayDB?.find((s) => s?.content_id?.idPage === item?.id)}  video={item} idx={id} page='1'></Music>}
             {type==='channel' && <ChanelCard channelDetail={item} idx={id} ></ChanelCard>}
             {type==='playlist'&& <FeatureCard playlist={item} idx={id} ></FeatureCard>}
             </section>
           ))}
           {mood === 'spotify' &&  Array.isArray(videos?.playlists?.items) && videos?.playlists?.items.map((item, id) => (
             <section key={id} style={{transitionDelay: '1s'} && type === 'playlist' ? {marginLeft: ''} : null}> 
-              {type==='playlist'&& <FeatureCard playlist={item} text={undefined} idx={id} mood={mood}></FeatureCard>}
+              {type==='playlist'&& <FeatureCard text={"1"} playlist={item} idx={id} mood={mood}></FeatureCard>}
             </section>
           ))}
           {mood === 'spotify' && Array.isArray(videos?.tracks?.items) && videos?.tracks?.items.map((item, id) => (

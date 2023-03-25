@@ -2,12 +2,22 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ApiYouTube9 } from '../utils/fetchAPI'
 import Cookies from 'js-cookie';
-
+import colors from "../utils/colors";
 import './music.css'
 
-const Music = ({video, idx, page, mood, treding, treding1}) => {
+const Music = ({video, idx, color, page, mood, treding, treding1}) => {
   const [like, setLike] = useState([]);
   const [image, setImage] = React.useState('');
+
+  function formatNumber(num) {
+    if (num >= 1000000) {
+      return (num / 1000000)?.toFixed(0)+ 'M';
+    } else if (num >= 1000) {
+      return (num / 1000)?.toFixed(0) + 'K';
+    } else {
+      return num?.toString();
+    }
+  }
 
   function toTime(seconds) {
     var date = new Date(null);
@@ -83,6 +93,8 @@ function millisToMinutesAndSeconds(millis) {
                 video?.podcast?.cover?.[2]?.url ? video?.podcast?.cover?.[2]?.url : null || 
                 video?.track?.album?.coverArt?.sources?.[2]?.url ? video?.track?.album?.coverArt?.sources?.[2]?.url : null ||
                 video?.trackMetadata?.displayImageUri ? video?.trackMetadata?.displayImageUri : null ||
+                video?.[0]?.album?.images?.[0]?.url ? video?.[0]?.album?.images?.[0]?.url : null ||
+                video?.track?.album?.images?.[0]?.url ? video?.track?.album?.images?.[0]?.url : null ||
                 video?.album?.images?.[0]?.url ? video?.album?.images?.[0]?.url : null ||
                 video?.images?.coverarthq ? video?.images?.coverarthq : null ||
                 image ? image : null}
@@ -98,6 +110,8 @@ function millisToMinutesAndSeconds(millis) {
              video?.channel?.name ? video?.channel?.name : null ||
              video?.publishedText ? video?.publishedText.slice(0,50) : null ||
              video?.[0]?.id?.author ? video?.[0]?.id?.author : null || 
+             video?.[0]?.album?.artists?.[0]?.name ? video?.[0]?.album?.artists?.[0]?.name : null ||
+             video?.track?.album?.artists?.[0]?.name ? video?.track?.album?.artists?.[0]?.name : null ||
              video?.[0]?.id?.channel?.name ? video?.[0]?.id?.channel?.name : null ||
              video?.data?.artists?.items?.[0]?.profile?.name ? video?.data?.artists?.items?.[0]?.profile?.name : null ||
              video?.artists?.[0]?.name ? video?.artists?.[0]?.name : null || 
@@ -113,6 +127,8 @@ function millisToMinutesAndSeconds(millis) {
           video?.[0]?.id?.title ? video?.[0]?.id?.title : null || 
           video?.data?.name ? video?.data?.name : null || 
           video?.name ? video?.name : null ||
+          video?.[0]?.name ? video?.[0]?.name : null ||
+          video?.track?.name ? video?.track?.name : null ||
           video?.track?.name ? video?.track?.name : null || 
           video?.trackMetadata?.trackName ? video?.trackMetadata?.trackName : null}</span>
           <br className=""></br>
@@ -123,9 +139,11 @@ function millisToMinutesAndSeconds(millis) {
             className=""
           ></path>
         </svg> : null}
-        <span className="music-text07">{video?.video?.stats?.views ? video?.video?.stats?.views : null ||  video?.views ? video?.views : null ||
-              video?.viewCount ?  video?.viewCount : null || video?.[0]?.id?.views ? video?.[0]?.id?.views : null 
-                || like?.videoDetails?.viewCount || video?.[0]?.id?.view_count || video?.track?.playcount}</span>    
+        <span className="music-text07">{video?.video?.stats?.views ? formatNumber(video?.video?.stats?.views) : null ||  video?.views ? formatNumber(video?.views) : null ||
+              video?.viewCount ?  formatNumber(video?.viewCount) : null || video?.[0]?.id?.views ? formatNumber(video?.[0]?.id?.views) : null 
+                ||like?.videoDetails?.viewCount ?  formatNumber(like?.videoDetails?.viewCount) : null || 
+                video?.[0]?.id?.view_count ? formatNumber(video?.[0]?.id?.view_count) : null || 
+                video?.track?.playcount ? formatNumber(video?.track?.playcount) : null}</span>    
         {treding1 === undefined ? <svg viewBox="0 0 1024 1024" className="music-icon2">
           <path
             d="M658.744 749.256l-210.744-210.746v-282.51h128v229.49l173.256 173.254zM512 0c-282.77 0-512 229.23-512 512s229.23 512 512 512 512-229.23 512-512-229.23-512-512-512zM512 896c-212.078 0-384-171.922-384-384s171.922-384 384-384c212.078 0 384 171.922 384 384s-171.922 384-384 384z"
@@ -134,6 +152,7 @@ function millisToMinutesAndSeconds(millis) {
         </svg> : null}
         <span className="music-text08">
           <span className="">{video?.video?.lengthSeconds ? toTime(video?.video?.lengthSeconds) : null ||
+                video?.[0]?.duration_ms ? millisToMinutesAndSeconds(video?.[0]?.duration_ms) : null ||
                 video?.lengthSeconds ? toTime(video?.lengthSeconds) : null || 
                 video?.[0]?.id?.length ? video?.[0]?.id?.length : null ||
                 video?.lengthText ? video?.lengthText || 'Live' : null ||
@@ -141,6 +160,7 @@ function millisToMinutesAndSeconds(millis) {
                 video?.[0]?.id?.duration_formatted ? video?.[0]?.id?.duration_formatted : null ||
                 mood === 'youtube' && video?.timeText ? video?.timeText || 'Live' : null ||
                 mood === 'youtube' && video?.durationText ? video?.durationText : null ||
+                video?.track?.duration_ms ? millisToMinutesAndSeconds(video?.track?.duration_ms) : null ||
                 video?.data?.duration?.totalMilliseconds ? toTime(video?.data?.duration?.totalMilliseconds) : null ||
                 video?.track?.duration?.totalMilliseconds ? millisToMinutesAndSeconds(video?.track?.duration?.totalMilliseconds) : null ||
                 video?.trackMetadata?.releaseDate ? video?.trackMetadata?.releaseDate : null}</span>
@@ -148,7 +168,7 @@ function millisToMinutesAndSeconds(millis) {
         </span>
       </div>
       <button className="button favorite music-button">
-        <svg viewBox="0 0 1024 1024" className="music-icon4">
+        <svg viewBox="0 0 1024 1024" style={{fill: colors?.[color]?.hex || colors?.[color?.fill]?.hex}} className="music-icon4">
           <path
             d="M512 910l-62-56q-106-96-154-142t-107-114-81-123-22-113q0-98 67-166t167-68q116 0 192 90 76-90 192-90 100 0 167 68t67 166q0 78-52 162t-113 146-199 186z"
             className=""

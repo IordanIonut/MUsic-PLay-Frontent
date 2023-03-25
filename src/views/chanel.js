@@ -128,25 +128,17 @@ const Chanel = () => {
       ApiDataBaseGet(`content/last`);
       ApiDataBaseGet(`content/last`);
       ApiDataBaseGet(`content/last`);
-      ApiDataBaseGet(`content/last`);
-      ApiDataBaseGet(`content/last`);
-      ApiDataBaseGet(`content/last`);
-      ApiDataBaseGet(`content/last`);
-      ApiDataBaseGet(`content/last`);
-      ApiDataBaseGet(`content/last`);
-      ApiDataBaseGet(`content/last`);
-      ApiDataBaseGet(`content/last`);
-      if(mood === 'youtube' && channelDetail?.length !== 0){
+      if(mood === 'youtube' && channelDetail?.length != 0 && !id?.includes("|")){
         ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=channel&description=${id}`).then((data1) => {console.log(data1);}).catch((err) => {console.log(err?.message);});   
       }
-      if(mood === 'spotify' && channelDetail?.length !== 0){
+      if(mood === 'spotify' && channelDetail?.length != 0  && !id?.includes("|")){
         ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=channel&description=${id}`).then((data1) => {console.log(data1);}).catch((err) => {console.log(err?.message);});   
       }
-      if(mood === 'appleMusic' && videos?.length !== 0){
+      if(mood === 'appleMusic' && videos?.length != 0  && !id?.includes("|")){
         ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=channel&description=${id}`).then((data1) => {console.log(data1);}).catch((err) => {console.log(err?.message);});   
       }
     }
-  },[channelDetail, token]);
+  },[channelDetail, videos, idSp, mood, token]);
 
   useEffect(() =>{
     styleChangeOnBar(mood);
@@ -176,6 +168,7 @@ const Chanel = () => {
     if(idClass === 'appleMusic')
       document.getElementById('appleMusic1').classList.remove("accoun5");
   });
+
 
   return ( 
       <div className="home-container">
@@ -319,7 +312,7 @@ const Chanel = () => {
             </svg>
           </Link>
         </section>
-          <ChanelBar channelDetail={channelDetail} videos={videos} live={live} playlist={playlist} mood={mood}></ChanelBar> 
+          <ChanelBar channelDetail={channelDetail} idSp={idSp} videos={videos} live={live} playlist={playlist} mood={mood}></ChanelBar> 
       </div>
       <MusicBar></MusicBar>
     </div>
