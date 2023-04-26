@@ -6,7 +6,7 @@
   background-color: rgba(255, 255, 255, 0.75);
 }
 .my-sweetalert-container .swal2-confirm {
-  opacity: 0.6 !important;
+  opacity: 0.8 !important;
   background-color: rgb(44, 62, 80) !important;
   width: 200px !important;
   height: 50px !important;
@@ -41,7 +41,7 @@
 }
 .my-sweetalert-container .swal2-cancel {
   background-color: #595959 !important;
-  opacity: 0.6 !important;
+  opacity: 0.8 !important;
   width: 200px !important;
   height: 50px !important;
   border: none !important;
@@ -75,7 +75,7 @@
 }
 .my-sweetalert-container .swal2-deny {
   background-color: #595959 !important;
-  opacity: 0.6 !important;
+  opacity: 0.8 !important;
   width: 200px !important;
   height: 50px !important;
   border: none !important;
@@ -192,7 +192,7 @@
 }
 .home-search-bar:hover {
   height: 42px;
-  opacity: 0.6;
+  opacity: 0.8;
 }
 .home-posibili {
   width: 230px;
@@ -243,7 +243,7 @@
 }
 .home-account {
   width: 40px;
-  opacity: 0.3;
+  opacity: 0.5;
   transition: 0.3s;
   margin-left: 4px;
   padding-top: 0px;
@@ -256,7 +256,7 @@
 }
 .home-account:hover {
   width: 40px;
-  opacity: 0.4;
+  opacity: 0.6;
   margin-left: 4px;
   margin-right: 20px;
 }
@@ -462,7 +462,7 @@
   width: 30px;
   height: 40px;
   display: flex;
-  opacity: 0.6;
+  opacity: 0.8;
   padding: 0px;
   margin-left: 10px;
   margin-right: 10px;
@@ -550,23 +550,23 @@
   width: 100%;
   height: 100%;
   display: none;
-  opacity: 0.3;
+  opacity: 0.5;
   transition: 0.3s;
 }
 .home-iframe:hover {
-  opacity: 0.6;
+  opacity: 0.8;
 }
 .home-image3 {
   width: 230px;
   height: 230px;
-  opacity: 0.3;
+  opacity: 0.5;
   align-self: center;
   object-fit: cover;
   transition: 0.3s;
   border-radius: var(--dl-radius-radius-round);
 }
 .home-image3:hover {
-  opacity: 0.6;
+  opacity: 0.8;
 }
 .home-test {
   width: 100%;
@@ -581,7 +581,7 @@
   color: var(--dl-color-gray-700);
   width: 100%;
   height: 40px;
-  opacity: 0.3;
+  opacity: 0.5;
   font-size: 21px;
   align-self: flex-start;
   text-align: left;
@@ -589,7 +589,7 @@
   padding-left: 20px;
 }
 .home-text08:hover {
-  opacity: 0.6;
+  opacity: 0.8;
   font-size: 22px;
 }
 .home-share1 {
@@ -600,7 +600,7 @@
   background-color: var(--dl-color-gray-500);
 }
 .home-share1:hover {
-  opacity: 0.6;
+  opacity: 0.8;
 }
 .home-button15 {
   display: flex;
@@ -620,7 +620,7 @@
   background-color: var(--dl-color-gray-500);
 }
 .home-play-list01:hover {
-  opacity: 0.6;
+  opacity: 0.8;
 }
 .home-button16 {
   display: flex;
@@ -676,7 +676,7 @@
   margin-right: 30px;
 }
 .home-container2:hover {
-  opacity: 0.6;
+  opacity: 0.8;
 }
 .home-button19 {
   width: auto;
@@ -688,12 +688,12 @@
 .home-image4 {
   width: 70px;
   height: 70px;
-  opacity: 0.3;
+  opacity: 0.5;
   object-fit: cover;
   border-radius: 20px;
 }
 .home-image4:hover {
-  opacity: 0.6;
+  opacity: 0.8;
 }
 .home-text11 {
   width: 230px;
@@ -711,7 +711,7 @@
 .home-text12 {
   color: var(--dl-color-gray-700);
   width: 100%;
-  opacity: 0.3;
+  opacity: 0.5;
   font-size: 21px;
   align-self: flex-start;
   margin-top: 5px;
@@ -721,12 +721,12 @@
 }
 .home-text12:hover {
   font-size: 22px;
-  opacity: 0.6;
+  opacity: 0.8;
 }
 .home-text13 {
   color: var(--dl-color-gray-700);
   width: 100%;
-  opacity: 0.6;
+  opacity: 0.8;
   font-size: 17px;
   align-self: flex-end;
   text-align: center;
@@ -745,7 +745,7 @@
   background-color: transparent;
 }
 .home-view1:hover {
-  opacity: 0.6;
+  opacity: 0.8;
 }
 .home-icon054 {
   fill: var(--dl-color-gray-700);
@@ -855,7 +855,7 @@
   width: 100%;
   height: 400px;
   display: flex;
-  opacity: 0.3;
+  opacity: 0.5;
   flex-wrap: wrap;
   align-items: center;
   flex-direction: column;
@@ -866,7 +866,7 @@
   width: 98%;
   height: calc(16.1290322581vw - 1px);
   display: block;
-  opacity: 0.3;
+  opacity: 0.5;
   position: relative;
   align-self: flex-start;
   object-fit: cover;
@@ -877,12 +877,12 @@
   justify-content: flex-start;
 }
 .home-image5:hover {
-  opacity: 0.6;
+  opacity: 0.8;
 }
 .home-container3 {
   width: 100%;
   display: flex;
-  opacity: 0.6;
+  opacity: 0.8;
   position: relative;
   align-self: flex-start;
   margin-top: 20px;
@@ -917,14 +917,14 @@
 }
 .home-view2 {
   width: auto;
-  opacity: 0.6;
+  opacity: 1;
   transition: 0.3s;
   margin-left: 150px;
   margin-right: 154px;
   background-color: transparent;
 }
 .home-view2:hover {
-  opacity: 0.6;
+  opacity: 0.8;
   margin-left: 150px;
   margin-right: 150px;
 }
@@ -943,7 +943,7 @@
   top: 30px;
   right: 120px;
   width: 50px;
-  opacity: 0.6;
+  opacity: 0.8;
   position: absolute;
   transition: 0.3s;
   margin-left: 0px;
@@ -953,7 +953,7 @@
   background-color: var(--dl-color-gray-500);
 }
 .home-video2:hover {
-  opacity: 0.6;
+  opacity: 0.8;
 }
 .home-icon064 {
   fill: var(--dl-color-gray-700);
@@ -965,7 +965,7 @@
   top: 30px;
   right: 200px;
   width: 50px;
-  opacity: 0.6;
+  opacity: 0.8;
   position: absolute;
   transition: 0.3s;
   margin-left: 0px;
@@ -973,7 +973,7 @@
   background-color: var(--dl-color-gray-500);
 }
 .home-play-list03:hover {
-  opacity: 0.6;
+  opacity: 0.8;
 }
 .home-button20 {
   display: flex;
@@ -988,7 +988,7 @@
 .home-play-list04 {
   right: 280px;
   width: 50px;
-  opacity: 0.6;
+  opacity: 0.8;
   position: absolute;
   transition: 0.3s;
   margin-left: 0px;
@@ -996,7 +996,7 @@
   background-color: var(--dl-color-gray-500);
 }
 .home-play-list04:hover {
-  opacity: 0.6;
+  opacity: 0.8;
 }
 .home-button21 {
   display: flex;
@@ -1019,7 +1019,7 @@
   color: var(--dl-color-gray-500);
   width: 100%;
   height: 40px;
-  opacity: 0.6;
+  opacity: 0.8;
   font-size: 30px;
   align-self: flex-start;
   text-align: left;
@@ -1040,7 +1040,7 @@
 .home-text25 {
   color: var(--dl-color-gray-500);
   height: 40px;
-  opacity: 0.6;
+  opacity: 0.8;
   font-size: 30px;
   align-self: flex-start;
   text-align: left;
@@ -1070,7 +1070,7 @@
 .home-text29 {
   color: var(--dl-color-gray-500);
   height: 40px;
-  opacity: 0.6;
+  opacity: 0.8;
   font-size: 30px;
   align-self: flex-start;
   text-align: left;
@@ -1091,7 +1091,7 @@
   background-color: var(--dl-color-gray-500);
 }
 .home-share2:hover {
-  opacity: 0.6;
+  opacity: 0.8;
 }
 .home-button22 {
   display: flex;
@@ -1131,7 +1131,7 @@
   background-color: var(--dl-color-gray-500);
 }
 .home-play-list06:hover {
-  opacity: 0.6;
+  opacity: 0.8;
 }
 .hover111{
   fill: var(--dl-color-gray-700);
@@ -1170,7 +1170,7 @@
   fill: var(--dl-color-gray-700);
   width: 70px;
   height: 30px;
-  opacity: 0.6;
+  opacity: 0.8;
   align-items: center;
   border-color: #2c3e50;
   border-width: 4px;
@@ -1214,7 +1214,7 @@
   color: var(--dl-color-gray-500);
   width: auto;
   height: 40px;
-  opacity: 0.6;
+  opacity: 0.8;
   font-size: 30px;
   align-self: flex-start;
   text-align: left;
@@ -1232,7 +1232,7 @@
   color: var(--dl-color-gray-500);
   width: auto;
   height: 40px;
-  opacity: 0.6;
+  opacity: 0.8;
   font-size: 30px;
   align-self: flex-start;
   text-align: left;
@@ -1245,7 +1245,7 @@
 }
 .home-card3 {
   display: flex;
-  opacity: 0.6;
+  opacity: 0.8;
 }
 .home-play-list07 {
   width: 100%;
@@ -1269,7 +1269,7 @@
 .home-text38 {
   color: var(--dl-color-gray-500);
   height: 40px;
-  opacity: 0.6;
+  opacity: 0.8;
   font-size: 30px;
   align-self: flex-start;
   text-align: left;
@@ -1288,13 +1288,13 @@
   background-color: var(--dl-color-gray-500);
 }
 .home-share3:hover {
-  opacity: 0.6;
+  opacity: 1;
 }
 .home-button25 {
   width: 30px;
   height: 40px;
   display: flex;
-  opacity: 0.6;
+  opacity: 1;
   padding: 0px;
   margin-left: 10px;
   margin-right: 10px;
@@ -1337,7 +1337,7 @@
 .home-text39 {
   color: var(--dl-color-gray-500);
   height: 40px;
-  opacity: 0.6;
+  opacity: 0.8;
   font-size: 30px;
   align-self: flex-start;
   text-align: left;
@@ -1356,13 +1356,13 @@
   background-color: var(--dl-color-gray-500);
 }
 .home-share4:hover {
-  opacity: 0.6;
+  opacity: 0.8;
 }
 .home-button27 {
   width: 30px;
   height: 40px;
   display: flex;
-  opacity: 0.6;
+  opacity: 0.8;
   padding: 0px;
   margin-left: 10px;
   margin-right: 10px;
@@ -1382,7 +1382,7 @@
   background-color: var(--dl-color-gray-500);
 }
 .home-play-list08:hover {
-  opacity: 0.6;
+  opacity: 0.8;
 }
 .home-button28 {
   display: flex;
@@ -1402,7 +1402,7 @@
   color: var(--dl-color-gray-500);
   width: auto;
   height: 40px;
-  opacity: 0.6;
+  opacity: 0.8;
   font-size: 30px;
   align-self: flex-start;
   text-align: left;
@@ -1430,7 +1430,7 @@
   width: 96%;
   height: auto;
   display: flex;
-  opacity: 0.6;
+  opacity: 0.8;
   align-items: flex-start;
   flex-direction: row;
   justify-content: space-between;
@@ -1439,7 +1439,7 @@
   color: var(--dl-color-gray-500);
   width: 100%;
   height: 40px;
-  opacity: 0.6;
+  opacity: 0.8;
   font-size: 30px;
   align-self: flex-start;
   text-align: left;
@@ -1465,7 +1465,7 @@
   color: var(--dl-color-gray-500);
   width: 85vh;
   height: 40px;
-  opacity: 0.6;
+  opacity: 0.8;
   font-size: 30px;
   align-self: flex-start;
   text-align: left;
@@ -1484,13 +1484,13 @@
   background-color: var(--dl-color-gray-500);
 }
 .home-share5:hover {
-  opacity: 0.6;
+  opacity: 0.8;
 }
 .home-button29 {
   width: 30px;
   height: 40px;
   display: flex;
-  opacity: 0.6;
+  opacity: 0.8;
   padding: 0px;
   margin-left: 10px;
   margin-right: 10px;
@@ -1510,7 +1510,7 @@
   background-color: var(--dl-color-gray-500);
 }
 .home-play-list09:hover {
-  opacity: 0.6;
+  opacity: 0.8;
 }
 .home-icon086 {
   fill: var(--dl-color-gray-700);
@@ -1535,7 +1535,7 @@
   color: var(--dl-color-gray-500);
   width: auto;
   height: 40px;
-  opacity: 0.6;
+  opacity: 0.8;
   font-size: 30px;
   align-self: flex-start;
   text-align: left;
@@ -1549,7 +1549,7 @@
 .home-card7 {
   width: 98%;
   display: flex;
-  opacity: 0.6;
+  opacity: 0.8;
   overflow-y: visible;
   flex-wrap: wrap;
 }
@@ -1602,14 +1602,14 @@
 .home-message {
   height: 100%;
   display: flex;
-  opacity: 0.3;
+  opacity: 0.5;
   transition: 0.3s;
   align-items: center;
   flex-direction: row;
   justify-content: flex-start;
 }
 .home-message:hover {
-  opacity: 0.6;
+  opacity: 0.8;
 }
 .home-form {
   width: 500px;
@@ -1632,7 +1632,7 @@
   color: var(--dl-color-gray-700);
   width: 100%;
   height: auto;
-  opacity: 0.6;
+  opacity: 0.8;
   font-size: 35px;
   align-self: flex-start;
   margin-top: 10px;
@@ -1700,7 +1700,7 @@
   width: 100%;
   height: 100%;
   display: flex;
-  opacity: 0.3;
+  opacity: 0.5;
   position: relative;
   transition: 0.3s;
   align-items: flex-start;
@@ -1715,13 +1715,13 @@
   border-bottom-width: 0px;
 }
 .home-contact:hover {
-  opacity: 0.6;
+  opacity: 0.8;
 }
 .home-text58 {
   color: var(--dl-color-gray-700);
   width: 100%;
   height: auto;
-  opacity: 0.6;
+  opacity: 0.8;
   font-size: 35px;
   align-self: flex-start;
   margin-top: 10px;
@@ -1731,13 +1731,13 @@
 .home-icon090 {
   width: 30px;
   height: 30px;
-  opacity: 0.6;
+  opacity: 0.8;
   margin-bottom: 20px;
 }
 .home-icon092 {
   width: 30px;
   height: 30px;
-  opacity: 0.6;
+  opacity: 0.8;
   margin-bottom: 20px;
 }
 .home-text59 {
@@ -1746,7 +1746,7 @@
   color: var(--dl-color-gray-700);
   width: var(--dl-size-size-xxlarge);
   height: auto;
-  opacity: 0.6;
+  opacity: 0.8;
   position: absolute;
   font-size: 23px;
 }
@@ -1756,7 +1756,7 @@
   color: var(--dl-color-gray-700);
   width: var(--dl-size-size-xxlarge);
   height: auto;
-  opacity: 0.6;
+  opacity: 0.8;
   position: absolute;
   font-size: 23px;
 }
@@ -1766,14 +1766,14 @@
   color: var(--dl-color-gray-700);
   width: var(--dl-size-size-xxlarge);
   height: auto;
-  opacity: 0.6;
+  opacity: 0.8;
   position: absolute;
   font-size: 23px;
 }
 .home-icon094 {
   width: 30px;
   height: 30px;
-  opacity: 0.6;
+  opacity: 0.8;
   margin-bottom: 20px;
 }
 .home-container6 {
@@ -1828,7 +1828,7 @@
 }
 .home-text62 {
   width: 90vh;
-  opacity: 0.01;
+  opacity: 0.03;
   margin-bottom: 20px;
 }
 .home-share6 {
@@ -1839,13 +1839,13 @@
   background-color: var(--dl-color-gray-500);
 }
 .home-share6:hover {
-  opacity: 0.6;
+  opacity: 0.8;
 }
 .home-button32 {
   width: 30px;
   height: 40px;
   display: flex;
-  opacity: 0.6;
+  opacity: 0.8;
   padding: 0px;
   margin-left: 10px;
   margin-right: 10px;
@@ -1865,7 +1865,7 @@
   background-color: var(--dl-color-gray-500);
 }
 .home-play-list10:hover {
-  opacity: 0.6;
+  opacity: 0.8;
 }
 .home-button33 {
   display: flex;
@@ -1905,7 +1905,7 @@
   width: 100%;
   height: 100%;
   display: flex;
-  opacity: 0.6;
+  opacity: 0.8;
   align-self: flex-start;
   align-items: stretch;
   border-radius: 50px;
@@ -1923,7 +1923,7 @@
   justify-content: flex-start;
 }
 .home-music:hover {
-  opacity: 0.6;
+  opacity: 0.8;
 }
 .home-button35 {
   color: transparent;
@@ -2072,7 +2072,7 @@
 .home-container7 {
   width: 80%;
   height: 15px;
-  opacity: 0.5;
+  opacity: 0.7;
   align-self: center;
   box-shadow: -5px 5px 10px 0px #1e2b38;
   transition: 0.3s;
@@ -2083,7 +2083,7 @@
   border-top-width: 0px;
 }
 .home-container7:hover {
-  opacity: 0.7;
+  opacity: 0.9;
   box-shadow: -5px 5px 10px 0px #1e2b38;
 }
 @media(max-width: 1200px) {

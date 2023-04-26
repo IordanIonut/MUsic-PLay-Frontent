@@ -67,14 +67,14 @@
 .login-message {
   height: 100%;
   display: flex;
-  opacity: 0.3;
+  opacity: 0.5;
   transition: 0.3s;
   align-items: center;
   flex-direction: row;
   justify-content: flex-start;
 }
 .login-message:hover {
-  opacity: 0.6;
+  opacity: 0.8;
 }
 .login-form {
   width: 500px;
@@ -133,7 +133,7 @@
   width: 100%;
   height: 100%;
   display: flex;
-  opacity: 0.3;
+  opacity: 0.5;
   position: relative;
   transition: 0.3s;
   align-items: flex-start;
@@ -148,7 +148,7 @@
   border-bottom-width: 0px;
 }
 .login-contact:hover {
-  opacity: 0.6;
+  opacity: 0.8;
 }
 .login-text02 {
   color: var(--dl-color-gray-700);
@@ -164,7 +164,7 @@
   color: var(--dl-color-gray-700);
   width: 100%;
   height: 30%;
-  opacity: 0.6;
+  opacity: 0.8;
   font-size: 17px;
   text-align: center;
 }
@@ -218,14 +218,14 @@
   width: 100%;
   height: 100%;
   display: flex;
-  opacity: 0.3;
+  opacity: 0.5;
   transition: 0.3s;
   align-items: center;
   flex-direction: row;
   justify-content: flex-start;
 }
 .login-message1:hover {
-  opacity: 0.6;
+  opacity: 0.8;
 }
 .login-form1 {
   width: 500px;
@@ -248,7 +248,7 @@
   color: var(--dl-color-gray-700);
   width: 100%;
   height: auto;
-  opacity: 0.6;
+  opacity: 0.8;
   font-size: 35px;
   align-self: flex-start;
   margin-top: 10px;
@@ -286,7 +286,7 @@
 .login-text08 {
   color: var(--dl-color-gray-700);
   height: auto;
-  opacity: 0.6;
+  opacity: 0.8;
   font-size: 16px;
   align-self: center;
 }
@@ -320,7 +320,7 @@
 .login-text09 {
   color: var(--dl-color-gray-700);
   height: auto;
-  opacity: 0.6;
+  opacity: 0.8;
   font-size: 16px;
   align-self: center;
 }
@@ -347,7 +347,7 @@
   width: 100%;
   height: 100%;
   display: flex;
-  opacity: 0.3;
+  opacity: 0.5;
   position: relative;
   transition: 0.3s;
   align-items: flex-start;
@@ -362,13 +362,13 @@
   border-bottom-width: 0px;
 }
 .login-contact1:hover {
-  opacity: 0.6;
+  opacity: 0.8;
 }
 .login-text13 {
   color: var(--dl-color-gray-700);
   width: 100%;
   height: auto;
-  opacity: 0.6;
+  opacity: 0.8;
   font-size: 35px;
   align-self: flex-start;
   margin-top: 10px;
@@ -379,7 +379,7 @@
   color: var(--dl-color-gray-700);
   width: 100%;
   height: 30%;
-  opacity: 0.6;
+  opacity: 0.8;
   font-size: 17px;
   text-align: center;
 }
@@ -433,7 +433,7 @@
   width: 100%;
   height: 100%;
   display: flex;
-  opacity: 0.3;
+  opacity: 0.5;
   position: relative;
   transition: 0.3s;
   align-items: flex-start;
@@ -449,13 +449,13 @@
   border-bottom-width: 0px;
 }
 .login-contact2:hover {
-  opacity: 0.6;
+  opacity: 0.8;
 }
 .login-text20 {
   color: var(--dl-color-gray-700);
   width: 100%;
   height: auto;
-  opacity: 0.6;
+  opacity: 0.8;
   font-size: 35px;
   align-self: flex-start;
   margin-top: 10px;
@@ -466,7 +466,7 @@
   color: var(--dl-color-gray-700);
   width: 100%;
   height: 30%;
-  opacity: 0.6;
+  opacity: 0.8;
   font-size: 17px;
   text-align: center;
 }
@@ -492,14 +492,14 @@
 .login-message2 {
   height: 100%;
   display: flex;
-  opacity: 0.3;
+  opacity: 0.5;
   transition: 0.3s;
   align-items: center;
   flex-direction: row;
   justify-content: flex-start;
 }
 .login-message2:hover {
-  opacity: 0.6;
+  opacity: 0.8;
 }
 .login-form2 {
   width: 500px;
@@ -522,7 +522,7 @@
   color: var(--dl-color-gray-700);
   width: 100%;
   height: auto;
-  opacity: 0.6;
+  opacity: 0.8;
   font-size: 35px;
   align-self: flex-start;
   margin-top: 10px;
@@ -560,7 +560,7 @@
 .login-text28 {
   color: var(--dl-color-gray-700);
   height: auto;
-  opacity: 0.6;
+  opacity: 0.8;
   font-size: 16px;
   align-self: center;
 }

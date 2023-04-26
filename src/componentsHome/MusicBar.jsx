@@ -6,7 +6,7 @@ import colors from '../utils/colors';
 import Cookies from 'js-cookie';
 
 
-export const MusicBar = ({previous, playing, muted, onProgress, onDuration, loop, onPlayStop, onMute, onLoop, handleSeek, url, artist, idSp, id, token, related,
+export const MusicBar = ({previous, playing, muted, onProgress, onDuration, loop, onPlayStop, onMute, onLoop, handleSeek, url, idSp, id, token, related,
    name, thumbnail, next, onRandome, playlist, mood}) => {
   const currentTimeFormatted = onProgress && typeof onProgress === 'number' ? new Date(onProgress * 1000).toISOString().substr(11, 8) : '00:00:00';
   const durationFormatted = onDuration && typeof onDuration === 'number' ? new Date(onDuration * 1000).toISOString().substr(11, 8) : '00:00:00';
@@ -68,7 +68,7 @@ export const MusicBar = ({previous, playing, muted, onProgress, onDuration, loop
             aa = data?.description?.[0]?.content_id?.content_id;
           const val={content_id: {content_id: aa},  fill: ran, user_id: {user_id: idSp}};
           ApiDataBasePost(`favorite/add`, val).then((data) => {console.log(data);
-            ApiDataBaseGet(`favorite/all/user_id?user_id=${idSp}`).then((data) =>{setAll(data); //console.log("4444444444444444444444"); 
+            ApiDataBaseGet(`favorite/all/user_id/1?user_id=${idSp}`).then((data) =>{setAll(data); //console.log("4444444444444444444444"); 
             setSameID('as'); setCheck(true);})}).catch((err) => {console.log(err?.message)})})
         .catch((err) => {console.log(err)});
     } else {
@@ -118,14 +118,14 @@ export const MusicBar = ({previous, playing, muted, onProgress, onDuration, loop
       if(idx != undefined && check){
         ApiDataBaseGet(`favorite/all/user_id?user_id=${idSp}`).then((data) =>{setAll(data);setSameID('');setCount(0);}).catch((err) =>{console.log(err?.message);});
         style('save');
-    //  console.log("6666666666666666666666666666666");
+      console.log("6666666666666666666666666666666");
       }
       else{
-      //  console.log("77777777777777777777777777777");
+       console.log("77777777777777777777777777777");
         ApiDataBaseGet(`favorite/all/user_id?user_id=${idSp}`).then((data) =>{setAll(data);setCount(0);setSameID('')}).catch((err) =>{console.log(err?.message);});
       }
     }
-  }, [idx, token]);
+  }, [idx, token, idSongPlayList, related]);
 
   useEffect(() =>{
     for (let i = 0; i < all?.length; i++) {

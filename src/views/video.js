@@ -218,6 +218,7 @@ const Video = () => {
           const aaaa = related; 
           delete aaaa?.tracks?.items; 
           const rezult = {description: aaaa, mood: 'spotify', type: 'playlist', idPage: id};
+          console.log(rezult);
           ApiDataBasePost(`content/add`, rezult).catch((error) => {console.log(error?.message);});
         }
       }
@@ -230,7 +231,7 @@ const Video = () => {
           setRelated(videos);
     }
     },[videos, token]);
-    
+
     useEffect(() =>{
       if(token && videos != 0){
         ApiDataBaseGet(`content/last`);
@@ -254,22 +255,23 @@ const Video = () => {
         }
         if(mood === 'appleMusic'  && related?.length !== 0 && !id?.includes("|")){
           if(typexx?.[1] === 'song' || typexx?.[1] === 'MUSIC' || typexx?.[1] === 'SONG'){
-            ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=video&description=${id}`).then((data1) => {ApiDataBaseGet(`history/unused-content`)}).catch((err) => {console.log(err?.message);});    
+            ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=video&description=${id}`).then((data1) => {console.log(data1);ApiDataBaseGet(`history/unused-content`)}).catch((err) => {console.log(err?.message);});    
           }
           if(typexx?.[1] === 'albums' || typexx?.[1] === 'album'){
             ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=playlist&description=${id}`).then((data1) => {console.log(data1);}).catch((err) => {console.log(err?.message);});    
           }
         }
-        if(mood === 'spotify' && videos?.length !== 0 && !id?.includes("|")){
+        if(mood === 'spotify' && related?.length !== 0 && videos?.length !== 0 && !id?.includes("|")){
           if(typexx?.[1] === 'track'){
-            ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=video&description=${id}`).then((data1) => {ApiDataBaseGet(`history/unused-content`)}).catch((err) => {console.log(err?.message);});    
+            console.log("test123121321313123")
+            ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=video&description=${id}`).then((data1) => {console.log(data1);ApiDataBaseGet(`history/unused-content`)}).catch((err) => {console.log(err?.message);});    
           }
           if(typexx?.[1] === 'playlist'){
             ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=playlist&description=${id}`).then((data1) => {console.log(data1);}).catch((err) => {console.log(err?.message);});    
           }
         }
     }
-    },[videos, idSp, mood, id, token, idSongPlayList, related]);
+    },[videos, idSp, mood, id, token, idSongPlayList]);
 
     useEffect(() =>{
       if(token && !id?.includes("|")){
@@ -284,7 +286,6 @@ const Video = () => {
             }else{
               rezult = {description: res, mood: 'youtube', type: 'video', idPage: idSong[0]};
             }
-            console.log(rezult);
             if(rezult?.description != null)
               ApiDataBasePost(`content/add`, rezult).then((data) => {}).catch((error) => {console.log(error?.message);});
           }

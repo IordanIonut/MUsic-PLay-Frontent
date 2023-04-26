@@ -11,7 +11,6 @@ const TredingBar = ({trending, token, mood, idSp})=>{
             ApiDataBaseGet(`favorite/search?userId=${idSp}&type=video&mood=${mood}`).then((data) =>{setSame(data)}).catch((err) =>{console.log(err?.message)});
       }
     }, [idSp, mood]);
-
     return(
       <section className="home-seach music-list" style={{display: 'flex', alignContent: 'baseline'}}>
       <span className="home-text47 text">
@@ -19,17 +18,17 @@ const TredingBar = ({trending, token, mood, idSp})=>{
         <br></br>
       </span>
       <div className="home-card2 music-card">
-      {mood === 'youtube' && trending.map((item, idx) => (
+      {mood === 'youtube' && Array.isArray(trending?.contents)  && trending?.contents?.map((item, idx) => (
             <section key={idx} style={{width: '100%', transitionDelay: '1s' }}> 
             {<Music video={item} color={same?.find((s) => s?.content_id?.idPage === item?.videoId)}  idx={idx}></Music>}
             </section>
       ))}
-      {mood === 'spotify' && trending.map((item, idx) => (
+      {mood === 'spotify' && Array.isArray(trending) && trending?.map((item, idx) => (
             <section key={idx} style={{width: '100%', transitionDelay: '1s' }}> 
             {<Music video={item} treding={'1'} mood={mood} idx={idx}></Music>}
             </section>
       ))}
-       {mood === 'appleMusic' && trending.map((item, idx) => (
+       {mood === 'appleMusic' && Array.isArray(trending) && trending?.map((item, idx) => (
             <section key={idx} style={{width: '100%', transitionDelay: '1s' }}> 
             {<Music video={item} mood={mood} treding={'1'} treding1={"1"} idx={idx}></Music>}
             </section>

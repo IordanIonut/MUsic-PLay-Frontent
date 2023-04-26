@@ -15,7 +15,7 @@ import MusicBar from '../componentsHome/MusicBar'
 import FiltreBar from '../componentsHome/FiltreBar'
 import SearchBar from '../componentsHome/SearchBar'
 import VideoBar from '../componentsHome/VideoBar'
-import { ApiYouTube2, ApiYouTube10, ApiSpotify1, ApiSpotify3, ApiShazam1, ApiDataBaseGet } from '../utils/fetchAPI'
+import { ApiYouTube9, ApiYouTube10, ApiSpotify1, ApiSpotify3, ApiShazam1, ApiDataBaseGet } from '../utils/fetchAPI'
 import { Link } from 'react-router-dom';
 import {useHistory} from 'react-router-dom';
 import Cookies from 'js-cookie';
@@ -147,7 +147,7 @@ const Home = () => {
   useEffect(() =>{
     if(statusTredingButton === true){
       if(mood === 'youtube'){
-        ApiYouTube2(`trending`).then((data2) => setTrending(data2));
+        ApiYouTube9(`trending?gl=RO`).then((data2) => setTrending(data2));
         ApiYouTube10(``).then((data2) => sethome(data2));
       }
       if(mood === 'spotify'){
@@ -162,7 +162,7 @@ const Home = () => {
       }
     }
     styleChangeOnBar(mood);
-  },[mood, statusTredingButton]);
+  },[mood, statusTredingButton, id]);
 
   const styleChangeOnBar=((idClass)=>{
     document.getElementById(idClass).classList.add("accoun1");
@@ -675,7 +675,7 @@ const Home = () => {
             {statusHistoryButton? <HistoryBar mood={mood} idSp={idSp} userDate={userDate}></HistoryBar> :null}
             {statusLiveButton? <LiveBar></LiveBar> :null}
             {statusQrButton? <QrBar></QrBar> :null}
-            {statusSendButton? <SendBar mood={mood} idSp={idSp}></SendBar> :null}
+            {statusSendButton? <SendBar mood={mood} idSp={idSp} userDate={userDate}></SendBar> :null}
             {statusFiltreButton? <FiltreBar selectedFiltre={selectedFiltre} idSp={idSp} setStatusSearchButtons={setStatusSearchButtons} setStatusFiltreButtons={setStatusFiltreButtons} setSelectedFiltre={setSelectedFiltre}> </FiltreBar> :null}
             {statusSearcheButton? <SearchBar idSp={idSp} selectedFiltre={selectedFiltre} mood={mood}></SearchBar> :null}
             {statusVideoButton? <VideoBar></VideoBar> :null}

@@ -51,7 +51,7 @@ const HistoryBar = ({mood, idSp, userDate})=>{
         ApiDataBaseGet(`favorite/search?userId=${idSp}&type=channel&mood=${mood}`).then((data) =>{setSame(data)}).catch((err) =>{console.log(err?.message)});
       }
   }, [arrayDB]);
-
+console.log(arrayDB);
   return(
         <section className="home-history"style={{display: 'flex', alignContent: 'baseline'}}>
           <span className="home-text29 text"></span>
@@ -98,7 +98,7 @@ const HistoryBar = ({mood, idSp, userDate})=>{
           ))}
           {mood === 'youtube' && idSp && type === 'video' && Array.isArray(arrayDB) && arrayDB.map((item, idx) => (
             <section  key={idx} style={{width: '99%', transitionDelay: '1s' }}> 
-            {  Array.isArray(arrayDB)  &&  <Music color={same?.find((s) => s?.content_id?.idPage === item?.content_id?.description?.id)}  video={item?.content_id?.description} idx={idx}></Music> }
+            {  Array.isArray(arrayDB)  &&  <Music color={same?.find((s) => s?.content_id?.idPage === item?.content_id?.idPage)}  video={item?.content_id?.description} idx={idx}></Music> }
             </section>
           ))}
            {mood === 'youtube'  && idSp && type === 'playlist' && Array.isArray(arrayDB) && arrayDB.map((item, idx) => (
@@ -143,7 +143,7 @@ const HistoryBar = ({mood, idSp, userDate})=>{
           ))}
            {mood === 'spotify' && idSp  && type === 'video' && Array.isArray(arrayDB) && arrayDB.map((item, idx) => (
             <section  key={idx} style={{width: '99%', transitionDelay: '1s' }}> 
-            { Array.isArray(arrayDB)&&  <Music video={item?.content_id?.description?.[0]} idx={idx}></Music> }
+            { Array.isArray(arrayDB)&&  <Music color={same?.find((s) => s?.content_id?.idPage === item?.content_id?.description?.[0]?.id)} video={item?.content_id?.description?.[0]} idx={idx}></Music> }
             </section>
           ))}
           {mood === 'spotify'  && idSp && type === 'playlist' && Array.isArray(arrayDB) && arrayDB.map((item, idx) => (

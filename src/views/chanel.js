@@ -113,7 +113,7 @@ const Chanel = () => {
         ApiDataBasePost(`content/add`, rezult).catch((error) => {console.log(error?.message);});
     }
     }
-  },[videos, token]);
+  },[videos, token, id, channelDetail]);
 
   useEffect(() =>{
     if(token){

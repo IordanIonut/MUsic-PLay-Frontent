@@ -57,7 +57,7 @@
   width: 80%;
   cursor: auto;
   height: auto;
-  opacity: 0.6;
+  opacity: 0.8;
   padding: 0.5rem 1rem;
   align-self: center;
   margin-top: 10px;
@@ -94,7 +94,7 @@
 .search-bar {
   width: 55%;
   height: var(--dl-size-size-small);
-  opacity: 0.6;
+  opacity: 0.8;
   padding: Space-HalfUnit;
   z-index: 100;
   font-size: 18px;
@@ -114,7 +114,7 @@
   width: 30px;
   height: 40px;
   display: flex;
-  opacity: 0.6;
+  opacity: 0.8;
   z-index: 100;
   align-self: center;
   transition: 0.3s;
@@ -154,7 +154,7 @@
   width: 50px;
   height: 40px;
   display: flex;
-  opacity: 0.3;
+  opacity: 0.5;
   padding: 4px;
   align-self: center;
   transition: 0.3s;
@@ -169,7 +169,7 @@
   background-color: var(--dl-color-gray-500);
 }
 .posibili:hover {
-  opacity: 0.6;
+  opacity: 0.8;
   padding: 4px;
   align-self: center;
   align-items: center;
@@ -263,7 +263,7 @@
   width: 100%;
   height: 60px;
   display: flex;
-  opacity: 0.3;
+  opacity: 0.5;
   align-self: center;
   transition: 0.3s;
   align-items: center;
@@ -283,7 +283,7 @@
   color: var(--dl-color-gray-500);
   width: 85vh;
   height: 40px;
-  opacity: 0.6;
+  opacity: 0.8;
   font-size: 30px;
   align-self: flex-start;
   text-align: left;
@@ -348,7 +348,7 @@
   width: 100%;
   height: auto;
   display: flex;
-  opacity: 0.6;
+  opacity: 0.8;
   flex-wrap: wrap;
   align-items: center;
   padding-top: 20px;
@@ -361,7 +361,7 @@
   width: 200px;
   height: 250px;
   display: flex;
-  opacity: 0.3;
+  opacity: 0.5;
   padding: var(--dl-space-space-unit);
   z-index: 100;
   position: relative;
@@ -378,12 +378,12 @@
   background-color: var(--dl-color-gray-500);
 }
 .card-music:hover {
-  opacity: 0.6;
+  opacity: 0.8;
   transform: scale(1.02);
 }
 
 .card-music-video{
-  opacity: 0.6;
+  opacity: 0.8;
   transform: scale(1.02);
 }
 .text-card {
@@ -400,7 +400,7 @@
   left: 30px;
   width: 40px;
   height: 40px;
-  opacity: 0.3;
+  opacity: 0.5;
   position: absolute;
   box-shadow: 5px 5px 10px 2px #d4d4d4,-5px -5px 10px 2px #d4d4d4;
   transition: 0.3s;
@@ -434,7 +434,7 @@
   width: 100%;
   height: 70px;
   display: flex;
-  opacity: 0.3;
+  opacity: 0.5;
   align-self: flex-start;
   transition: 0.3s;
   align-items: center;
@@ -451,7 +451,7 @@
   background-color: var(--dl-color-gray-500);
 }
 .music-line:hover {
-  opacity: 0.6;
+  opacity: 0.8;
   margin-left: 0px;
   margin-right: 0px;
   margin-bottom: 20px;
@@ -464,7 +464,7 @@
   width: 30px;
   height: 30px;
   display: flex;
-  opacity: 0.3;
+  opacity: 0.8;
   padding: 0px;
   position: absolute;
   transition: 0.3s;
@@ -488,7 +488,7 @@
 .filtre-card {
   width: 150px;
   height: 200px;
-  opacity: 0.3;
+  opacity: 0.8;
   transition: 0.3s;
   margin-left: 10px;
   margin-right: 10px;
@@ -497,7 +497,7 @@
   background-color: transparent;
 }
 .filtre-card:hover {
-  opacity: 0.6;
+  opacity: 0.8;
   margin-top: 10px;
   margin-right: 10px;
   margin-bottom: 30px;
@@ -509,7 +509,7 @@
   width: 300px;
   height: 300px;
   display: flex;
-  opacity: 0.3;
+  opacity: 0.8;
   position: absolute;
   box-shadow: 50px 50px 10px 10px #232f3a,-50px -50px 10px 10px #232f3a;
   align-items: flex-start;
@@ -538,7 +538,7 @@
   width: 100%;
   height: 100px;
   display: flex;
-  opacity: 0.3;
+  opacity: 0.8;
   align-self: flex-start;
   transition: 0.3s;
   align-items: center;
@@ -632,7 +632,7 @@
     margin-right: 10px;
   }
   .cicle {
-    opacity: 0.3;
+    opacity: 0.5;
     z-index: 100;
     background-color: #D9D9D9;
   }
@@ -949,7 +949,7 @@ input[type='radio'] + label {
   width: 50px;
   height: 50px;
   display: inline-block;
-  opacity: 0.6;
+  opacity: 0.8;
   box-shadow: inset 0 0 0 4px #5ca8ff;
   color: var(--dl-color-gray-700);
   text-align: center;

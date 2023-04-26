@@ -23,22 +23,22 @@ const Music = ({video, idx, color, page, mood, treding, treding1}) => {
     var date = new Date(null);
     date?.setSeconds(seconds);
     return date?.toISOString()?.substr(11, 8);
- }
+  }
 
- function formatTime(milliseconds) {
-  const date = new Date(milliseconds);
-  const hours = date?.getUTCHours()?.toString()?.padStart(2, '0');
-  const minutes = date?.getUTCMinutes()?.toString()?.padStart(2, '0');
-  const seconds = date?.getUTCSeconds()?.toString()?.padStart(2, '0');
-  const milliseconds1 = date?.getUTCMilliseconds()?.toString()?.padStart(3, '0');
-  return `${hours}:${minutes}:${seconds}`;
-}
+  function formatTime(milliseconds) {
+    const date = new Date(milliseconds);
+    const hours = date?.getUTCHours()?.toString()?.padStart(2, '0');
+    const minutes = date?.getUTCMinutes()?.toString()?.padStart(2, '0');
+    const seconds = date?.getUTCSeconds()?.toString()?.padStart(2, '0');
+    const milliseconds1 = date?.getUTCMilliseconds()?.toString()?.padStart(3, '0');
+    return `${hours}:${minutes}:${seconds}`;
+  }
 
-function millisToMinutesAndSeconds(millis) {
-  var minutes = Math?.floor(millis / 60000);
-  var seconds = ((millis % 60000) / 1000)?.toFixed(0);
-  return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
-}
+  function millisToMinutesAndSeconds(millis) {
+    var minutes = Math?.floor(millis / 60000);
+    var seconds = ((millis % 60000) / 1000)?.toFixed(0);
+    return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
+  }
 
   const idxx = video?.trackMetadata?.trackUri.split(':') || '';
 
@@ -65,6 +65,7 @@ function millisToMinutesAndSeconds(millis) {
           video?.[0]?.id?.id ? `/video/${video?.[0]?.id?.id}` : null ||
           video?.data?.uri ? `/video/${video?.data?.id}` : null ||
           video?.track?.id ? `/video/${video?.track?.id}` : null ||
+          video?.[0]?.id ? `/video/${video?.[0]?.id}` : null ||
           video?.id ? `/video/${video?.id}` : null ||
           video?.trackMetadata?.trackUri ? `/video/${idxx?.[2]}` : null ||
           video?.key ? `/video/${video?.key}` : null ||
@@ -81,11 +82,14 @@ function millisToMinutesAndSeconds(millis) {
            src={video?.video?.thumbnails ?  video?.video?.thumbnails[1]?.url : null || 
                 video?.videoThumbnails ? video?.videoThumbnails[1]?.url : null || 
                 video?.thumbnail?.[3]?.url ? video?.thumbnail?.[3]?.url : null ||
-                video?.thumbnail && page=== '1' ? video?.thumbnail  : null || 
+                video?.thumbnail && page === '1' ? video?.thumbnail  : null || 
                 video?.thumbnail?.[1]?.url  ? video?.thumbnail[1]?.url : null ||
                 video?.thumbnail?.url ? video?.thumbnail?.url : null || 
                 video?.[0]?.id?.thumb  ? video?.[0]?.id?.thumb : null ||
+                video?.thumbnail?.[0]?.url && page === '2' ? video?.thumbnail?.[0]?.url : null ||
+                video?.thumbnail?.[1]?.url && page === '2' ? video?.thumbnail?.[1]?.url : null ||
                 video?.thumbnail?.[3]?.url ? video?.thumbnail?.[3]?.url : null ||
+                video?.thumbnail?.[0]?.url ? video?.thumbnail?.[0]?.url : null ||
                 video?.[0]?.id?.thumbnail?.url ? video?.[0]?.id?.thumbnail?.url : null ||
                 video?.data?.albumOfTrack?.coverArt?.sources?.[2]?.url ? video?.data?.albumOfTrack?.coverArt?.sources?.[2]?.url : null ||
                 video?.data?.coverArt?.sources?.[2]?.url ? video?.data?.coverArt?.sources?.[2]?.url : null || 
@@ -108,6 +112,7 @@ function millisToMinutesAndSeconds(millis) {
              like && page === '1'&& mood !== 'spotify' ? like?.videoDetails?.author : null||
              video?.snippet ? video?.snippet?.title.slice(0,50) : null || 
              video?.channel?.name ? video?.channel?.name : null ||
+             video?.video?.channelName ? video?.video?.channelName : null ||
              video?.publishedText ? video?.publishedText.slice(0,50) : null ||
              video?.[0]?.id?.author ? video?.[0]?.id?.author : null || 
              video?.[0]?.album?.artists?.[0]?.name ? video?.[0]?.album?.artists?.[0]?.name : null ||
@@ -143,6 +148,7 @@ function millisToMinutesAndSeconds(millis) {
               video?.viewCount ?  formatNumber(video?.viewCount) : null || video?.[0]?.id?.views ? formatNumber(video?.[0]?.id?.views) : null 
                 ||like?.videoDetails?.viewCount ?  formatNumber(like?.videoDetails?.viewCount) : null || 
                 video?.[0]?.id?.view_count ? formatNumber(video?.[0]?.id?.view_count) : null || 
+                video?.video?.viewCountText ? video?.video?.viewCountText : null ||
                 video?.track?.playcount ? formatNumber(video?.track?.playcount) : null}</span>    
         {treding1 === undefined ? <svg viewBox="0 0 1024 1024" className="music-icon2">
           <path
@@ -156,6 +162,7 @@ function millisToMinutesAndSeconds(millis) {
                 video?.lengthSeconds ? toTime(video?.lengthSeconds) : null || 
                 video?.[0]?.id?.length ? video?.[0]?.id?.length : null ||
                 video?.lengthText ? video?.lengthText || 'Live' : null ||
+                video?.video?.lengthText ? video?.video?.lengthText : null ||
                 video?.duration ? formatTime(video?.duration) : null ||
                 video?.[0]?.id?.duration_formatted ? video?.[0]?.id?.duration_formatted : null ||
                 mood === 'youtube' && video?.timeText ? video?.timeText || 'Live' : null ||

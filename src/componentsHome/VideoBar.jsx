@@ -32,7 +32,7 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
   const [option, setOption] = useState([]);
   const [same, setSame] = useState([]);
   const [youtube, setYouTube] = useState([]);
-
+  
   function formatNumber(num) {
     if (num >= 1000000) {
       return (num / 1000000)?.toFixed(0)+ 'M';
@@ -92,7 +92,7 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
         }else if(idSongPlayList === ''){
           ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${idSearch}&mood=${mood}`).then((data) => {setSame(data)});
         }else{
-        ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${idSong[0]}`).then((data) => {setSame(data)});
+        ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${idSong[0]}&mood=${mood}`).then((data) => {setSame(data)});
       }
     }
     if(mood === 'youtube'){
@@ -393,7 +393,6 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
                   console.log(idSearch);
                 }else{
                 ApiDataBaseGet(`playList/delete?user_id=${idSp}&id_page=${idSong[0]}&mood=${mood}&playlist_id=${result?.value?.[0]}&content_id=${data?.content_id}`).then((data) =>{handleConfirm();}).catch((err) =>{console.log(err?.message)});
-                console.log(idSong[0]);
               }
             }
           }).catch((err) => console.log(err?.message));
@@ -648,7 +647,8 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
           alt="image"
           src={ (mood === 'spotify' ? idSong[1] : null) || videos?.[0]?.album?.images?.[0]?.url || related?.[0]?.content_id?.description?.[0]?.album?.images?.[0]?.url || description?.album?.images?.[0]?.url  || 
               related?.tracks?.items?.[0]?.track?.album?.images?.[0]?.url || videos?.images?.coverarthq || image || related?.[0]?.content_id?.description?.track?.album?.images?.[0]?.url}
-          className="home-image3"/> : null}
+          className="home-image3"/> 
+      : null}
       </div>
       <div className="home-test">
         <span className="home-text08">{ mood==='youtube' ? (playlist === 0 ? videos?.title : related?.videos?.author || 

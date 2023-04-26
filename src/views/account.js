@@ -6,6 +6,7 @@ import { useHistory } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { ApiDataBaseGet, ApiDataBasePut } from '../utils/fetchAPI';
 import colors from '../utils/colors';
+import image from '../utils/image';
 
 const Account = () => {
   const [statusHomeButton, setStatusHomeButton] = React.useState(false);
@@ -111,7 +112,9 @@ const Account = () => {
       }
     }).then((result) => {
       if (result.isConfirmed) {
-        let val = {name : result?.value?.input1}
+        let a = result?.value?.input1.slice(0,1);
+        let im = image.find((obj, index) => obj?.letter === a.toLocaleUpperCase());
+        let val = {name : result?.value?.input1, image: im?.svg}
         ApiDataBasePut(`users/name/${idSp}`, val).then((data) => {window.location.reload();}).catch((err) => console.log(err?.message));
       }
     })

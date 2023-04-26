@@ -15,9 +15,9 @@ const SearchBar = ({selectedFiltre, mood, idSp}) => {
     useEffect(() =>{
       if(mood === 'youtube'){
         if(type === "video" || type === "playlist" || type === "channel")
-          ApiYouTube4(`search?query=${selectedFiltre}&type=${type}`).then((data) => setVideo(data.data));
+          ApiYouTube4(`search?query=${selectedFiltre}&type=${type}`).then((data) => setVideo(data?.data));
         else
-          ApiYouTube2(`search-live?q=${selectedFiltre}`).then((data) => setVideo(data));
+          ApiYouTube4(`search?query=${selectedFiltre}&geo=RO&lang=en&features=live`).then((data) => setVideo(data?.data));
       }
       if(mood === 'spotify'){
         let ex;
@@ -106,19 +106,19 @@ const SearchBar = ({selectedFiltre, mood, idSp}) => {
                        type === 'channel' ? {width: '100%'}: null ||
                        type === 'playlist' ? {marginLeft: ''} : null)}> 
             {type==='video' && <Music color={arrayDB?.find((s) => s?.content_id?.idPage === item?.videoId)}  video={item} idx={id} page='0'></Music>}
-            {type==='live' && <Music color={arrayDB?.find((s) => s?.content_id?.idPage === item?.id)}  video={item} idx={id} page='1'></Music>}
+            {type==='live' && <Music color={arrayDB?.find((s) => s?.content_id?.idPage === item?.id)}  video={item} idx={id} page='2'></Music>}
             {type==='channel' && <ChanelCard channelDetail={item} idx={id} ></ChanelCard>}
             {type==='playlist'&& <FeatureCard playlist={item} idx={id} ></FeatureCard>}
             </section>
           ))}
           {mood === 'spotify' &&  Array.isArray(videos?.playlists?.items) && videos?.playlists?.items.map((item, id) => (
             <section key={id} style={{transitionDelay: '1s'} && type === 'playlist' ? {marginLeft: ''} : null}> 
-              {type==='playlist'&& <FeatureCard text={"1"} playlist={item} idx={id} mood={mood}></FeatureCard>}
+              {type==='playlist'&& <FeatureCard   text={"1"} playlist={item} idx={id} mood={mood}></FeatureCard>}
             </section>
           ))}
           {mood === 'spotify' && Array.isArray(videos?.tracks?.items) && videos?.tracks?.items.map((item, id) => (
             <section key={id} style={{transitionDelay: '1s'} && (type === 'video' ? {width: '100%'}: null)}> 
-              {type==='video' && <Music video={item} idx={id} page='0' mood={mood}></Music>}
+              {type==='video' && <Music color={arrayDB?.find((s) => s?.content_id?.idPage === item?.id)} video={item} idx={id} page='0' mood={mood}></Music>}
             </section>
           ))}
           {mood === 'spotify' && Array.isArray(videos?.episodes?.items) && videos?.episodes?.items.map((item, id) => (

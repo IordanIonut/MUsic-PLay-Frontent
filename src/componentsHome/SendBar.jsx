@@ -1,51 +1,131 @@
-import React from "react";
-import FeatureCard from "../components/feature-card";
-import FilreCard from "../components/filre-card";
-import Music from "../components/music";
-import Music1 from "../components/music1";
-import Home from "../views/home";
+import React, {useState, useEffect} from 'react';
 import '../views/home.css'
+import { useFormik } from 'formik';
+import * as Yup from "yup";
+import Swal from 'sweetalert2';
+import { ApiDataBaseGet, ApiDataBasePost } from '../utils/fetchAPI';
 
-const SendBar = (props)=>{
-    return(
-<section className="home-mesaj"style={{display: 'flex'}}>
+const SendBar = ({idSp, userDate})=>{
+    
+  const formik = useFormik({
+    initialValues: {
+      name: '',
+      email: '',
+      subject: '',
+      message: ''
+    },
+    validationSchema: Yup.object({
+      name: Yup.string().required('The name is mandatory!'),
+      email: idSp ? Yup.string() : Yup.string()
+        .email('The email address is invalid!')
+        .matches(/(yahoo|gmail)\.com$/, 'The email address must be of the type "yahoo.com" or "gmail.com"!')
+        .required('Email address is mandatory!'),
+      subject: Yup.string().required('The subject is mandatory!'),
+      message: Yup.string().required('The messageame is mandatory!'),
+
+    }),
+    onSubmit: (values) => {
+      console.log(values);
+      if(idSp != '') {
+        formik.values.email = userDate?.email;
+      }
+      ApiDataBasePost(`sendEmail`, values)
+      .then((response) => {
+          formik.values.name = '';
+          formik.values.email = '';
+          formik.values.subject = '';
+          formik.values.message = '';
+      }).catch((error) => {
+         Swal.fire({
+            icon: 'error',
+            text: error?.response?.data,
+            showConfirmButton: false,
+            customClass: {
+              container: 'blur-background popup'
+            },
+            timer: 2000,
+            buttons: false
+          });
+        });
+    },
+  });
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    formik.submitForm();
+    if (formik.errors.name) {
+      Swal.fire({
+        icon: 'error',
+        text: formik.errors.name,
+        showConfirmButton: false,
+        customClass: {
+          container: 'blur-background popup'
+        },
+        timer: 2000,
+        buttons: false
+      });
+    } else if (formik.errors.email) {
+      Swal.fire({
+          icon: 'error',
+          text: formik.errors.email,
+          showConfirmButton: false,
+          customClass: {
+            container: 'blur-background popup'
+          },
+          timer: 2000,
+          buttons: false
+      });
+    } else if (formik.errors.subject) {
+      Swal.fire({
+        icon: 'error',
+          text: formik.errors.subject,
+          showConfirmButton: false,
+          customClass: {
+            container: 'blur-background popup'
+          },
+          timer: 2000,
+          buttons: false
+      });
+    }else if (formik.errors.message) {
+      Swal.fire({
+        icon: 'error',
+          text: formik.errors.message,
+          showConfirmButton: false,
+          customClass: {
+            container: 'blur-background popup'
+          },
+          timer: 2000,
+          buttons: false
+      });
+    }
+  };
+  
+  return(
+      <section className="home-mesaj"style={{display: 'flex'}}>
           <div className="home-container5">
             <div className="home-message">
-              <form className="home-form">
+              <form className="home-form" onSubmit={handleSubmit}>
                 <span className="home-text54">
                   <span>Send Message</span>
                   <br></br>
                 </span>
-                <input
-                  type="text"
-                  required
-                  placeholder="Your Name"
-                  autoComplete="on"
-                  className="home-textinput input"
-                />
-                <input
-                  type="text"
-                  required
-                  placeholder="Your Name"
-                  autoComplete="on"
-                  className="home-textinput1 input"
-                />
-                <input
-                  type="text"
-                  required
-                  placeholder="Subject"
-                  autoComplete="on"
-                  className="home-textinput2 input"
-                />
-                <textarea
-                  cols="30"
-                  rows="7"
-                  placeholder="Your Message"
-                  autoComplete="on"
-                  className="home-textarea input textarea"
-                ></textarea>
-                <button type="button" className="home-button31 button">
-                  <span className="home-text57">Send</span>
+                <input type="text" id="name" name="name" placeholder="Your Name" className="home-textinput input"
+                 value={formik.values.name}
+                 onChange={formik.handleChange}/>
+                {idSp === '' ? <input  type="text" id="email" name="email" placeholder="Your Email" className="home-textinput1 input"
+                 value={formik.values.email}
+                 onChange={formik.handleChange}/>: null}
+                <input type="text" id="subject" name="subject" placeholder="Subject" className="home-textinput2 input"
+                 value={formik.values.subject}
+                 onChange={formik.handleChange}/>
+                <textarea cols="30" rows="7" id="message" name="message" placeholder="Your Message" className="home-textarea input textarea"
+                    value={formik.values.message}
+                    onChange={formik.handleChange}></textarea>
+                <button type="submit" className="login-button6 button" style={{backgroundColor: '#2c3e50', width: '210px'}}>
+                  <span className="login-text10">
+                    <span>SigN in</span>
+                    <br></br>
+                  </span>
                 </button>
               </form>
             </div>
@@ -82,6 +162,7 @@ const SendBar = (props)=>{
               </div>
             </div>
           </div>
-        </section>    )
+        </section>    
+  )
 }
 export default SendBar
