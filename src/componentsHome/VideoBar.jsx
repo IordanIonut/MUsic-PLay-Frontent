@@ -9,7 +9,7 @@ import { ApiYouTube5, ApiYouTube8, ApiYouTube4, ApiYouTube11, ApiSpotify4, ApiSp
   ApiYouTube3} from '../utils/fetchAPI'
 import Cookies from 'js-cookie';
 import Swal from 'sweetalert2';
-import {setAuthor, setName, setThumbnail, setUrl, playVideo, pauseVideo, setUrlReactPlayer} from '../utils/actions';
+import {setAuthor, setName, setThumbnail, setUrl, playVideo, pauseVideo, setUrlReactPlayer, setCurrentTime, setDuration} from '../utils/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import colors from '../utils/colors';
 import WaveSurfer from 'wavesurfer.js';
@@ -241,7 +241,6 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
         buttons: false
       });
   };
-
 
     const handleConfirm = () => {
       const con = id;
@@ -591,7 +590,6 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
      }
     },[related, artist]);
     
-    
     useEffect(()=> {
       if(mood === 'youtube'){
         if(playlist === 0){
@@ -690,11 +688,12 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
             setBar(bestMatch);
           });
         }
-    },[videos, related, idSongPlayList, id, mood])
+    },[videos, related, idSongPlayList, id, mood]);
 
     //const [url, setVideoUrl] = useState('http://commondatastorage.googleapis.com/codeskulptor-demos/DDR_assets/Kangaroo_MusiQue_-_The_Neverwritten_Role_Playing_Game.mp3');
    // const [imageUrl, setImageUrl] = useState('https://user-images.githubusercontent.com/40034115/233121992-12eb2448-4f62-4cba-b9a3-c0d3e9233aa7.jpg');
    
+
 
 //https://www.youtube.com/watch?v=lDDlf3yu8M0
 //http://commondatastorage.googleapis.com/codeskulptor-demos/DDR_assets/Kangaroo_MusiQue_-_The_Neverwritten_Role_Playing_Game.mp3

@@ -789,7 +789,7 @@ const Video = () => {
 
     const dispatch = useDispatch();
     const playerRef = React.useRef(null);
-    const { url, urlReactPlayer, playing, muted, loop, played, duration, currentTime, artist, name, thumbnail, previous, next, randome, rad } = useSelector((state) => state);
+    const { url, urlReactPlayer, playing, muted, loop, played, duration, currentTime, artist_id, name, thumbnail, previous, next, randome, rad } = useSelector((state) => state);
     const [index, setIndex] = useState(0);
     const [last, setLast] = useState();
 

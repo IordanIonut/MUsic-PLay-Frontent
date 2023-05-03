@@ -12,7 +12,7 @@ const initialState = {
   currentTime: 0,
   duration: 0,
   play: false,
-  artis: "",
+  artis_id: "",
   name: "",
   thumbnail: "",
   previous: [],
@@ -45,7 +45,7 @@ const videoReducer = (state = initialState, action) => {
     case "TOGGLE_PLAY":
       return { ...state, play: !state.play };
     case "SET_ARTIST":
-      return { ...state, artis: action.payload };
+      return { ...state, artis_id: action.payload };
     case "SET_NAME":
       return { ...state, name: action.payload };
     case "SET_THIMBNAIL":
