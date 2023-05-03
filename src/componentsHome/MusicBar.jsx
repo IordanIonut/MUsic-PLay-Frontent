@@ -7,7 +7,7 @@ import Cookies from 'js-cookie';
 
 
 export const MusicBar = ({previous, playing, muted, onProgress, onDuration, loop, onPlayStop, onMute, onLoop, handleSeek, url, idSp, id, token, related,
-   name, thumbnail, next, onRandome, playlist, mood}) => {
+   name, thumbnail, next, onRandome, playlist, mood, urlReactPlayer}) => {
   const currentTimeFormatted = onProgress && typeof onProgress === 'number' ? new Date(onProgress * 1000).toISOString().substr(11, 8) : '00:00:00';
   const durationFormatted = onDuration && typeof onDuration === 'number' ? new Date(onDuration * 1000).toISOString().substr(11, 8) : '00:00:00';
   const [count, setCount] = useState(0);

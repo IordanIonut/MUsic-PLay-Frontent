@@ -3,6 +3,7 @@ import { SET_URL, PLAY, PAUSE, TOGGLE_MUTE, TOGGLE_LOOP, SET_PLAYED, SET_LOADED,
 
 const initialState = {
   url: "",
+  urlReactPlayer: "",
   playing: true,
   muted: false,
   loop: false,
@@ -23,6 +24,8 @@ const videoReducer = (state = initialState, action) => {
   switch (action.type) {
     case "SET_URL":
       return { ...state, url: action.payload };
+    case "SET_URL_REACT_PLAYER":
+        return { ...state, urlReactPlayer: action.payload };
     case 'PLAY':
       return { ...state, playing: true}
     case 'PAUSE':

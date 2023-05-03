@@ -140,8 +140,7 @@
 .swal2-confirm,
 .pop-up-button {
   color: var(--dl-color-gray-700);
-  width: 150px;
-  height: 50px;
+  
   align-self: center;
   margin-top: 10px;
   transition: 0.3s;
@@ -152,6 +151,12 @@
   border-radius: 30px;
   justify-content: center;
 }
+.sweetalert-button {
+  background-color: var(--dl-color-gray-700) !important;
+  width: 100px;
+  height: 100px;
+}
+
 .home-container {
   align-items: center;
   flex-direction: column;

@@ -1,19 +1,22 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useState, useRef } from 'react'
 import Music1 from "../components/music1";
 import '../views/home.css'
 import '../views/login.css';
 import ReactPlayer from 'react-player';
 import FeatureCard from "../components/feature-card";
 import { Link } from 'react-router-dom';
-import { ApiYouTube5, ApiYouTube8, ApiYouTube4, ApiYouTube11, ApiSpotify4, ApiSpotify5, ApiShazam2, ApiShazam1, ApiDataBasePost, ApiDataBaseGet, ApiYouTube3} from '../utils/fetchAPI'
+import { ApiYouTube5, ApiYouTube8, ApiYouTube4, ApiYouTube11, ApiSpotify4, ApiSpotify5, ApiShazam2, ApiShazam1, ApiDataBasePost, ApiDataBaseGet, 
+  ApiYouTube3} from '../utils/fetchAPI'
 import Cookies from 'js-cookie';
 import Swal from 'sweetalert2';
-import {setAuthor, setName, setThumbnail, setUrl, playVideo, pauseVideo} from '../utils/actions';
+import {setAuthor, setName, setThumbnail, setUrl, playVideo, pauseVideo, setUrlReactPlayer} from '../utils/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import colors from '../utils/colors';
+import WaveSurfer from 'wavesurfer.js';
+import SineWaves from 'sine-waves';
 
 const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, idxx, previous, token, idSp, setRelated, same12,
-  playerRef, playing, muted, loop, onProgress, onDuration, next }) => { 
+  playerRef, playing, muted, loop, onProgress, onDuration, next, url }) => { 
   const [like, setLike] = useState([]);
   const idSearch=id;
   const [comments, setComments] = useState([]);
@@ -32,7 +35,8 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
   const [option, setOption] = useState([]);
   const [same, setSame] = useState([]);
   const [youtube, setYouTube] = useState([]);
-  
+  const [bar, setBar] = useState([]);
+
   function formatNumber(num) {
     if (num >= 1000000) {
       return (num / 1000000)?.toFixed(0)+ 'M';
@@ -144,14 +148,14 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
       if(idSongPlayList === '' && playlist === 1){
         if(!id?.includes("|")){
           let a = related?.tracks?.items?.[0]?.sharing_info?.uri.split(":");
-          ApiSpotify5(`track_lyrics/?id=${a?.[2]}`).then((data2) => setDescription(data2?.lyrics));
+        //  ApiSpotify5(`track_lyrics/?id=${a?.[2]}`).then((data2) => setDescription(data2?.lyrics));
         }else{
           //ApiSpotify5(`track_lyrics/?id=${related?.[0]?.content_id?.idPage}`).then((data2) => setDescription(data2?.lyrics));
         }
       }else if(idSongPlayList === ''){
-        ApiSpotify5(`track_lyrics/?id=${idSearch}`).then((data2) => setDescription(data2?.lyrics));
+       // ApiSpotify5(`track_lyrics/?id=${idSearch}`).then((data2) => setDescription(data2?.lyrics));
       }else{
-        ApiSpotify5(`track_lyrics/?id=${idSong[0]}`).then((data2) => setDescription(data2?.lyrics));
+        //ApiSpotify5(`track_lyrics/?id=${idSong[0]}`).then((data2) => setDescription(data2?.lyrics));
       }
     }
     if(mood === 'appleMusic'){
@@ -347,6 +351,8 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
         },
         focusDeny: false,
         focusConfirm:false,
+        button: false,
+        focusCancel:true,
         didOpen: () => {
           const validationMessage = Swal.getValidationMessage();
           validationMessage.style.backgroundImage = 'linear-gradient(-45deg, rgb(19, 19, 19) 85.00%,rgb(44, 62, 80) 100.00%)';
@@ -473,8 +479,6 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
       });
     };
     
-    
-    
     const commentClick = () => {
       if(mood === 'youtube')
         Swal.fire({
@@ -520,7 +524,7 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
         });
       if(mood === 'spotify')
       Swal.fire({
-        title: 'Description',
+        title: 'Lyrics',
         html: `<p class="text-sm" style="text-align:left">${description?.lines.map(item => `<p>${item?.words}</p>`).join('')}</p>` ,
         showConfirmButton: false,
         customClass: {
@@ -592,18 +596,37 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
       if(mood === 'youtube'){
         if(playlist === 0){
           dispatch(setName(videos?.title?.slice(0,42)));
-          dispatch(setAuthor(videos?.channel?.id));
+          dispatch(setAuthor(videos?.channel?.name));
           dispatch(setThumbnail(videos?.thumbnail?.url));
           dispatch(setUrl(id));
+          dispatch(setUrlReactPlayer(id))
         }
         if(playlist === 1){
-          dispatch(setName(idSong[2]?.slice(0,42) ||  related?.videos?.[0]?.title));
-          dispatch(setAuthor(idSong[5] || related?.videos?.[0]?.channel?.id));
-          dispatch(setThumbnail(idSong[1] ||  related?.videos?.[0]?.thumbnail?.url));
+          dispatch(setName(idSong[2]?.slice(0,42) || related?.[0]?.content_id?.description?.title  ||  related?.videos?.[0]?.title ));
+          dispatch(setAuthor(idSong[5] || related?.[0]?.content_id?.description?.channel?.name || related?.videos?.[0]?.channel?.name));
+          dispatch(setThumbnail(idSong[1] || related?.[0]?.content_id?.description?.thumbnail?.url ||  related?.videos?.[0]?.thumbnail?.url));
           dispatch(setUrl(id));
+          dispatch(setUrlReactPlayer(id))
         }
       }
-    },[videos, related])
+      if(mood === 'spotify'){
+        if(playlist === 0){
+          dispatch(setName(videos?.[0]?.name.slice(0,42)));
+          dispatch(setAuthor(videos?.[0]?.artists?.[0]?.id));
+          dispatch(setThumbnail(videos?.[0]?.album?.images?.[0]?.url));
+          dispatch(setUrl(id));
+          dispatch(setUrlReactPlayer(bar?.id))
+        }
+        if(playlist === 1){
+          dispatch(setName(idSong[2]?.slice(0,42) || related?.[0]?.content_id?.description?.[0]?.name?.slice(0,42) || related?.tracks?.items?.[0]?.track?.name?.slice(0,42)));
+          dispatch(setAuthor(idSong[5] || related?.[0]?.content_id?.description?.[0]?.artists?.[0]?.id || related?.tracks?.items?.[0]?.track?.artists?.[0]?.id));
+          dispatch(setThumbnail(idSong[1] || related?.[0]?.content_id?.description?.[0]?.album?.images?.[0]?.url || related?.tracks?.items?.[0]?.track?.album?.images?.[0]?.url));
+          dispatch(setUrl(id));
+          dispatch(setUrlReactPlayer(bar?.id))
+          console.log(bar)
+        }
+      }
+    },[videos, related, mood, bar, idSongPlayList])
 
     const handleClickNext = () => {
       const link = document.getElementById(next);
@@ -627,10 +650,63 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
       handleClicBack();
     }, [previous]);
 
-    return (
+    useEffect(() => {
+      if(mood === 'spotify' && video !== undefined && related !== undefined) {
+        let search = null;
+        if(idSongPlayList === '' && playlist === 1){
+            if(!id?.includes("|")){
+              search = related?.tracks?.items?.[0]?.track?.name + " " + related?.tracks?.items?.[0]?.track?.artists?.[0]?.name;
+            }else{
+              search = related?.[0]?.content_id?.description?.[0]?.name + " " + related?.[0]?.content_id?.description?.[0]?.artists?.[0]?.name;
+            }
+          }else if(idSongPlayList === ''){
+            search = videos?.[0]?.artists?.[0]?.name +" "+ videos?.[0]?.name;
+          }else{
+            search = idSong[2] + " " + idSong[3];
+        }
+          ApiYouTube3(`search?query=${search}&type=video`).then((result) => {
+            const songs = result?.results;
+            if (!songs || songs.length === 0) {
+              console.log('No results found!');
+              return;
+            }
+            const bestMatch = songs.reduce((prev, current) => {
+              const title = current.title.toLowerCase();
+              const prevTitle = prev.title.toLowerCase();
+              const currentScore = (title.includes('official') ? 2 : 1) *
+                (title.includes('lyric') ? 2 : 1) *
+                (title.includes('audio') ? 0.5 : 1) *
+                (title.includes('live') ? 0.5 : 1) *
+                (title.includes('remix') ? 0.5 : 1) *
+                (title.includes('cover') ? 0.25 : 1);
+              const prevScore = (prevTitle.includes('official') ? 2 : 1) *
+                (prevTitle.includes('lyric') ? 2 : 1) *
+                (prevTitle.includes('audio') ? 0.5 : 1) *
+                (prevTitle.includes('live') ? 0.5 : 1) *
+                (prevTitle.includes('remix') ? 0.5 : 1) *
+                (prevTitle.includes('cover') ? 0.25 : 1);
+              return (currentScore > prevScore) ? current : prev;
+            });
+            setBar(bestMatch);
+          });
+        }
+    },[videos, related, idSongPlayList, id, mood])
+
+    //const [url, setVideoUrl] = useState('http://commondatastorage.googleapis.com/codeskulptor-demos/DDR_assets/Kangaroo_MusiQue_-_The_Neverwritten_Role_Playing_Game.mp3');
+   // const [imageUrl, setImageUrl] = useState('https://user-images.githubusercontent.com/40034115/233121992-12eb2448-4f62-4cba-b9a3-c0d3e9233aa7.jpg');
+   
+
+//https://www.youtube.com/watch?v=lDDlf3yu8M0
+//http://commondatastorage.googleapis.com/codeskulptor-demos/DDR_assets/Kangaroo_MusiQue_-_The_Neverwritten_Role_Playing_Game.mp3
+//https://user-images.githubusercontent.com/40034115/233121992-12eb2448-4f62-4cba-b9a3-c0d3e9233aa7.jpg
+//console.log(related);
+
+return (
     <section className="home-video" style={{display: 'flex'}}>
     <div className="home-video1 video">
       <div className="home-container1">
+
+
       {mood === 'youtube' ? <ReactPlayer autoFocus volume on  playsInline frameBorder='0' allow='autoplay; encrypted-media' width='100%' height='100%'  loaded style={{display: 'flex'}} 
         url={(playlist === 0 ? `https://www.youtube.com/watch?v=${id}` :  undefined || 
         (idSongPlayList === '' && playlist === 1) ? `https://www.youtube.com/watch?v=${related?.videos?.[0]?.id || related?.[0]?.content_id?.idPage}` : 
@@ -642,15 +718,31 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
         onProgress={onProgress}
         onDuration={onDuration}
         />: null}
-        
-     {mood === 'spotify' || mood === 'appleMusic' ? <img style={{display: 'flex'}}
+
+
+    {mood === 'spotify' || mood === 'appleMusic' ? <img style={{display: 'flex'}}
           alt="image"
           src={ (mood === 'spotify' ? idSong[1] : null) || videos?.[0]?.album?.images?.[0]?.url || related?.[0]?.content_id?.description?.[0]?.album?.images?.[0]?.url || description?.album?.images?.[0]?.url  || 
               related?.tracks?.items?.[0]?.track?.album?.images?.[0]?.url || videos?.images?.coverarthq || image || related?.[0]?.content_id?.description?.track?.album?.images?.[0]?.url}
           className="home-image3"/> 
       : null}
-      </div>
-      <div className="home-test">
+      {mood === 'spotify' || mood === 'appleMusic' ? <ReactPlayer autoFocus volume on  playsInline frameBorder='0' allow='autoplay; encrypted-media' 
+      width='100%' height='100%'  loaded style={{display: 'none'}}
+       url={(playlist === 0 ? `https://www.youtube.com/watch?v=${bar?.id || related?.[0]?.content_id?.idPage}` :  undefined || 
+        (idSongPlayList === '' && playlist === 1) ? `https://www.youtube.com/watch?v=${bar?.id || related?.[0]?.content_id?.idPage}` : 
+         `https://www.youtube.com/watch?v=${bar?.id}`)}
+        ref={playerRef}
+        playing={playing}
+        muted={muted}
+        loop={loop}
+        onProgress={onProgress}
+        onDuration={onDuration}
+        />: null}
+
+     
+
+        </div>
+        <div className="home-test">
         <span className="home-text08">{ mood==='youtube' ? (playlist === 0 ? videos?.title : related?.videos?.author || 
             idSongPlayList === '' && playlist === 1 ? (related?.videos?.[0]?.title ? related?.videos?.[0]?.title : null || 
               related?.[0]?.content_id?.description?.title ? related?.[0]?.content_id?.description?.title  : null  || views?.title ? views?.title : null ||

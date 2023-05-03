@@ -58,3 +58,7 @@ export const setNext = (next) => {
 export const setRad = (rad) => {
   return { type: "SET_RAD", payload: rad };
 };
+
+export const setUrlReactPlayer = (urlReactPlayer) => {
+  return { type: "SET_URL_REACT_PLAYER", payload: urlReactPlayer };
+};

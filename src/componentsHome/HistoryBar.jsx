@@ -51,7 +51,7 @@ const HistoryBar = ({mood, idSp, userDate})=>{
         ApiDataBaseGet(`favorite/search?userId=${idSp}&type=channel&mood=${mood}`).then((data) =>{setSame(data)}).catch((err) =>{console.log(err?.message)});
       }
   }, [arrayDB]);
-console.log(arrayDB);
+
   return(
         <section className="home-history"style={{display: 'flex', alignContent: 'baseline'}}>
           <span className="home-text29 text"></span>
