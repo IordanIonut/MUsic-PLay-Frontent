@@ -5,15 +5,18 @@ import Cookies from 'js-cookie';
 import colors from "../utils/colors";
 import './music.css'
 
-const Music = ({video, idx, color, page, mood, treding, treding1}) => {
+const Music = ({video, idx, color, page, mood, treding, treding1, moood}) => {
   const [like, setLike] = useState([]);
   const [image, setImage] = React.useState('');
 
+
   function formatNumber(num) {
-    if (num >= 1000000) {
-      return (num / 1000000)?.toFixed(0)+ 'M';
+    if (num >= 1000000000) {
+      return (num / 1000000000)?.toFixed(2) + ' B';
+    } else if (num >= 1000000) {
+      return (num / 1000000)?.toFixed(2) + ' M';
     } else if (num >= 1000) {
-      return (num / 1000)?.toFixed(0) + 'K';
+      return (num / 1000)?.toFixed(2) + ' K';
     } else {
       return num?.toString();
     }
@@ -70,9 +73,10 @@ const Music = ({video, idx, color, page, mood, treding, treding1}) => {
           video?.trackMetadata?.trackUri ? `/video/${idxx?.[2]}` : null ||
           video?.key ? `/video/${video?.key}` : null ||
           video?.playParams?.id ? `/video/${video?.playParams?.id}` : null} 
-          onClick={() => video?.id ? video?.id && Cookies.set('spotifyType', "123:"+video?.type+':'+video?.id) : null ||
+          onClick={() =>(mood != undefined || moood != undefined ? Cookies.set('mood',mood || moood) : null) &&
+              video?.id ? video?.id && Cookies.set('spotifyType', "123:"+video?.type+':'+video?.id) : null ||
               video?.track?.uri ? video?.track?.uri && Cookies.set('spotifyType', video?.track?.uri) : null || 
-              video?.trackMetadata?.trackUri ? video?.trackMetadata?.trackUri && Cookies.set('spotifyType', video?.trackMetadata?.trackUri) : null ||
+              video?.trackMetadata?.trackUri ? video?.trackMetadata?.trackUri && Cookies.set('spotifyType', video?.trackMetadata?.trackUri)  : null ||
               video?.key ? video?.key && Cookies.set('spotifyType', "123:"+video?.type+':'+ video?.key) : null ||
               video?.playParams?.id ? video?.playParams?.id && Cookies.set('spotifyType', "123:"+video?.playParams?.kind+':'+ video?.playParams?.id) : null}>
       <div className="button music-line">
@@ -175,17 +179,9 @@ const Music = ({video, idx, color, page, mood, treding, treding1}) => {
         </span>
       </div>
       <button className="button favorite music-button">
-        <svg viewBox="0 0 1024 1024" style={{fill: colors?.[color]?.hex || colors?.[color?.fill]?.hex}} className="music-icon4">
+        <svg viewBox="0 0 1024 1024" style={{fill: colors?.[color]?.hex || colors?.[color?.fill]?.hex}} className="music-icon6">
           <path
             d="M512 910l-62-56q-106-96-154-142t-107-114-81-123-22-113q0-98 67-166t167-68q116 0 192 90 76-90 192-90 100 0 167 68t67 166q0 78-52 162t-113 146-199 186z"
-            className=""
-          ></path>
-        </svg>
-      </button>
-      <button className="music-button1 button favorite">
-        <svg viewBox="0 0 1024 1024" className="music-icon6">
-          <path
-            d="M512 682q34 0 60 26t26 60-26 60-60 26-60-26-26-60 26-60 60-26zM512 426q34 0 60 26t26 60-26 60-60 26-60-26-26-60 26-60 60-26zM512 342q-34 0-60-26t-26-60 26-60 60-26 60 26 26 60-26 60-60 26z"
             className=""
           ></path>
         </svg>

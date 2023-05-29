@@ -26,6 +26,7 @@ const Account = () => {
         })
         .catch((error) => {
           console.log(error?.message);
+          localStorage.removeItem('token')
         });
       ApiDataBaseGet(`users/get/${idSp}`)
       .then((response) => {

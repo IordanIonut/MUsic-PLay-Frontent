@@ -4,7 +4,11 @@ import '../views/home.css'
 import '../components/filre-card.css'
 import { Link } from 'react-router-dom';
 
-const FiltreBar = ({selectedFiltre, setSelectedFiltre,setStatusFiltreButtons,setStatusSearchButtons})=>{
+const FiltreBar = ({selectedFiltre, setSelectedFiltre,setStatusFiltreButtons,setStatusSearchButtons, setButtonYoutube, setButtonSpotify, setButtonAppleMusic})=>{
+  setButtonYoutube(false);
+  setButtonSpotify(false);
+  setButtonAppleMusic(false);
+  
   return(
     <section className="home-filtre" style={{display: 'block', overflowY: 'scroll'}}>
         <div className="home-card2 music-card" style={{width: '99%',display: 'flex'}}>

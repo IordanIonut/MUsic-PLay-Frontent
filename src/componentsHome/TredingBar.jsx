@@ -3,8 +3,11 @@ import Music from "../components/music";
 import '../views/home.css'
 import { ApiDataBaseGet } from "../utils/fetchAPI";
 
-const TredingBar = ({trending, token, mood, idSp})=>{
+const TredingBar = ({trending, token, mood, idSp, setButtonYoutube, setButtonSpotify, setButtonAppleMusic})=>{
    const [same, setSame] = useState([]);
+   setButtonYoutube(false);
+   setButtonSpotify(false);
+   setButtonAppleMusic(false);
 
    useEffect(() =>{
       if(token){

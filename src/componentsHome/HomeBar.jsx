@@ -1,26 +1,29 @@
 import React, { useState, useEffect, useRef } from 'react';
 import '../views/home.css';
 import '../style.css';
-import start from "../utils/startSong";
-import startPlayList from "../utils/startPlayList";
+import startYoutube from "../utils/startSong";
+import playlistYoutube from "../utils/startPlayList";
 import Music from '../components/music';
 import FeatureCard from '../components/feature-card';
 import { ApiDataBaseGet } from '../utils/fetchAPI';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
-const HomeBar = ({mood, token, idSp})=>{
+const HomeBar = ({mood, token, idSp, setButtonYoutube, setButtonSpotify, setButtonAppleMusic})=>{
   const [type, setType] = React.useState("video");
   const [homeSong, setHomeSong] = useState([]);
   const [homePlaylist, setPlaylist] = useState([]);
-  const songStart = start;
-  const playlistStart = startPlayList;
+  const songStart = startYoutube;
+  const playlistStart = playlistYoutube;
   const appleMusic_video=JSON.parse(localStorage.getItem('appleMusic_video'));
   const appleMusic_playlist=JSON.parse(localStorage.getItem('appleMusic_playlist'));
   const youtube_video=JSON.parse(localStorage.getItem('youtube_video'));
   const youtube_playlist=JSON.parse(localStorage.getItem('youtube_playlist'));
   const [arrayDB, setArrayBD] = useState([]);
   const [same, setSame] = useState([]);
+  setButtonYoutube(true);
+  setButtonSpotify(true);
+  setButtonAppleMusic(true);
 
     function handleGetRandomNumbers(aaa, bbb, text) {
       const result = [];
@@ -32,12 +35,12 @@ const HomeBar = ({mood, token, idSp})=>{
       if(original2?.length === null){
         original2 = original1.splice();
       }
-      const number = original2?.length / 2 - 1;
+      const number = original2?.length / 4 - 1;
       const randomNumbers = [];
-      for (let i = 0; i < 300; i++) {
+      for (let i = 0; i < 400; i++) {
         randomNumbers.push(Math.floor(Math.random() * 3));
       }
-      for (let i = 0; i < 150; i++) {
+      for (let i = 0; i < 200; i++) {
         if(randomNumbers[i]  === 0) {
           if (!original1.length) 
             continue;
@@ -127,121 +130,9 @@ const HomeBar = ({mood, token, idSp})=>{
     document.getElementById(idClass).classList.remove("hoverType1");
   });
 
-
-
-
-
- /* const [song, setSong] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleRecord = () => {
-    setIsLoading(true);
-
-    navigator.mediaDevices.getUserMedia({ audio: true })
-      .then(stream => {
-        const mediaRecorder = new MediaRecorder(stream);
-        const audioChunks = [];
-
-        mediaRecorder.addEventListener("dataavailable", event => {
-          audioChunks.push(event.data);
-        });
-
-        mediaRecorder.addEventListener("stop", async () => {
-          setIsLoading(true);
-
-          const audioBlob = new Blob(audioChunks, { type: 'audio/mp3' });
-          const formData = new FormData();
-          formData.append('file', audioBlob);
-
-          try {
-            const response = await axios.post('https://cors-anywhere.herokuapp.com/https://api.audd.io/', {
-              api_token: '04f7152000a9a1126f1285785133a0eb',
-              return: 'apple_music,spotify',
-              audio : formData
-              //url: 'http://commondatastorage.googleapis.com/codeskulptor-demos/DDR_assets/Kangaroo_MusiQue_-_The_Neverwritten_Role_Playing_Game.mp3'
-            }, {
-              headers: {
-                'Content-Type': 'multipart/form-data',
-                'X-Requested-With': 'XMLHttpRequest'
-              },
-            });
-            
-            console.log(response?.data);
-            setSong(response.data.result);
-          } catch (error) {
-            console.log(error);
-          }
-
-          setIsLoading(false);
-        });
-
-        setTimeout(() => {
-          mediaRecorder.stop();
-        }, 5000);
-
-        mediaRecorder.start();
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  }
-  */
-  const [song, setSong] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  
-  const handleRecord = () => {
-    setIsLoading(true);
-  
-    navigator.mediaDevices.getUserMedia({ audio: true })
-      .then(stream => {
-        const mediaRecorder = new MediaRecorder(stream);
-        const audioChunks = [];
-  
-        mediaRecorder.addEventListener("dataavailable", event => {
-          audioChunks.push(event.data);
-        });
-  
-        mediaRecorder.addEventListener("stop", async () => {
-          setIsLoading(true);
-  
-          const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-          const reader = new FileReader();
-          
-          reader.readAsDataURL(audioBlob);
-          reader.onloadend = async () => {
-            const base64Data = reader.result.replace(/^data:audio\/\w+;base64,/, '');
-            try {
-              const response = await axios.post('https://cors-anywhere.herokuapp.com/https://api.audd.io/  11', {
-                api_token: process.env.REACT_APP_AUDD_KEY,
-                return: 'apple_music,spotify',
-                audio: base64Data
-              });
-              console.log(response?.data);
-              setSong(response.data.result);
-            } catch (error) {
-              console.log(error);
-            }
-  
-            setIsLoading(false);
-          }
-        });
-  
-        setTimeout(() => {
-          mediaRecorder.stop();
-        }, 5000);
-  
-        mediaRecorder.start();
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  }
-  
-
-
   return(
       <section className="home-seach music-list"style={{display: 'flex', alignContent: 'baseline'}}>
-       <span className="home-text62 text">
+       <span className="home-text29 text">
         <br></br>
         <br></br>
       </span>
@@ -275,25 +166,6 @@ const HomeBar = ({mood, token, idSp})=>{
           {mood === 'spotify' && <p>De implementat Spotify</p>}
           {mood === 'appleMusic' && <p>De implementat AppleMusic</p>} 
            {mood === 'shazam' &&         <p>asdasdsaaaa</p>   }
-
-
-           {isLoading ? <p>Încărcare...</p> : (
-        <button onClick={handleRecord}>Începeți înregistrarea</button>
-      )}
-
-      {song && (
-        <div>
-          <h2>Rezultate</h2>
-          <p>Artist: {song.artist}</p>
-          <p>Melodie: {song.title}</p>
-          <p>Link-uri: {song.apple_music && song.apple_music.url} {song.spotify && song.spotify.url}</p>
-        </div>
-      )}
-
-
-      
-
-
           </div>
       </section> 
     )

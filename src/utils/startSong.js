@@ -1,4 +1,4 @@
-const start =
+export const startYoutube =
 [
   [
     {
@@ -13626,6 +13626,7 @@ const start =
     }
   ]
 ]
+export default startYoutube;
 
-export default start;
+const startSpotify = [];
 

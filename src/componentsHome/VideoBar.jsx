@@ -1,12 +1,12 @@
 import React, {useEffect, useState, useRef } from 'react'
 import Music1 from "../components/music1";
+import Music from "../components/music";
 import '../views/home.css'
 import '../views/login.css';
 import ReactPlayer from 'react-player';
 import FeatureCard from "../components/feature-card";
 import { Link } from 'react-router-dom';
-import { ApiYouTube5, ApiYouTube8, ApiYouTube4, ApiYouTube11, ApiSpotify4, ApiSpotify5, ApiShazam2, ApiShazam1, ApiDataBasePost, ApiDataBaseGet, 
-  ApiYouTube3} from '../utils/fetchAPI'
+import { ApiYouTube5, ApiYouTube8, ApiYouTube4, ApiYouTube11, ApiSpotify4, ApiSpotify5, ApiShazam2, ApiShazam1, ApiDataBasePost, ApiDataBaseGet, ApiYouTube3} from '../utils/fetchAPI'
 import Cookies from 'js-cookie';
 import Swal from 'sweetalert2';
 import {setAuthor, setName, setThumbnail, setUrl, playVideo, pauseVideo, setUrlReactPlayer, setCurrentTime, setDuration} from '../utils/actions';
@@ -38,10 +38,12 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
   const [bar, setBar] = useState([]);
 
   function formatNumber(num) {
-    if (num >= 1000000) {
-      return (num / 1000000)?.toFixed(0)+ 'M';
+    if (num >= 1000000000) {
+      return (num / 1000000000)?.toFixed(2) + 'B';
+    } else if (num >= 1000000) {
+      return (num / 1000000)?.toFixed(2) + 'M';
     } else if (num >= 1000) {
-      return (num / 1000)?.toFixed(0) + 'K';
+      return (num / 1000)?.toFixed(2) + 'K';
     } else {
       return num?.toString();
     }
@@ -63,7 +65,7 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
         ApiYouTube5(`votes?videoId=${idSong[0]}`).then((data2) => setLike(data2));
       }
     }
-  },[related,idSearch,idSong]);
+  },[related,idSearch]);
 
   useEffect(() => {
     if(mood === 'spotify')
@@ -621,7 +623,6 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
           dispatch(setThumbnail(idSong[1] || related?.[0]?.content_id?.description?.[0]?.album?.images?.[0]?.url || related?.tracks?.items?.[0]?.track?.album?.images?.[0]?.url));
           dispatch(setUrl(id));
           dispatch(setUrlReactPlayer(bar?.id))
-          console.log(bar)
         }
       }
     },[videos, related, mood, bar, idSongPlayList])
@@ -689,24 +690,15 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
           });
         }
     },[videos, related, idSongPlayList, id, mood]);
-
-    //const [url, setVideoUrl] = useState('http://commondatastorage.googleapis.com/codeskulptor-demos/DDR_assets/Kangaroo_MusiQue_-_The_Neverwritten_Role_Playing_Game.mp3');
-   // const [imageUrl, setImageUrl] = useState('https://user-images.githubusercontent.com/40034115/233121992-12eb2448-4f62-4cba-b9a3-c0d3e9233aa7.jpg');
-   
-
-
-//https://www.youtube.com/watch?v=lDDlf3yu8M0
-//http://commondatastorage.googleapis.com/codeskulptor-demos/DDR_assets/Kangaroo_MusiQue_-_The_Neverwritten_Role_Playing_Game.mp3
-//https://user-images.githubusercontent.com/40034115/233121992-12eb2448-4f62-4cba-b9a3-c0d3e9233aa7.jpg
-//console.log(related);
-
-return (
+    
+  return (
     <section className="home-video" style={{display: 'flex'}}>
     <div className="home-video1 video">
-      <div className="home-container1">
+      <div className="home-container1" s>
 
 
-      {mood === 'youtube' ? <ReactPlayer autoFocus volume on  playsInline frameBorder='0' allow='autoplay; encrypted-media' width='100%' height='100%'  loaded style={{display: 'flex'}} 
+      {mood === 'youtube' ? <ReactPlayer autoFocus volume on  playsInline frameBorder='0' allow='autoplay; encrypted-media' width='100%' height='100%'  
+        loaded style={{display: 'flex'}}  className="home-iframe"
         url={(playlist === 0 ? `https://www.youtube.com/watch?v=${id}` :  undefined || 
         (idSongPlayList === '' && playlist === 1) ? `https://www.youtube.com/watch?v=${related?.videos?.[0]?.id || related?.[0]?.content_id?.idPage}` : 
          `https://www.youtube.com/watch?v=${idSong[0]}`)}
@@ -716,7 +708,7 @@ return (
         loop={loop}
         onProgress={onProgress}
         onDuration={onDuration}
-        />: null}
+      />: null}
 
 
     {mood === 'spotify' || mood === 'appleMusic' ? <img style={{display: 'flex'}}
@@ -726,7 +718,7 @@ return (
           className="home-image3"/> 
       : null}
       {mood === 'spotify' || mood === 'appleMusic' ? <ReactPlayer autoFocus volume on  playsInline frameBorder='0' allow='autoplay; encrypted-media' 
-      width='100%' height='100%'  loaded style={{display: 'none'}}
+      width='100%' height='100%'  loaded style={{display: 'none'}}  className="home-iframe"
        url={(playlist === 0 ? `https://www.youtube.com/watch?v=${bar?.id || related?.[0]?.content_id?.idPage}` :  undefined || 
         (idSongPlayList === '' && playlist === 1) ? `https://www.youtube.com/watch?v=${bar?.id || related?.[0]?.content_id?.idPage}` : 
          `https://www.youtube.com/watch?v=${bar?.id}`)}

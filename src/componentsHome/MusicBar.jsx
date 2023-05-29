@@ -1,10 +1,10 @@
-import React,{useState, useEffect} from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import '../views/home.css';
 import { Link } from 'react-router-dom';
 import { ApiDataBaseGet, ApiDataBasePost } from '../utils/fetchAPI';
 import colors from '../utils/colors';
 import Cookies from 'js-cookie';
-
+import Slider from '@mui/material/Slider';
 
 export const MusicBar = ({previous, playing, muted, onProgress, onDuration, loop, onPlayStop, onMute, onLoop, handleSeek, url, idSp, id, token, related,
    name, thumbnail, next, onRandome, playlist, mood, urlReactPlayer}) => {
@@ -140,8 +140,55 @@ export const MusicBar = ({previous, playing, muted, onProgress, onDuration, loop
         }
   },[idx, sameID, check, all]);
 
+
+
+  const [isDragging, setIsDragging] = useState(false);
+  const rangeRef = useRef(null);
+
+  const handleMouseMove = (e) => {
+    if (!isDragging) return;
+    const rect = rangeRef.current.getBoundingClientRect();
+    const offsetX = e.clientX - rect.left;
+    const percent = offsetX / rect.width;
+    const value = percent * onDuration;
+    setProgress(value);
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  useEffect(() => {
+    if (isDragging) {
+      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mouseup', handleMouseUp);
+    } else {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+    }
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isDragging]);
+/**
+ *  <input
+            type="range"
+            className="home-container7"
+            min={0}
+            max={onDuration}
+            value={onProgress}
+            onChange={handleSeek}
+            step={0.01}
+          />
+
+
+          
+ */
+
+  
   return (
-    <section className="home-bar bar">
+    <section className="home-bar bar" style={{  opacity: 0.8    }}>
         <div className="home-music-play">
           <div className="home-music music-bar">
             <Link to={`/video/${url}`} className="home-button35 button">
@@ -200,7 +247,29 @@ export const MusicBar = ({previous, playing, muted, onProgress, onDuration, loop
               </svg>}
             </button>
           </div>
-          <input className="home-container7" type="range" min={0} max={onDuration} value={onProgress} onChange={handleSeek} step={0.01}/>
+          <div
+            className="range-container"
+            onClick={(e) => {
+              const rect = e.currentTarget.getBoundingClientRect();
+              const offsetX = e.clientX - rect.left;
+              const percent = offsetX / rect.width;
+              const value = percent * onDuration;
+              handleSeek(value);
+            }}
+          >
+            <div
+              className="range-progress"
+              style={{
+                height: '100%',
+                borderRadius: '30px',
+                backgroundColor: '#1e2b38',
+                width: `${(onProgress / onDuration) * 100}%`,
+                position: 'absolute',
+                top: '0',
+                left: '0'
+              }}
+            />
+          </div>
         </div>
       </section>
   )

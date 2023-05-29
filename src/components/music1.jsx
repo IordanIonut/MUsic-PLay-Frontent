@@ -7,15 +7,18 @@ import colors from '../utils/colors';
 const Music1 = ({video, color, idx, idSearch,pointerEvents, text, mood, albums, playlist, idArtist, imArtist}) => {
   const [image, setImage] = React.useState('');
 
+
   function formatNumber(num) {
-    if (num >= 1000000) {
-      return (num / 1000000)?.toFixed(0)+ 'M';
+    if (num >= 1000000000) {
+      return (num / 1000000000)?.toFixed(2) + ' B';
+    } else if (num >= 1000000) {
+      return (num / 1000000)?.toFixed(2) + ' M';
     } else if (num >= 1000) {
-      return (num / 1000)?.toFixed(0) + 'K';
+      return (num / 1000)?.toFixed(2) + ' K';
     } else {
       return num?.toString();
     }
-  };
+  }
 
   function millisToMinutesAndSeconds(millis) {
     var minutes = Math?.floor(millis / 60000);

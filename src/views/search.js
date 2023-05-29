@@ -55,14 +55,15 @@ const Search = () => {
   const [idSp, setIdSp]=useState('');
   const [userDate, setUserDate] = useState([]); 
 
- useEffect(() =>{
+  useEffect(() =>{
     if (token) {
       ApiDataBaseGet(`users/token?token=${token}`)
         .then((response) => {
           setIdSp(response)
         })
         .catch((error) => {
-          console.log(error);
+          console.log(error?.message);
+          localStorage.removeItem('token')
         });
       ApiDataBaseGet(`users/get/${idSp}`)
       .then((response) => {
@@ -73,7 +74,6 @@ const Search = () => {
       });
     }
   },[token, idSp]);
-
   const handleClick = () => {
     let value = type;
     dispatch(pauseVideo());

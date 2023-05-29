@@ -5,8 +5,11 @@ import * as Yup from "yup";
 import Swal from 'sweetalert2';
 import { ApiDataBaseGet, ApiDataBasePost } from '../utils/fetchAPI';
 
-const SendBar = ({idSp, userDate})=>{
-    
+const SendBar = ({idSp, userDate, setButtonYoutube, setButtonSpotify, setButtonAppleMusic})=>{
+  setButtonYoutube(false);
+  setButtonSpotify(false);
+  setButtonAppleMusic(false);
+  
   const formik = useFormik({
     initialValues: {
       name: '',
@@ -138,7 +141,7 @@ const SendBar = ({idSp, userDate})=>{
                 <path d="M282 460q96 186 282 282l94-94q20-20 44-10 72 24 152 24 18 0 30 12t12 30v150q0 18-12 30t-30 12q-300 0-513-213t-213-513q0-18 12-30t30-12h150q18 0 30 12t12 30q0 80 24 152 8 26-10 44z"></path>
               </svg>
               <span className="home-text59">Pitesti,Romania</span>
-              <span className="home-text60">musicPlay@yahoo.com</span>
+              <span className="home-text60">MUsicPLat@gmail.com</span>
               <span className="home-text61">+40760069111</span>
               <svg viewBox="0 0 1024 1024" className="home-icon094">
                 <path d="M854 342v-86l-342 214-342-214v86l342 212zM854 170q34 0 59 26t25 60v512q0 34-25 60t-59 26h-684q-34 0-59-26t-25-60v-512q0-34 25-60t59-26h684z"></path>

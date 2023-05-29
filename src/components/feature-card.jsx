@@ -3,7 +3,7 @@ import './feature-card.css'
 import { Link } from 'react-router-dom'
 import Cookies from 'js-cookie';
 
-const FeatureCard = ({playlist, text, mood, idxx, userDate, count}) => {
+const FeatureCard = ({playlist, text, mood, idxx, userDate, count, moood }) => {
   const [id, setId] = useState('');
   const [image, setImage] = React.useState('');
 
@@ -11,25 +11,21 @@ const FeatureCard = ({playlist, text, mood, idxx, userDate, count}) => {
     if(mood === 'spotify'){
       if(text != '2'){
         let c = playlist?.data?.uri?.split(':');
-        setId(c[2]);
+        if(c != undefined){
+          setId(c[2]);
+        }
+      }
     }
-  }
-  },[]);
-
-  useEffect(()=>{
     if(mood === 'appleMusic'){
-        const a = playlist?.artwork?.url.split('{w}x{h}');
-        setImage(a?.[0] + "1425x1425" + a?.[1]);
+      const a = playlist?.artwork?.url.split('{w}x{h}');
+      setImage(a?.[0] + "1425x1425" + a?.[1]);
     }
-  },[playlist]);
-
-  useEffect(()=>{
     if(mood === 'appleMusic' && text === "1"){
-        const a = playlist?.attributes?.artwork?.url.split('{w}x{h}');
-        setImage(a?.[0] + "1425x1425" + a?.[1]);
+      const a = playlist?.attributes?.artwork?.url.split('{w}x{h}');
+      setImage(a?.[0] + "1425x1425" + a?.[1]);
     }
   },[playlist]);
-
+  
   return (
     <div className={`feature-card-feature-card card-music`} style={(playlist?.id || playlist?.[0]?.content_id?.idPage || playlist?.playParams?.id) && text === '0' ?{opacity: '0.6', transform: 'scale(1.02)', pointerEvents: 'none'}: null}>
       <Link to={ playlist?.playlistId ? `/video/${playlist?.playlistId}` : null || playlist?.id ? `/video/${playlist?.id}` : null ||
@@ -40,7 +36,8 @@ const FeatureCard = ({playlist, text, mood, idxx, userDate, count}) => {
           idxx ? `/video/${idxx}` : null ||
           playlist?.playParams?.id ? `/video/${playlist?.playParams?.id}` : null || 
           playlist?.id ? `/video/${playlist?.id}` : null} 
-       onClick={() => playlist?.data?.uri ? playlist?.data?.uri && Cookies.set('spotifyType', playlist?.data?.uri) : null || 
+       onClick={() => (mood != undefined || moood != undefined ? Cookies.set('mood',mood || moood) : null) && 
+          playlist?.data?.uri ? playlist?.data?.uri && Cookies.set('spotifyType', playlist?.data?.uri) : null || 
           playlist?.releases?.items?.[0]?.uri ? playlist?.releases?.items?.[0]?.uri && Cookies.set('spotifyType', playlist?.releases?.items?.[0]?.uri) : null ||
           playlist?.uri ? playlist?.uri && Cookies.set('spotifyType', playlist?.uri) : null ||
           playlist?.playParams?.id ? playlist?.playParams?.id && Cookies.set('spotifyType', "123:"+playlist?.playParams?.kind+':'+ playlist?.playParams?.id) : null ||

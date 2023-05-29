@@ -5,9 +5,12 @@ import '../views/home.css'
 import { ApiDataBaseGet } from "../utils/fetchAPI";
 import FeatureCard from "../components/feature-card";
 
-const PlaylistBar = ({mood, idSp, userDate})=>{
+const PlaylistBar = ({mood, idSp, userDate, setButtonYoutube, setButtonSpotify, setButtonAppleMusic})=>{
     const [playlist, setPlaylist] = useState();
-    
+    setButtonYoutube(true);
+    setButtonSpotify(true);
+    setButtonAppleMusic(true);
+
     useEffect(() =>{
       ApiDataBaseGet(`playlistContent/mood/user_id?mood=${mood}&user_id=${idSp}`).then((data) =>{setPlaylist(data)});
     },[mood, idSp]);

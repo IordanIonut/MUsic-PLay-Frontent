@@ -8,19 +8,23 @@ import FeatureCard from "../components/feature-card";
 import ChanelCard from "../components/chanel-card";
 import { ApiDataBaseGet } from "../utils/fetchAPI";
 
-const HistoryBar = ({mood, idSp, userDate})=>{
+const HistoryBar = ({mood, idSp, userDate, setButtonYoutube, setButtonSpotify, setButtonAppleMusic})=>{
   const [type, setType] = React.useState("video");
-  const appleMusic_video=JSON.parse(localStorage.getItem('appleMusic_video'));
-  const appleMusic_playlist=JSON.parse(localStorage.getItem('appleMusic_playlist'));
-  const appleMusic_channel = JSON.parse(localStorage.getItem('appleMusic_channel'));
-  const youtube_video=JSON.parse(localStorage.getItem('youtube_video'));
-  const youtube_playlist=JSON.parse(localStorage.getItem('youtube_playlist'));
-  const youtube_channel = JSON.parse(localStorage.getItem('youtube_channel'));
-  const spotify_video=JSON.parse(localStorage.getItem('spotify_video'));
-  const spotify_playlist=JSON.parse(localStorage.getItem('spotify_playlist'));
-  const spotify_channel = JSON.parse(localStorage.getItem('spotify_channel'));
+  const appleMusic_video=JSON.parse(localStorage.getItem('appleMusic_video')) || [];
+  const appleMusic_playlist=JSON.parse(localStorage.getItem('appleMusic_playlist'))|| [];
+  const appleMusic_channel = JSON.parse(localStorage.getItem('appleMusic_channel'))|| [];
+  const youtube_video=JSON.parse(localStorage.getItem('youtube_video'))|| [];
+  const youtube_playlist=JSON.parse(localStorage.getItem('youtube_playlist'))|| [];
+  const youtube_channel = JSON.parse(localStorage.getItem('youtube_channel'))|| [];
+  const spotify_video=JSON.parse(localStorage.getItem('spotify_video'))|| [];
+  const spotify_playlist=JSON.parse(localStorage.getItem('spotify_playlist'))|| [];
+  const spotify_channel = JSON.parse(localStorage.getItem('spotify_channel'))|| [];
   const [arrayDB, setArrayBD] = useState([]);
   const [same, setSame] = useState([]);
+  setButtonYoutube(true);
+  setButtonSpotify(true);
+  setButtonAppleMusic(true);
+  const [combinedArrayBD, setCombinedArrayBD] = useState([]);
 
   const styleChangeOn=((idClass)=>{
     document.getElementById(idClass).classList.add("hoverType");
@@ -30,28 +34,73 @@ const HistoryBar = ({mood, idSp, userDate})=>{
     document.getElementById(idClass).classList.remove("hoverType");
   });
 
-  useEffect(() =>{
-    if(idSp !== ''){
-      if(type === 'video')
-        ApiDataBaseGet(`history/search/all?user_id=${idSp}&mood=${mood}&type=video`).then((data) =>{setArrayBD(data)}).catch((err) =>{console.log("err1")});
-      if(type === 'playlist')
-        ApiDataBaseGet(`history/search/all?user_id=${idSp}&mood=${mood}&type=playlist`).then((data) =>{setArrayBD(data)}).catch((err) =>{console.log("err2")});;
-      if(type === 'channel')
-        ApiDataBaseGet(`history/search/all?user_id=${idSp}&mood=${mood}&type=channel`).then((data) =>{setArrayBD(data)}).catch((err) =>{console.log("err3")});;
+  function parseCustomDate(dateString) {
+    if (!dateString) {
+      return null;
     }
-  }, [type, idSp, mood]);
+    const [datePart, timePart] = dateString.split(', ');
+    const [day, month, year] = datePart.split('.');
+    const [hour, minute, second] = timePart.split(':');
+    if (isNaN(day) || isNaN(month) || isNaN(year) || isNaN(hour) || isNaN(minute) || isNaN(second)) {
+      return null;
+    }
+    return new Date(parseInt(year), parseInt(month) - 1, parseInt(day), parseInt(hour), parseInt(minute), parseInt(second));
+  }
 
   useEffect(() =>{
     if(idSp != ''){
-      if(type === 'video')
+      if(type === 'video'){
+        ApiDataBaseGet(`history/search/all?user_id=${idSp}&type=video`).then((data) =>{setArrayBD(data)}).catch((err) =>{console.log("err1")});
         ApiDataBaseGet(`favorite/search?userId=${idSp}&type=video&mood=${mood}`).then((data) =>{setSame(data)}).catch((err) =>{console.log(err?.message)});
-      if(type === 'playlist')
+      }
+      if(type === 'playlist'){
+        ApiDataBaseGet(`history/search/all?user_id=${idSp}&type=playlist`).then((data) =>{setArrayBD(data)}).catch((err) =>{console.log("err2")});;
         ApiDataBaseGet(`favorite/search?userId=${idSp}&type=playlist&mood=${mood}`).then((data) =>{setSame(data)}).catch((err) =>{console.log(err?.message)});
-      if(type === 'channel')
+      }
+      if(type === 'channel'){
+        ApiDataBaseGet(`history/search/all?user_id=${idSp}&type=channel`).then((data) =>{setArrayBD(data)}).catch((err) =>{console.log("err3")});;
         ApiDataBaseGet(`favorite/search?userId=${idSp}&type=channel&mood=${mood}`).then((data) =>{setSame(data)}).catch((err) =>{console.log(err?.message)});
       }
-  }, [arrayDB]);
-
+    }else{
+      if (type === 'video') {
+        const order = [...youtube_video, ...spotify_video, ...appleMusic_video] || [];
+        order.sort((a, b) => {
+          const dateA = parseCustomDate(a?.[0]?.data);
+          const dateB = parseCustomDate(b?.[0]?.data);
+          if (dateA === null || dateB === null) {
+            return dateA === null ? 1 : -1;
+          }
+          return dateB.getTime() - dateA.getTime();
+        });
+        setCombinedArrayBD(order);
+      }
+      if(type === 'playlist'){
+        const order = [...youtube_playlist, ...spotify_playlist, ...appleMusic_playlist] || [];
+        order.sort((a, b) => {
+          const dateA = parseCustomDate(a?.[0]?.data);
+          const dateB = parseCustomDate(b?.[0]?.data);
+          if (dateA === null || dateB === null) {
+            return 0; 
+          }
+          return dateB.getTime() - dateA.getTime();
+        });
+        setCombinedArrayBD(order);
+      }
+        if(type === 'channel'){
+          const order = [...youtube_channel, ...spotify_channel, ...appleMusic_channel] || [];
+          order.sort((a, b) => {
+            const dateA = parseCustomDate(a?.[0]?.data);
+            const dateB = parseCustomDate(b?.[0]?.data);
+            if (dateA === null || dateB === null) {
+              return 0;
+            }
+            return dateB.getTime() - dateA.getTime();
+          });
+          setCombinedArrayBD(order);
+        }
+    }
+  }, [type, idSp, mood]);
+  //history from localStorege do not order fine, chek
   return(
         <section className="home-history"style={{display: 'flex', alignContent: 'baseline'}}>
           <span className="home-text29 text"></span>
@@ -81,94 +130,46 @@ const HistoryBar = ({mood, idSp, userDate})=>{
             </button>
           </div>
           <div className="home-card2 music-card">
-          {mood === 'youtube' && idSp === '' && type === 'video' && Array.isArray(youtube_video) && youtube_video.map((item, idx) => (
+          {idSp && type === 'video' && Array.isArray(arrayDB) && arrayDB.map((item, idx) => (
             <section  key={idx} style={{width: '99%', transitionDelay: '1s' }}> 
-            { Array.isArray(youtube_video?.[idx])  && <Music video={item} idx={idx}></Music> }
+              {Array.isArray(arrayDB)  &&  item?.content_id?.mood === 'youtube' ? <Music moood={item?.content_id?.mood} color={same?.find((s) => s?.content_id?.idPage === item?.content_id?.idPage)}  video={item?.content_id?.description} idx={idx}></Music> : null ||
+                item?.content_id?.mood === 'spotify' ? <Music  moood={item?.content_id?.mood} color={same?.find((s) => s?.content_id?.idPage === item?.content_id?.description?.[0]?.id)} video={item?.content_id?.description?.[0]} idx={idx}></Music> : null ||
+                item?.content_id?.mood === 'appleMusic' ? <Music  moood={item?.content_id?.mood} video={item?.content_id?.description} idx={idx}></Music> : null }
             </section>
           ))}
-          {mood === 'youtube'  && idSp === '' && type === 'playlist' && Array.isArray(youtube_playlist) && youtube_playlist.map((item, idx) => (
-            <section key={idx} style={{marginLeft: '', transitionDelay: '1s'}}> 
-            {Array.isArray(youtube_playlist?.[idx]) &&  <FeatureCard playlist={item} idx={idx}></FeatureCard> }
+           {idSp && type === 'playlist' && Array.isArray(arrayDB) && arrayDB.map((item, idx) => (
+            <section key={idx} style={{marginLeft: '', transitionDelay: '1s'}}>
+              {Array.isArray(arrayDB) && item?.content_id?.mood === 'youtube' ? <FeatureCard moood={item?.content_id?.mood} playlist={item?.content_id?.description} idx={idx}></FeatureCard> : null ||
+                item?.content_id?.mood === 'spotify' ? <FeatureCard moood={item?.content_id?.mood} text={'2'} playlist={item?.content_id?.description} idx={idx} mood={mood}></FeatureCard> : null ||
+                item?.content_id?.mood === 'appleMusic' ? <FeatureCard moood={item?.content_id?.mood} text={'1'} playlist={item?.content_id?.description?.data?.[0]} idx={idx} mood={mood}></FeatureCard>: null}
             </section>
           ))}
-          {mood === 'youtube'  && idSp === '' && type === 'channel' && Array.isArray(youtube_channel) && youtube_channel.map((item, idx) => (
+          {idSp && type === 'channel' && Array.isArray(arrayDB) && arrayDB.map((item, idx) => (
             <section key={idx} style={{width: '99%' , transitionDelay: '1s' }}> 
-            {Array.isArray(youtube_channel?.[idx])  &&  <ChanelCard channelDetail={item} idx={idx}></ChanelCard> }
+              {Array.isArray(arrayDB) && item?.content_id?.mood === 'youtube' ?  <ChanelCard moood={item?.content_id?.mood} channelDetail={item?.content_id?.description} idx={idx}></ChanelCard> : null||
+                item?.content_id?.mood === 'spotify' ? <ChanelCard moood={item?.content_id?.mood} channelDetail={item?.content_id?.description?.data?.artist} text={"1"} mood={mood} idx={idx}></ChanelCard> : null ||
+                item?.content_id?.mood === 'appleMusic' ? <ChanelCard moood={item?.content_id?.mood} channelDetail={item?.content_id?.description} text={"1"} mood={mood} idx={idx}></ChanelCard> :null }
             </section>
           ))}
-          {mood === 'youtube' && idSp && type === 'video' && Array.isArray(arrayDB) && arrayDB.map((item, idx) => (
+          {idSp === '' && type === 'video' && Array.isArray(combinedArrayBD) && combinedArrayBD.map((item, idx) => (
             <section  key={idx} style={{width: '99%', transitionDelay: '1s' }}> 
-            {  Array.isArray(arrayDB)  &&  <Music color={same?.find((s) => s?.content_id?.idPage === item?.content_id?.idPage)}  video={item?.content_id?.description} idx={idx}></Music> }
+            { item?.mood === 'youtube' ? <Music moood={item?.[0]?.mood} video={item?.id} idx={idx} mood={'youtube'}></Music>: null ||
+              item?.mood === 'appleMusic' ? <Music moood={item?.[0]?.mood} video={item?.[0]?.id?.id} idx={idx} mood={'appleMusic'}></Music> : null ||
+              item?.mood === 'spotify' ? <Music moood={item?.[0]?.mood} video={item?.[0]?.id?.[0]?.id} idx={idx} mood={'spotify'}></Music>: null}
             </section>
           ))}
-           {mood === 'youtube'  && idSp && type === 'playlist' && Array.isArray(arrayDB) && arrayDB.map((item, idx) => (
+          {idSp === '' && type === 'playlist' && Array.isArray(combinedArrayBD) && combinedArrayBD.map((item, idx) => (
             <section key={idx} style={{marginLeft: '', transitionDelay: '1s'}}> 
-            {Array.isArray(arrayDB)&&  <FeatureCard playlist={item?.content_id?.description} idx={idx}></FeatureCard> }
+            { item?.mood === 'youtube' ?  <FeatureCard moood={item?.[0]?.mood} playlist={item?.id} idx={idx} mood={'youtube'}></FeatureCard> : null ||
+              item?.mood === 'spotify' ? <FeatureCard moood={item?.[0]?.mood} text={'1'} playlist={item?.[0]?.id?.id} idx={idx} mood={'spotify'}></FeatureCard> :null ||
+              item?.mood === 'appleMusic' ? <FeatureCard moood={item?.[0]?.mood} text={'1'} playlist={item?.[0]?.id?.data?.[0]?.id} idx={idx} mood={'appleMusic'}></FeatureCard> : null}
             </section>
           ))}
-          {mood === 'youtube'  && idSp && type === 'channel' && Array.isArray(arrayDB) && arrayDB.map((item, idx) => (
+          {idSp === '' && type === 'channel' && Array.isArray(combinedArrayBD) && combinedArrayBD.map((item, idx) => (
             <section key={idx} style={{width: '99%' , transitionDelay: '1s' }}> 
-            {Array.isArray(arrayDB)&&  <ChanelCard channelDetail={item?.content_id?.description} idx={idx}></ChanelCard> }
-            </section>
-          ))}
-          {mood === 'appleMusic' && idSp === '' && type === 'video' && Array.isArray(appleMusic_video) && appleMusic_video.map((item, idx) => (
-            <section  key={idx} style={{width: '99%', transitionDelay: '1s' }}> 
-            { Array.isArray(appleMusic_video?.[idx])&&  <Music video={item?.[0]?.id} idx={idx}></Music> }
-            </section>
-          ))}
-          {mood === 'appleMusic'  && idSp === '' && type === 'playlist' && Array.isArray(appleMusic_playlist) && appleMusic_playlist.map((item, idx) => (
-            <section key={idx} style={{marginLeft: '', transitionDelay: '1s'}}> 
-            {Array.isArray(appleMusic_playlist?.[idx])&&  <FeatureCard text={'1'} playlist={item?.[0]?.id?.data?.[0]} idx={idx} mood={mood}></FeatureCard> }
-            </section>
-          ))}
-          {mood === 'appleMusic'  && idSp === '' && type === 'channel' && Array.isArray(appleMusic_channel) && appleMusic_channel.map((item, idx) => (
-            <section key={idx} style={{width: '99%' , transitionDelay: '1s' }}> 
-            {Array.isArray(appleMusic_channel?.[idx])&&  <ChanelCard channelDetail={item?.[0]?.id} text={"1"} mood={mood} idx={idx}></ChanelCard> }
-            </section>
-          ))}
-          {mood === 'spotify' && idSp === '' && type === 'video' && Array.isArray(spotify_video) && spotify_video.map((item, idx) => (
-            <section  key={idx} style={{width: '99%', transitionDelay: '1s' }}> 
-            { Array.isArray(spotify_video?.[idx])&&  <Music video={item?.[0]?.id?.[0]} idx={idx}></Music> }
-            </section>
-          ))}
-          {mood === 'spotify'  && idSp === '' && type === 'playlist' && Array.isArray(spotify_playlist) && spotify_playlist.map((item, idx) => (
-            <section key={idx} style={{marginLeft: '', transitionDelay: '1s'}}> 
-            {Array.isArray(spotify_playlist?.[idx])&&  <FeatureCard text={'1'} playlist={item?.[0]?.id} idx={idx} mood={mood}></FeatureCard> }
-            </section>
-          ))}
-          {mood === 'spotify'  && idSp === '' && type === 'channel' && Array.isArray(spotify_channel) && spotify_channel.map((item, idx) => (
-            <section key={idx} style={{width: '99%' , transitionDelay: '1s' }}> 
-            {Array.isArray(spotify_channel?.[idx])&&  <ChanelCard channelDetail={item?.[0]?.id?.data?.artist} text={"1"} mood={mood} idx={idx}></ChanelCard> }
-            </section>
-          ))}
-           {mood === 'spotify' && idSp  && type === 'video' && Array.isArray(arrayDB) && arrayDB.map((item, idx) => (
-            <section  key={idx} style={{width: '99%', transitionDelay: '1s' }}> 
-            { Array.isArray(arrayDB)&&  <Music color={same?.find((s) => s?.content_id?.idPage === item?.content_id?.description?.[0]?.id)} video={item?.content_id?.description?.[0]} idx={idx}></Music> }
-            </section>
-          ))}
-          {mood === 'spotify'  && idSp && type === 'playlist' && Array.isArray(arrayDB) && arrayDB.map((item, idx) => (
-            <section key={idx} style={{marginLeft: '', transitionDelay: '1s'}}> 
-            {Array.isArray(arrayDB)&&  <FeatureCard text={'2'} playlist={item?.content_id?.description} idx={idx} mood={mood}></FeatureCard> }
-            </section>
-          ))}
-          {mood === 'spotify'  && idSp  && type === 'channel' && Array.isArray(arrayDB) && arrayDB.map((item, idx) => (
-            <section key={idx} style={{width: '99%' , transitionDelay: '1s' }}> 
-            {Array.isArray(arrayDB)&&  <ChanelCard channelDetail={item?.content_id?.description?.data?.artist} text={"1"} mood={mood} idx={idx}></ChanelCard> }
-            </section>
-          ))}
-          {mood === 'appleMusic' && idSp  && type === 'video' && Array.isArray(arrayDB) && arrayDB.map((item, idx) => (
-            <section  key={idx} style={{width: '99%', transitionDelay: '1s' }}> 
-            { Array.isArray(arrayDB)&&  <Music video={item?.content_id?.description} idx={idx}></Music> }
-            </section>
-          ))}
-          {mood === 'appleMusic'  && idSp && type === 'playlist' && Array.isArray(arrayDB) && arrayDB.map((item, idx) => (
-            <section key={idx} style={{marginLeft: '', transitionDelay: '1s'}}> 
-            {Array.isArray(arrayDB)&&  <FeatureCard text={'1'} playlist={item?.content_id?.description?.data?.[0]} idx={idx} mood={mood}></FeatureCard> }
-            </section>
-          ))}
-          {mood === 'appleMusic'  && idSp  && type === 'channel' && Array.isArray(arrayDB) && arrayDB.map((item, idx) => (
-            <section key={idx} style={{width: '99%' , transitionDelay: '1s' }}> 
-            {Array.isArray(arrayDB)&&  <ChanelCard channelDetail={item?.content_id?.description} text={"1"} mood={mood} idx={idx}></ChanelCard> }
+            {Array.isArray(youtube_channel?.[idx]) && item?.[0]?.mood === 'youtube' ?<ChanelCard moood={item?.[0]?.mood} channelDetail={item} idx={idx} mood={'youtube'}></ChanelCard> : null || 
+              item?.[0]?.mood === 'spotify' ? <ChanelCard moood={item?.[0]?.mood} channelDetail={item?.[0]?.id?.data?.artist} text={"1"} mood={'spotify'} idx={idx}></ChanelCard> : null || 
+              item?.[0]?.mood === 'applemusic' ? <ChanelCard moood={item?.[0]?.mood} channelDetail={item?.[0]?.id} text={"1"}  mood={'applemusic'} idx={idx}></ChanelCard> : null}
             </section>
           ))}
           </div>

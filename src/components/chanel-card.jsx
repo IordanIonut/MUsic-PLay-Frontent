@@ -2,9 +2,9 @@ import React from 'react'
 import '../views/home.css'
 import { Link } from 'react-router-dom'
 import { useEffect, useState } from 'react'
+import Cookies from 'js-cookie';
 
-
-const ChanelCard = ({channelDetail, idx, mood, text}) => {
+const ChanelCard = ({channelDetail, idx, mood, text, moood}) => {
   const [id, setId] = useState('');
   const [image, setImage] = React.useState('');
 
@@ -32,7 +32,8 @@ const ChanelCard = ({channelDetail, idx, mood, text}) => {
            channelDetail?.[0]?.id?.id ? `/channel/${channelDetail?.[0]?.id?.id}` : null ||
            channelDetail?.id ? `/channel/${channelDetail?.id}` : null ||
            channelDetail?.data?.uri ? `/channel/${id}` : null ||
-           channelDetail?.adamid ? `/channel/${channelDetail?.adamid}` : null }>
+           channelDetail?.adamid ? `/channel/${channelDetail?.adamid}` : null }
+           onClick={() => moood != undefined ? Cookies.set('mood',moood) : null}>
       <div className="button music-line"><span>{idx}</span>
         <img style={{marginLeft: '50px'}}
               src={channelDetail?.[0]?.id?.snippet?.thumbnails?.high?.url ? channelDetail?.[0]?.id?.snippet?.thumbnails?.high?.url  : null ||
