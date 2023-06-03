@@ -32,15 +32,19 @@ const ChanelCard = ({channelDetail, idx, mood, text, moood}) => {
            channelDetail?.[0]?.id?.id ? `/channel/${channelDetail?.[0]?.id?.id}` : null ||
            channelDetail?.id ? `/channel/${channelDetail?.id}` : null ||
            channelDetail?.data?.uri ? `/channel/${id}` : null ||
+           channelDetail?.adam_id ? `/channel/${channelDetail?.adam_id}` : null || 
            channelDetail?.adamid ? `/channel/${channelDetail?.adamid}` : null }
            onClick={() => moood != undefined ? Cookies.set('mood',moood) : null}>
       <div className="button music-line"><span>{idx}</span>
         <img style={{marginLeft: '50px'}}
               src={channelDetail?.[0]?.id?.snippet?.thumbnails?.high?.url ? channelDetail?.[0]?.id?.snippet?.thumbnails?.high?.url  : null ||
                 channelDetail?.snippet?.thumbnails?.high?.url ? channelDetail?.snippet?.thumbnails?.high?.url : null ||
+                channelDetail?.thumbnail?.[3]?.url ? channelDetail?.thumbnail?.[3]?.url : null || 
+                channelDetail?.thumbnail?.[2]?.url ? channelDetail?.thumbnail?.[2]?.url : null ||
                 channelDetail?.thumbnail?.[1]?.url ? channelDetail?.thumbnail?.[1]?.url : null || 
                 channelDetail?.thumbnail?.[0]?.url  ? channelDetail?.thumbnail?.[0]?.url  : null ||
                 image ? image : null ||
+                channelDetail?.brandingSettings?.image?.bannerExternalUrl ? channelDetail?.brandingSettings?.image?.bannerExternalUrl : null ||
                 channelDetail?.visuals?.avatarImage?.sources?.[0]?.url ? channelDetail?.visuals?.avatarImage?.sources?.[0]?.url : null ||
                 channelDetail?.data?.visuals?.avatarImage?.sources?.[1]?.url ? channelDetail?.data?.visuals?.avatarImage?.sources?.[1]?.url : null ||
                 channelDetail?.avatar ? channelDetail?.avatar : null }

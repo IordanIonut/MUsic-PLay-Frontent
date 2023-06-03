@@ -28,13 +28,11 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
   const [channel, setChannel] = useState([]);
   const [video, setVideo] = React.useState([]);
   const [play, setPlay] = React.useState([]);
-  //console.log(idSongPlayList);
   const [image, setImage] = React.useState('');
   const [image1, setImage1] = React.useState('');
   const dispatch = useDispatch();
   const [option, setOption] = useState([]);
   const [same, setSame] = useState([]);
-  const [youtube, setYouTube] = useState([]);
   const [bar, setBar] = useState([]);
 
   function formatNumber(num) {
@@ -254,7 +252,7 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
       if(mood === 'youtube'){
         if(idSongPlayList === '' && playlist === 1){
           if(!id?.includes("|")){
-            ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${related?.videos?.[0]?.id}&mood=${mood}`).then((data) => {setSame(data)});
+            ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${related?.videos?.[0]?.id}&mood=${mood}`).then((data) => {setSame(data);console.log(data);});
           }else{
             ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${related?.[0]?.content_id?.idPage}&mood=${mood}`).then((data) => {setSame(data)});
           }
@@ -268,6 +266,20 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
         if(idSongPlayList === '' && playlist === 1){
           if(!id?.includes("|")){
             ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${related?.tracks?.items?.[0]?.track?.id}&mood=${mood}`).then((data) => {setSame(data)});
+          }else{
+            ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${related?.[0]?.content_id?.idPage}&mood=${mood}`).then((data) => {setSame(data)});
+          }
+          }else if(idSongPlayList === ''){
+            ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${idSearch}&mood=${mood}`).then((data) => {setSame(data)})
+          }else{
+          ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${idSong[0]}&mood=${mood}`).then((data) => {setSame(data)})
+        }
+      }
+      if(mood === 'appleMusic'){
+        if(idSongPlayList === '' && playlist === 1){
+          if(!id?.includes("|")){
+            console.log(related)
+            ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${related?.data?.[0]?.attributes?.playParams?.id}&mood=${mood}`).then((data) =>{handleConfirm();}).catch((err) =>{console.log(err?.message)});
           }else{
             ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${related?.[0]?.content_id?.idPage}&mood=${mood}`).then((data) => {setSame(data)});
           }
@@ -298,6 +310,19 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
         if(idSongPlayList === '' && playlist === 1){
           if(!id?.includes("|")){
             ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${related?.tracks?.items?.[0]?.track?.id}&mood=${mood}`).then((data) => {setSame(data)});
+          }else{
+            ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${related?.[0]?.content_id?.idPage}&mood=${mood}`).then((data) => {setSame(data)});
+          }
+          }else if(idSongPlayList === ''){
+            ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${idSearch}&mood=${mood}`).then((data) => {setSame(data)})
+          }else{
+          ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${idSong[0]}&mood=${mood}`).then((data) => {setSame(data)})
+        }
+      }
+      if(mood === 'appleMusic'){
+        if(idSongPlayList === '' && playlist === 1){
+          if(!id?.includes("|")){
+            ApiDataBaseGet(`playList/delete?user_id=${idSp}&id_page=${related?.data?.[0]?.attributes?.playParams?.id}&mood=${mood}&playlist_id=${result?.value?.[0]}&content_id=${data?.content_id}`).then((data) =>{handleConfirm();}).catch((err) =>{console.log(err?.message)});
           }else{
             ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${related?.[0]?.content_id?.idPage}&mood=${mood}`).then((data) => {setSame(data)});
           }
@@ -376,7 +401,22 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
             if(mood === 'youtube'){
               if(idSongPlayList === '' && playlist === 1){
                 if(!id?.includes("|")){
+                  console.log("2");
                   ApiDataBaseGet(`playList/delete?user_id=${idSp}&id_page=${related?.videos?.[0]?.id}&mood=${mood}&playlist_id=${result?.value?.[0]}&content_id=${data?.content_id}`).then((data) =>{handleConfirm();}).catch((err) =>{console.log(err?.message)});
+                }else{
+                  console.log("1");
+                  ApiDataBaseGet(`playList/delete?user_id=${idSp}&id_page=${videos?.[0]?.content_id?.idPage}&mood=${mood}&playlist_id=${result?.value?.[0]}&content_id=${data?.content_id}`).then((data) =>{handleConfirm();}).catch((err) =>{console.log(err?.message)});
+                }
+                }else if(idSongPlayList === ''){
+                  ApiDataBaseGet(`playList/delete?user_id=${idSp}&id_page=${idSearch}&mood=${mood}&playlist_id=${result?.value?.[0]}&content_id=${data?.content_id}`).then((data) =>{handleConfirm();}).catch((err) =>{console.log(err?.message)});
+                }else{
+                ApiDataBaseGet(`playList/delete?user_id=${idSp}&id_page=${idSong[0]}&mood=${mood}&playlist_id=${result?.value?.[0]}&content_id=${data?.content_id}`).then((data) =>{handleConfirm();}).catch((err) =>{console.log(err?.message)});
+              }
+            }
+            if(mood === 'spotify'){
+              if(idSongPlayList === '' && playlist === 1){
+                if(!id?.includes("|")){
+                  ApiDataBaseGet(`playList/delete?user_id=${idSp}&id_page=${related?.tracks?.items?.[0]?.track?.id}&mood=${mood}&playlist_id=${result?.value?.[0]}&content_id=${data?.content_id}`).then((data) =>{handleConfirm();}).catch((err) =>{console.log(err?.message)});
                 }else{
                   ApiDataBaseGet(`playList/delete?user_id=${idSp}&id_page=${videos?.[0]?.content_id?.idPage}&mood=${mood}&playlist_id=${result?.value?.[0]}&content_id=${data?.content_id}`).then((data) =>{handleConfirm();}).catch((err) =>{console.log(err?.message)});
                 }
@@ -385,20 +425,21 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
                 }else{
                 ApiDataBaseGet(`playList/delete?user_id=${idSp}&id_page=${idSong[0]}&mood=${mood}&playlist_id=${result?.value?.[0]}&content_id=${data?.content_id}`).then((data) =>{handleConfirm();}).catch((err) =>{console.log(err?.message)});
               }
-          }
-            if(mood === 'spotify'){
+            }
+            if(mood === 'appleMusic'){
               if(idSongPlayList === '' && playlist === 1){
                 if(!id?.includes("|")){
-                  ApiDataBaseGet(`playList/delete?user_id=${idSp}&id_page=${related?.tracks?.items?.[0]?.track?.id}&mood=${mood}&playlist_id=${result?.value?.[0]}&content_id=${data?.content_id}`).then((data) =>{handleConfirm();}).catch((err) =>{console.log(err?.message)});
-                console.log(related?.tracks?.items?.[0]?.track?.id)
+                  ApiDataBaseGet(`playList/delete?user_id=${idSp}&id_page=${related?.data?.[0]?.attributes?.playParams?.id}&mood=${mood}&playlist_id=${result?.value?.[0]}&content_id=${data?.content_id}`).then((data) =>{handleConfirm();}).catch((err) =>{console.log(err?.message)});
+                console.log("1")
                 }else{
                   ApiDataBaseGet(`playList/delete?user_id=${idSp}&id_page=${videos?.[0]?.content_id?.idPage}&mood=${mood}&playlist_id=${result?.value?.[0]}&content_id=${data?.content_id}`).then((data) =>{handleConfirm();}).catch((err) =>{console.log(err?.message)});
-                  console.log(videos?.[0]?.content_id?.idPage);
+                  console.log("2")
                 }
                 }else if(idSongPlayList === ''){
                   ApiDataBaseGet(`playList/delete?user_id=${idSp}&id_page=${idSearch}&mood=${mood}&playlist_id=${result?.value?.[0]}&content_id=${data?.content_id}`).then((data) =>{handleConfirm();}).catch((err) =>{console.log(err?.message)});
-                  console.log(idSearch);
+                  console.log("3")
                 }else{
+                  console.log("4")
                 ApiDataBaseGet(`playList/delete?user_id=${idSp}&id_page=${idSong[0]}&mood=${mood}&playlist_id=${result?.value?.[0]}&content_id=${data?.content_id}`).then((data) =>{handleConfirm();}).catch((err) =>{console.log(err?.message)});
               }
             }
@@ -585,7 +626,7 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
 
     useEffect(()=>{
       if(mood === 'appleMusic'){
-          const a = related?.data?.[0]?.relationships?.tracks?.data?.[0]?.attributes?.artwork?.url.split('{w}x{h}');
+          const a = related?.data?.[0]?.relationships?.tracks?.data?.[0]?.attributes?.artwork?.url.split('{w}x{h}') || related?.data?.[0]?.attributes?.artwork?.url.split('{w}x{h}');
           setImage(a?.[0] + "1425x1425" + a?.[1]);
           const aa = artist?.[0]?.attributes?.artwork?.url.split('{w}x{h}');
           setImage1(aa?.[0] + "1425x1425" + aa?.[1]);
@@ -689,14 +730,51 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
             setBar(bestMatch);
           });
         }
+        if(mood === 'appleMusic' && video !== undefined && related !== undefined) {
+          let search = null;
+          if(idSongPlayList === '' && playlist === 1){
+              if(!id?.includes("|")){
+                search = related?.tracks?.items?.[0]?.track?.name + " " + related?.tracks?.items?.[0]?.track?.artists?.[0]?.name;
+              }else{
+                search = related?.[0]?.content_id?.description?.[0]?.name + " " + related?.[0]?.content_id?.description?.[0]?.artists?.[0]?.name;
+              }
+            }else if(idSongPlayList === ''){
+              search = videos?.title +" "+ videos?.subtitle;
+            }else{
+              search = idSong[2] + " " + idSong[3];
+          }
+            ApiYouTube3(`search?query=${search}&type=video`).then((result) => {
+              const songs = result?.results;
+              if (!songs || songs.length === 0) {
+                console.log('No results found!');
+                return;
+              }
+              const bestMatch = songs.reduce((prev, current) => {
+                const title = current.title.toLowerCase();
+                const prevTitle = prev.title.toLowerCase();
+                const currentScore = (title.includes('official') ? 2 : 1) *
+                  (title.includes('lyric') ? 2 : 1) *
+                  (title.includes('audio') ? 0.5 : 1) *
+                  (title.includes('live') ? 0.5 : 1) *
+                  (title.includes('remix') ? 0.5 : 1) *
+                  (title.includes('cover') ? 0.25 : 1);
+                const prevScore = (prevTitle.includes('official') ? 2 : 1) *
+                  (prevTitle.includes('lyric') ? 2 : 1) *
+                  (prevTitle.includes('audio') ? 0.5 : 1) *
+                  (prevTitle.includes('live') ? 0.5 : 1) *
+                  (prevTitle.includes('remix') ? 0.5 : 1) *
+                  (prevTitle.includes('cover') ? 0.25 : 1);
+                return (currentScore > prevScore) ? current : prev;
+              });
+              setBar(bestMatch);
+            });
+          }
     },[videos, related, idSongPlayList, id, mood]);
-    
-  return (
+
+    return (
     <section className="home-video" style={{display: 'flex'}}>
     <div className="home-video1 video">
-      <div className="home-container1" s>
-
-
+      <div className="home-container1">
       {mood === 'youtube' ? <ReactPlayer autoFocus volume on  playsInline frameBorder='0' allow='autoplay; encrypted-media' width='100%' height='100%'  
         loaded style={{display: 'flex'}}  className="home-iframe"
         url={(playlist === 0 ? `https://www.youtube.com/watch?v=${id}` :  undefined || 
@@ -709,8 +787,6 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
         onProgress={onProgress}
         onDuration={onDuration}
       />: null}
-
-
     {mood === 'spotify' || mood === 'appleMusic' ? <img style={{display: 'flex'}}
           alt="image"
           src={ (mood === 'spotify' ? idSong[1] : null) || videos?.[0]?.album?.images?.[0]?.url || related?.[0]?.content_id?.description?.[0]?.album?.images?.[0]?.url || description?.album?.images?.[0]?.url  || 
@@ -729,9 +805,6 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
         onProgress={onProgress}
         onDuration={onDuration}
         />: null}
-
-     
-
         </div>
         <div className="home-test">
         <span className="home-text08">{ mood==='youtube' ? (playlist === 0 ? videos?.title : related?.videos?.author || 
@@ -743,9 +816,8 @@ const VideoBar = ({videos, id, related, playlist, views, relatedPlayList, mood, 
         mood === 'spotify' &&  idSongPlayList === '' && playlist === 1 ? (related?.videos?.[0]?.title ? related?.videos?.[0]?.title : null || related?.[0]?.content_id?.description?.[0]?.name ? related?.[0]?.content_id?.description?.[0]?.name : null ||
           related?.tracks?.items?.[0]?.track?.name  ? related?.tracks?.items?.[0]?.track?.name : null || related?.[0]?.content_id?.description?.track?.name ? related?.[0]?.content_id?.description?.track?.name : null ||
               views?.title ? views?.title : null || idSong[2] ? idSong[2] : null) : idSong[2] || 
-        mood === 'appleMusic' ? (videos?.title ? videos?.title : null || 
-            idSongPlayList === '' && playlist === 1 && related?.data?.[0]?.relationships?.tracks?.data?.[0]?.attributes?.name ?
-                 related?.data?.[0]?.relationships?.tracks?.data?.[0]?.attributes?.name : null || idSong[2] ? idSong[2] : null) : null}
+        mood === 'appleMusic' ? (videos?.title ? videos?.title : null ||
+            idSongPlayList === '' && playlist === 1 && related?.data?.[0]?.relationships?.tracks?.data?.[0]?.attributes?.name ? related?.data?.[0]?.relationships?.tracks?.data?.[0]?.attributes?.name :  idSong[2] || idSong[2] ? idSong[2] : null) : null}
         <br /><br />
         </span>
         <div className="home-share1 posibili buttonChange" onClick={shareClick}>

@@ -34,7 +34,7 @@ const FavoriteBar = ({mood, idSp, userDate, setButtonYoutube, setButtonSpotify, 
         <section  key={idx} style={{width: '99%', transitionDelay: '1s' }}> 
           {Array.isArray(arrayDB) && item?.content_id.mood ==='youtube' ? <Music moood={item?.content_id?.mood} color={item?.fill}  video={item?.content_id?.description} idx={idx}></Music>: null ||
             item?.content_id.mood ==='spotify' ? <Music moood={item?.content_id?.mood} color={item?.fill}   video={item?.content_id?.description} idx={idx}></Music> : null ||
-            item?.content_id.mood ==='appleMusic' ? <Music moood={item?.content_id?.mood} color={item?.fill}  video={item} idx={idx}></Music> : null}
+            item?.content_id.mood ==='appleMusic' ? <Music moood={item?.content_id?.mood} color={item?.fill}  video={item?.content_id?.description} idx={idx}></Music> : null}
         </section>
       ))}
       </div>

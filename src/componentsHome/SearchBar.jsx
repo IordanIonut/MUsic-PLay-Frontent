@@ -36,7 +36,7 @@ const SearchBar = ({selectedFiltre, mood, idSp}) => {
 
     useEffect(() =>{
       if(mood === 'appleMusic'){
-        ApiShazam1(`search/?query=${selectedFiltre}`).then((data) => setVideo(data));
+        ApiShazam1(`search?term=${selectedFiltre}`).then((data) => setVideo(data));
       }
     },[selectedFiltre, mood]);
 
@@ -131,12 +131,12 @@ const SearchBar = ({selectedFiltre, mood, idSp}) => {
               {type==='channel' && <ChanelCard channelDetail={item} idx={id} mood={mood}></ChanelCard>}
             </section>
           ))}
-          {mood === 'appleMusic' && Array.isArray(videos?.result?.tracks?.hits) && videos?.result?.tracks?.hits.map((item, id) => (
+          {mood === 'appleMusic' && type === 'video' && Array.isArray(videos?.tracks?.hits) && videos?.tracks?.hits.map((item, id) => (
             <section key={id} style={{transitionDelay: '1s'} && (type === 'video' ? {width: '100%'}: null)}> 
-              {type==='video' && <Music video={item?.track} treding={'1'} treding1={'1'} idx={id} page='0' mood={mood}></Music>}
+              {type==='video' && <Music video={item} treding={'1'} treding1={'1'} idx={id} page='0' mood={mood}></Music>}
             </section>
           ))}
-           {mood === 'appleMusic' && Array.isArray(videos?.result?.artists?.hits) && videos?.result?.artists?.hits.map((item, id) => (
+           {mood === 'appleMusic' && type === 'channel' && Array.isArray(videos?.artist?.hits) && videos?.artist?.hits.map((item, id) => (
             <section key={id} style={{transitionDelay: '1s'} && type === 'channel' ? {width: '100%'}: null }> 
               {type==='channel' && <ChanelCard channelDetail={item?.artist} idx={id} mood={mood}></ChanelCard>}
             </section>

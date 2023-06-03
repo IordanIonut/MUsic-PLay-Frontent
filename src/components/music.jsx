@@ -58,7 +58,7 @@ const Music = ({video, idx, color, page, mood, treding, treding1, moood}) => {
       }
     }
   },[video]);
-
+  
   return (
     <div className={`music-music `} style={{display: 'flex'}}>
       <Link to={video?.video?.videoId ? `/video/${video?.video?.videoId}` : null ||
@@ -105,6 +105,7 @@ const Music = ({video, idx, color, page, mood, treding, treding1, moood}) => {
                 video?.track?.album?.images?.[0]?.url ? video?.track?.album?.images?.[0]?.url : null ||
                 video?.album?.images?.[0]?.url ? video?.album?.images?.[0]?.url : null ||
                 video?.images?.coverarthq ? video?.images?.coverarthq : null ||
+                video?.images?.default ? video?.images?.default : null ||
                 image ? image : null}
           className="music-image"
         />
@@ -123,7 +124,8 @@ const Music = ({video, idx, color, page, mood, treding, treding1, moood}) => {
              video?.track?.album?.artists?.[0]?.name ? video?.track?.album?.artists?.[0]?.name : null ||
              video?.[0]?.id?.channel?.name ? video?.[0]?.id?.channel?.name : null ||
              video?.data?.artists?.items?.[0]?.profile?.name ? video?.data?.artists?.items?.[0]?.profile?.name : null ||
-             video?.artists?.[0]?.name ? video?.artists?.[0]?.name : null || 
+             video?.artists?.[0]?.name ? video?.artists?.[0]?.name : null ||
+             video?.heading?.subtitle ? video?.heading?.subtitle : null ||
              page === '1'&& mood === 'spotify' && video?.podcast?.publisherName ? video?.podcast?.publisherName : null ||
              video?.trackMetadata?.artists?.[0]?.name ? video?.trackMetadata?.artists?.[0]?.name : null || 
              video?.subtitle ? video?.subtitle : null}
@@ -138,6 +140,7 @@ const Music = ({video, idx, color, page, mood, treding, treding1, moood}) => {
           video?.name ? video?.name : null ||
           video?.[0]?.name ? video?.[0]?.name : null ||
           video?.track?.name ? video?.track?.name : null ||
+          video?.heading?.title ? video?.heading?.title : null ||
           video?.track?.name ? video?.track?.name : null || 
           video?.trackMetadata?.trackName ? video?.trackMetadata?.trackName : null}</span>
           <br className=""></br>

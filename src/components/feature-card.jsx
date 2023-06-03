@@ -20,7 +20,7 @@ const FeatureCard = ({playlist, text, mood, idxx, userDate, count, moood }) => {
       const a = playlist?.artwork?.url.split('{w}x{h}');
       setImage(a?.[0] + "1425x1425" + a?.[1]);
     }
-    if(mood === 'appleMusic' && text === "1"){
+    if((mood === 'appleMusic' || moood === 'appleMusic') && text === "1"){
       const a = playlist?.attributes?.artwork?.url.split('{w}x{h}');
       setImage(a?.[0] + "1425x1425" + a?.[1]);
     }
@@ -34,12 +34,14 @@ const FeatureCard = ({playlist, text, mood, idxx, userDate, count, moood }) => {
           playlist?.[4] ? `/video/${playlist?.[4]+'|'+playlist?.[3]+'|'+playlist?.[8]+'|'+playlist?.[0]}` : null ||
           playlist?.releases?.items?.[0]?.id ? `/video/${playlist?.releases?.items?.[0]?.id}` : null ||
           idxx ? `/video/${idxx}` : null ||
+          playlist?.attributes?.playParams?.id ? `/video/${playlist?.attributes?.playParams?.id}` : null ||
           playlist?.playParams?.id ? `/video/${playlist?.playParams?.id}` : null || 
           playlist?.id ? `/video/${playlist?.id}` : null} 
-       onClick={() => (mood != undefined || moood != undefined ? Cookies.set('mood',mood || moood) : null) && 
+       onClick={() => (moood != undefined || mood != undefined ? Cookies.set('mood',moood || mood) : null) && 
           playlist?.data?.uri ? playlist?.data?.uri && Cookies.set('spotifyType', playlist?.data?.uri) : null || 
           playlist?.releases?.items?.[0]?.uri ? playlist?.releases?.items?.[0]?.uri && Cookies.set('spotifyType', playlist?.releases?.items?.[0]?.uri) : null ||
           playlist?.uri ? playlist?.uri && Cookies.set('spotifyType', playlist?.uri) : null ||
+          playlist?.attributes?.playParams?.kind ? playlist?.attributes?.playParams?.kind && Cookies.set('spotifyType', "123:"+playlist?.attributes?.playParams?.kind+":"+playlist?.attributes?.playParams?.id) : null ||
           playlist?.playParams?.id ? playlist?.playParams?.id && Cookies.set('spotifyType', "123:"+playlist?.playParams?.kind+':'+ playlist?.playParams?.id) : null ||
           playlist?.id ? playlist?.id && Cookies.set('spotifyType', "123:"+playlist?.value?.type+':'+ playlist?.id) : null}>
       <button
@@ -90,7 +92,7 @@ const FeatureCard = ({playlist, text, mood, idxx, userDate, count, moood }) => {
       <span className="feature-card-text3" style={{paddingTop: '30px'}}>
         <span className="">{playlist?.videoCount ? playlist?.videoCount : null || playlist?.video_count ? playlist?.video_count : null || 
           playlist?.[0]?.id?.video_count ? playlist?.[0]?.id?.video_count :  null || playlist?.[9] ? playlist?.[9] : null 
-            || playlist?.tracks?.total ? playlist?.tracks?.total : null || count ? count : null || playlist?.attributes?.trackCount ? playlist?.attributes?.trackCount+"Videos" : null ||
+            || playlist?.tracks?.total ? playlist?.tracks?.total : null || count ? count : null || playlist?.attributes?.trackCount ? playlist?.attributes?.trackCount+" Videos" : null ||
           playlist?.videoCountText ? playlist?.videoCountText.replace('videos','') : null || playlist?.trackCount? playlist?.trackCount+" Videos" : null} 
           {mood !== 'appleMusic' ? ' Videos' : playlist?.value?.attributes?.releaseDate}
         </span>

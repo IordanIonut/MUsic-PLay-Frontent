@@ -65,42 +65,42 @@ const HistoryBar = ({mood, idSp, userDate, setButtonYoutube, setButtonSpotify, s
       if (type === 'video') {
         const order = [...youtube_video, ...spotify_video, ...appleMusic_video] || [];
         order.sort((a, b) => {
-          const dateA = parseCustomDate(a?.[0]?.data);
-          const dateB = parseCustomDate(b?.[0]?.data);
+          const dateA = new Date(a?.data);
+          const dateB = new Date(b?.data);
           if (dateA === null || dateB === null) {
             return dateA === null ? 1 : -1;
           }
-          return dateB.getTime() - dateA.getTime();
+          return dateB - dateA;
         });
         setCombinedArrayBD(order);
       }
       if(type === 'playlist'){
         const order = [...youtube_playlist, ...spotify_playlist, ...appleMusic_playlist] || [];
         order.sort((a, b) => {
-          const dateA = parseCustomDate(a?.[0]?.data);
-          const dateB = parseCustomDate(b?.[0]?.data);
+          const dateA = new Date(a?.data);
+          const dateB = new Date(b?.data);
           if (dateA === null || dateB === null) {
             return 0; 
           }
-          return dateB.getTime() - dateA.getTime();
+          return dateB - dateA;
         });
         setCombinedArrayBD(order);
       }
         if(type === 'channel'){
           const order = [...youtube_channel, ...spotify_channel, ...appleMusic_channel] || [];
           order.sort((a, b) => {
-            const dateA = parseCustomDate(a?.[0]?.data);
-            const dateB = parseCustomDate(b?.[0]?.data);
+            const dateA = new Date(a?.[0]?.data);
+            const dateB = new Date(b?.[0]?.data);
             if (dateA === null || dateB === null) {
               return 0;
             }
-            return dateB.getTime() - dateA.getTime();
+            return dateB - dateA;
           });
           setCombinedArrayBD(order);
         }
     }
   }, [type, idSp, mood]);
-  //history from localStorege do not order fine, chek
+
   return(
         <section className="home-history"style={{display: 'flex', alignContent: 'baseline'}}>
           <span className="home-text29 text"></span>
@@ -133,8 +133,8 @@ const HistoryBar = ({mood, idSp, userDate, setButtonYoutube, setButtonSpotify, s
           {idSp && type === 'video' && Array.isArray(arrayDB) && arrayDB.map((item, idx) => (
             <section  key={idx} style={{width: '99%', transitionDelay: '1s' }}> 
               {Array.isArray(arrayDB)  &&  item?.content_id?.mood === 'youtube' ? <Music moood={item?.content_id?.mood} color={same?.find((s) => s?.content_id?.idPage === item?.content_id?.idPage)}  video={item?.content_id?.description} idx={idx}></Music> : null ||
-                item?.content_id?.mood === 'spotify' ? <Music  moood={item?.content_id?.mood} color={same?.find((s) => s?.content_id?.idPage === item?.content_id?.description?.[0]?.id)} video={item?.content_id?.description?.[0]} idx={idx}></Music> : null ||
-                item?.content_id?.mood === 'appleMusic' ? <Music  moood={item?.content_id?.mood} video={item?.content_id?.description} idx={idx}></Music> : null }
+                item?.content_id?.mood === 'spotify' ? <Music moood={item?.content_id?.mood} color={same?.find((s) => s?.content_id?.idPage === item?.content_id?.description?.[0]?.id)} video={item?.content_id?.description?.[0]} idx={idx}></Music> : null ||
+                item?.content_id?.mood === 'appleMusic' ? <Music moood={item?.content_id?.mood} video={item?.content_id?.description} idx={idx} color={same?.find((s) => s?.content_id?.idPage === item?.content_id?.description?.key)}></Music> : null }
             </section>
           ))}
            {idSp && type === 'playlist' && Array.isArray(arrayDB) && arrayDB.map((item, idx) => (
@@ -154,22 +154,22 @@ const HistoryBar = ({mood, idSp, userDate, setButtonYoutube, setButtonSpotify, s
           {idSp === '' && type === 'video' && Array.isArray(combinedArrayBD) && combinedArrayBD.map((item, idx) => (
             <section  key={idx} style={{width: '99%', transitionDelay: '1s' }}> 
             { item?.mood === 'youtube' ? <Music moood={item?.[0]?.mood} video={item?.id} idx={idx} mood={'youtube'}></Music>: null ||
-              item?.mood === 'appleMusic' ? <Music moood={item?.[0]?.mood} video={item?.[0]?.id?.id} idx={idx} mood={'appleMusic'}></Music> : null ||
-              item?.mood === 'spotify' ? <Music moood={item?.[0]?.mood} video={item?.[0]?.id?.[0]?.id} idx={idx} mood={'spotify'}></Music>: null}
+              item?.mood === 'appleMusic' ? <Music moood={item?.[0]?.mood} video={item?.id} idx={idx} mood={'appleMusic'}></Music> : null ||
+              item?.mood === 'spotify' ? <Music moood={item?.[0]?.mood} video={item?.id} idx={idx} mood={'spotify'}></Music>: null}
             </section>
           ))}
           {idSp === '' && type === 'playlist' && Array.isArray(combinedArrayBD) && combinedArrayBD.map((item, idx) => (
             <section key={idx} style={{marginLeft: '', transitionDelay: '1s'}}> 
             { item?.mood === 'youtube' ?  <FeatureCard moood={item?.[0]?.mood} playlist={item?.id} idx={idx} mood={'youtube'}></FeatureCard> : null ||
               item?.mood === 'spotify' ? <FeatureCard moood={item?.[0]?.mood} text={'1'} playlist={item?.[0]?.id?.id} idx={idx} mood={'spotify'}></FeatureCard> :null ||
-              item?.mood === 'appleMusic' ? <FeatureCard moood={item?.[0]?.mood} text={'1'} playlist={item?.[0]?.id?.data?.[0]?.id} idx={idx} mood={'appleMusic'}></FeatureCard> : null}
+              item?.mood === 'appleMusic' ? <FeatureCard moood={item?.[0]?.mood} text={'1'} playlist={item?.id?.data?.[0]} idx={idx} mood={'appleMusic'}></FeatureCard> : null}
             </section>
           ))}
           {idSp === '' && type === 'channel' && Array.isArray(combinedArrayBD) && combinedArrayBD.map((item, idx) => (
             <section key={idx} style={{width: '99%' , transitionDelay: '1s' }}> 
-            {Array.isArray(youtube_channel?.[idx]) && item?.[0]?.mood === 'youtube' ?<ChanelCard moood={item?.[0]?.mood} channelDetail={item} idx={idx} mood={'youtube'}></ChanelCard> : null || 
+            {Array.isArray(youtube_channel?.[idx]) && item?.[0]?.mood === 'youtube' ?<ChanelCard moood={item?.[0]?.mood} channelDetail={item?.[0]?.id} idx={idx} mood={'youtube'}></ChanelCard> : null || 
               item?.[0]?.mood === 'spotify' ? <ChanelCard moood={item?.[0]?.mood} channelDetail={item?.[0]?.id?.data?.artist} text={"1"} mood={'spotify'} idx={idx}></ChanelCard> : null || 
-              item?.[0]?.mood === 'applemusic' ? <ChanelCard moood={item?.[0]?.mood} channelDetail={item?.[0]?.id} text={"1"}  mood={'applemusic'} idx={idx}></ChanelCard> : null}
+              item?.[0]?.mood === 'appleMusic' ? <ChanelCard moood={item?.[0]?.mood} channelDetail={item?.[0]?.id} text={"1"} mood={'appleMusic'} idx={idx}></ChanelCard> : null}
             </section>
           ))}
           </div>

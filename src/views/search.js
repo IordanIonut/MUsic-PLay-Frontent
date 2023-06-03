@@ -74,6 +74,7 @@ const Search = () => {
       });
     }
   },[token, idSp]);
+  
   const handleClick = () => {
     let value = type;
     dispatch(pauseVideo());

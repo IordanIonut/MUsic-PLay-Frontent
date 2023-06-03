@@ -111,6 +111,20 @@ export const MusicBar = ({previous, playing, muted, onProgress, onDuration, loop
           setIdx(idSong[0]);
         }
       }
+      if(mood === 'appleMusic'){
+        if(idSongPlayList === '' && playlist === 1){
+          if(!id?.includes("|")){
+            let a = related?.tracks?.items?.[0]?.sharing_info?.uri.split(":");
+            setIdx(a?.[2]);
+          }else{
+            setIdx(related?.[0]?.content_id?.idPage);
+          }
+        }else if(idSongPlayList === ''){
+          setIdx(id);
+        }else{
+          setIdx(idSong[0]);
+        }
+      }
   },[idSongPlayList, related]);
 
   useEffect(() =>{
@@ -139,8 +153,6 @@ export const MusicBar = ({previous, playing, muted, onProgress, onDuration, loop
           }
         }
   },[idx, sameID, check, all]);
-
-
 
   const [isDragging, setIsDragging] = useState(false);
   const rangeRef = useRef(null);
@@ -171,21 +183,6 @@ export const MusicBar = ({previous, playing, muted, onProgress, onDuration, loop
       window.removeEventListener('mouseup', handleMouseUp);
     };
   }, [isDragging]);
-/**
- *  <input
-            type="range"
-            className="home-container7"
-            min={0}
-            max={onDuration}
-            value={onProgress}
-            onChange={handleSeek}
-            step={0.01}
-          />
-
-
-          
- */
-
   
   return (
     <section className="home-bar bar" style={{  opacity: 0.8    }}>

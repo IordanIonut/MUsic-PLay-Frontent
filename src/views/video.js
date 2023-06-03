@@ -7,7 +7,7 @@ import {useParams} from 'react-router-dom';
 import MusicBar from '../componentsHome/MusicBar';
 import VideoBar from '../componentsHome/VideoBar';
 import { useHistory } from 'react-router-dom';
-import { ApiYouTube7, ApiYouTube3, ApiYouTube1, ApiYouTube10, ApiSpotify3, ApiSpotify4, ApiSpotify6, ApiShazam1, ApiShazam2, ApiDataBaseGet, ApiDataBasePost} from '../utils/fetchAPI';
+import { ApiYouTube7, ApiYouTube3, ApiYouTube1, ApiYouTube10, ApiSpotify3, ApiShazam4, ApiSpotify6, ApiShazam1, ApiShazam2, ApiDataBaseGet, ApiDataBasePost} from '../utils/fetchAPI';
 import {setCurrentTime, setDuration, toggleLoop, toggleMute, playVideo, pauseVideo, setPreview, setNext, toggleRandome, setRad  } from '../utils/actions';
 import { Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
@@ -149,9 +149,6 @@ const Video = () => {
       }
     };
     
-    
-    
-    
     useEffect(() =>{
       if(mood === 'youtube' && !id?.includes("|")){
         if(id.length  <= 11 && !playlistActivate){
@@ -179,24 +176,21 @@ const Video = () => {
       if(mood === 'appleMusic' && !id?.includes("|")){
         if(typexx?.[1] === 'song' || typexx?.[1] === 'MUSIC' || typexx?.[1] === 'SONG'){
           setPlaylist(0);
-          ApiShazam1(`track_about?track_id=${id}`).then((data1) => setVideo(data1?.result));
+          ApiShazam4(`songs/get_details?id=${id}`).then((data1) => setVideo(data1));
           ApiShazam2(`shazam-songs/list-similarities?id=track-similarities-id-${id}`).then((data2) => setRelated(data2?.resources));
         }
         if(typexx?.[1] === 'albums' || typexx?.[1] === 'album'){
           setPlaylist(1);
-          ApiShazam2(`albums/get-details?id=${id}`).then((data1) => setVideo(data1));
+          ApiShazam2(`albums/get-details?id=${id}`).then((data1) => {setVideo(data1);setRelated(data1);});
         }
       }
     },[id, idChannel]);
 
     useEffect(() =>{
-      if(mood === 'spotify'  && !id?.includes("|")){
-        if(typexx?.[1] === 'track')
-          ApiSpotify3(`albums?ids=${videos?.[0]?.album?.id}`).then((data) => setRelated(data?.albums?.[0]?.tracks?.items));
-      }
-      if(mood === 'appleMusic')
-        if(typexx?.[1] === 'albums' || typexx?.[1] === 'album')
-          setRelated(videos);
+        if(mood === 'spotify'  && !id?.includes("|")){
+          if(typexx?.[1] === 'track')
+            ApiSpotify3(`albums?ids=${videos?.[0]?.album?.id}`).then((data) => setRelated(data?.albums?.[0]?.tracks?.items));
+        }
     },[videos]);
 
     useEffect(() =>{
@@ -221,6 +215,7 @@ const Video = () => {
         }
         if(mood === 'appleMusic'){
           if(typexx?.[1] === 'song' || typexx?.[1] === 'MUSIC' || typexx?.[1] === 'SONG'){
+            
             storeData(videos,'video','appleMusic');
           }
           if(typexx?.[1] === 'albums' || typexx?.[1] === 'album'){
@@ -239,26 +234,37 @@ const Video = () => {
       if(mood === 'youtube' && videos?.length !== 0){
           if(id.length  <= 11 && !playlistActivate){
             const rezult = {description: videos, mood: 'youtube', type: 'video', idPage: id};
-            ApiDataBasePost(`content/add`, rezult).catch((error) => {console.log("error");});
+            ApiDataBasePost(`content/add`, rezult).then((data) => console.log(data)).catch((error) => {console.log("error");});
           }else if(playlistActivate === null){
             const aaaa = videos;
             delete aaaa.videos; 
             const rezult = {description: aaaa, mood: 'youtube', type: 'playlist', idPage: id};
-            ApiDataBasePost(`content/add`, rezult).catch((error) => {console.log(error?.message);});
+            ApiDataBasePost(`content/add`, rezult).then((data) => console.log(data)).catch((error) => {console.log(error?.message);});
+            if(idSongPlayList === '' && playlist === 1){
+              if(!id?.includes("|")){
+                const rezult1 = {description: related?.videos?.[0], mood: 'youtube', type: 'video', idPage: related?.videos?.[0]?.id};
+                ApiDataBasePost(`content/add`, rezult1).then((data) => console.log(data)).catch((error) => {console.log("error");});
+              }
+            }
           }
         }
       if(mood === 'appleMusic' && !id?.includes("|") && videos?.length !== 0){
         if(typexx?.[1] === 'song' || typexx?.[1] === 'MUSIC' || typexx?.[1] === 'SONG'){
-          const aaaa = related; 
-          delete aaaa?.lyrics; 
-          const rezult = {description: aaaa, mood: 'appleMusic', type: 'video', idPage: id};
+          const rezult = {description: videos, mood: 'appleMusic', type: 'video', idPage: id};
           ApiDataBasePost(`content/add`, rezult).then((data) =>{}).catch((error) => {console.log("error");});
         }
         if(typexx?.[1] === 'albums' || typexx?.[1] === 'album'){
-          const aaaa = videos; 
-          delete aaaa?.data?.[0]?.relationships?.tracks; 
+          const aaaa = {...videos};
+          delete aaaa?.data?.[0]?.relationships;
+          console.log(aaaa);
           const rezult = {description: aaaa, mood: 'appleMusic', type: 'playlist', idPage: id};
-          ApiDataBasePost(`content/add`, rezult).catch((error) => {console.log(error?.message);});
+          ApiDataBasePost(`content/add`, rezult).then((data) => console.log(data)).catch((error) => {console.log(error?.message);});
+          if(idSongPlayList === '' && playlist === 1){
+            if(!id?.includes("|")){
+              const rezult1 = {description: videos?.data?.[0]?.relationships?.tracks?.data?.[0], mood: 'appleMusic', type: 'video', idPage: videos?.data?.[0]?.relationships?.tracks?.data?.[0]?.id};
+              ApiDataBasePost(`content/add`, rezult1).then((data) => console.log(data)).catch((error) => {console.log(error?.message);});
+            }
+          }
         }
       }
       if(mood === 'spotify' && !id?.includes("|") && videos?.length !== 0){
@@ -278,9 +284,6 @@ const Video = () => {
         if(typexx?.[1] === 'playlist') 
           setRelated(videos);
       }
-      if(mood === 'appleMusic'  && !id?.includes("|"))
-        if(typexx?.[1] === 'albums' || typexx?.[1] === 'album')
-          setRelated(videos);
     }
     },[videos, token]);
 
@@ -303,7 +306,7 @@ const Video = () => {
           if(id.length  <= 11 && !playlistActivate){
             ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=video&description=${id}`).then((data1) => {console.log(data1);ApiDataBaseGet(`history/unused-content`)}).catch((err) => {console.log(err?.message);});    
           }else if(playlistActivate === null){
-            ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=playlist&description=${id}`).then((data1) => {console.log(data1);ApiDataBaseGet(`history/unused-content`)}).catch((err) => {console.log(err?.message);});    
+            ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=playlist&description=${id}`).then((data1) => {console.log(data1);}).catch((err) => {console.log(err?.message);});    
           }
         }
         if(mood === 'appleMusic'  && related?.length !== 0 && !id?.includes("|")){
@@ -311,7 +314,7 @@ const Video = () => {
             ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=video&description=${id}`).then((data1) => {console.log(data1);ApiDataBaseGet(`history/unused-content`)}).catch((err) => {console.log(err?.message);});    
           }
           if(typexx?.[1] === 'albums' || typexx?.[1] === 'album'){
-            ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=playlist&description=${id}`).then((data1) => {console.log(data1);ApiDataBaseGet(`history/unused-content`)}).catch((err) => {console.log(err?.message);});    
+            ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=playlist&description=${id}`).then((data1) => {console.log(data1);}).catch((err) => {console.log(err?.message);});    
           }
         }
         if(mood === 'spotify' && related?.length !== 0 && videos?.length !== 0 && !id?.includes("|")){
@@ -386,7 +389,6 @@ const Video = () => {
       if(idClass === 'appleMusic')
         document.getElementById('appleMusic1').classList.remove("accoun5");
     });
-  
   
     const handleChange = (namePlatform) =>{
       if(mood !== namePlatform)
@@ -1131,7 +1133,8 @@ const Video = () => {
             </svg>
           </Link>
         </section>
-          <VideoBar videos={videos} token={token} views={views} related={related} relatedPlayList={relatedPlayList} id={id} playlist={playlist} mood={mood} idxx={idxx?.[2]}
+          <VideoBar videos={videos} token={token} views={views} related={related} relatedPlayList={relatedPlayList} id={id} playlist={playlist} mood={mood} 
+          idxx={idxx?.[2]}
           playerRef={playerRef}
           playing={playing}
           muted={muted}
