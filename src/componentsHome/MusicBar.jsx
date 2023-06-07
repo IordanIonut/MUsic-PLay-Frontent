@@ -5,9 +5,10 @@ import { ApiDataBaseGet, ApiDataBasePost } from '../utils/fetchAPI';
 import colors from '../utils/colors';
 import Cookies from 'js-cookie';
 import Slider from '@mui/material/Slider';
+import Swal from 'sweetalert2';
 
 export const MusicBar = ({previous, playing, muted, onProgress, onDuration, loop, onPlayStop, onMute, onLoop, handleSeek, url, idSp, id, token, related,
-   name, thumbnail, next, onRandome, playlist, mood, urlReactPlayer}) => {
+      name, thumbnail, next, onRandome, playlist, mood, urlReactPlayer}) => {
   const currentTimeFormatted = onProgress && typeof onProgress === 'number' ? new Date(onProgress * 1000).toISOString().substr(11, 8) : '00:00:00';
   const durationFormatted = onDuration && typeof onDuration === 'number' ? new Date(onDuration * 1000).toISOString().substr(11, 8) : '00:00:00';
   const [count, setCount] = useState(0);
@@ -59,27 +60,40 @@ export const MusicBar = ({previous, playing, muted, onProgress, onDuration, loop
   });
   
   const handleClick = () => {
-    if (count % 2 === 0) {
-      let ran = Math.floor(Math.random() * 142);
-        ApiDataBaseGet(`content/last`).then((data) => {let aa = null;
+    if(!id?.includes("|")){
+      if (count % 2 === 0) {
+        let ran = Math.floor(Math.random() * 142);
+          ApiDataBaseGet(`content/last`).then((data) => {let aa = null;
+            if(!id?.includes("|"))
+              aa = data?.content_id;
+            else
+              aa = data?.description?.[0]?.content_id?.content_id;
+            const val={content_id: {content_id: aa},  fill: ran, user_id: {user_id: idSp}};
+            ApiDataBasePost(`favorite/add`, val).then((data) => {console.log(data);
+              ApiDataBaseGet(`favorite/all/user_id/1?user_id=${idSp}`).then((data) =>{setAll(data); //console.log("4444444444444444444444"); 
+              setSameID('as'); setCheck(true);})}).catch((err) => {console.log(err?.message)})})
+          .catch((err) => {console.log(err)});
+      } else {
+        ApiDataBaseGet(`content/last`).then((data) => {let val = null;
           if(!id?.includes("|"))
-            aa = data?.content_id;
+            val = data?.idPage;
           else
-            aa = data?.description?.[0]?.content_id?.content_id;
-          const val={content_id: {content_id: aa},  fill: ran, user_id: {user_id: idSp}};
-          ApiDataBasePost(`favorite/add`, val).then((data) => {console.log(data);
-            ApiDataBaseGet(`favorite/all/user_id/1?user_id=${idSp}`).then((data) =>{setAll(data); //console.log("4444444444444444444444"); 
-            setSameID('as'); setCheck(true);})}).catch((err) => {console.log(err?.message)})})
-        .catch((err) => {console.log(err)});
-    } else {
-      ApiDataBaseGet(`content/last`).then((data) => {let val = null;
-        if(!id?.includes("|"))
-          val = data?.idPage;
-        else
-          val = data?.description?.[0]?.content_id?.idPage;
-      ApiDataBaseGet(`favorite/delete/search?userId=${idSp}&idPage=${val}`).then((data) => {//console.log("delete : 555555555555555555555555555555"); 
-      console.log("countqw          "+count);setCheck(false);setCount(0);setAll([]);setSameID('');}).catch((err) => {console.log(err?.message)})});
-      setAll([]);setSameID('');
+            val = data?.description?.[0]?.content_id?.idPage;
+        ApiDataBaseGet(`favorite/delete/search?userId=${idSp}&idPage=${val}`).then((data) => {//console.log("delete : 555555555555555555555555555555"); 
+        console.log("countqw          "+count);setCheck(false);setCount(0);setAll([]);setSameID('');}).catch((err) => {console.log(err?.message)})});
+        setAll([]);setSameID('');
+      }
+    }else{
+      Swal.fire({
+        icon: 'error',
+          text: "Sorry, I'm unable to add the song to your favorite.",
+          showConfirmButton: false,
+          customClass: {
+            container: 'blur-background popup'
+          },
+          timer: 2000,
+          buttons: false
+      });
     }
   };
 
@@ -132,10 +146,10 @@ export const MusicBar = ({previous, playing, muted, onProgress, onDuration, loop
       if(idx != undefined && check){
         ApiDataBaseGet(`favorite/all/user_id?user_id=${idSp}`).then((data) =>{setAll(data);setSameID('');setCount(0);}).catch((err) =>{console.log(err?.message);});
         style('save');
-      console.log("6666666666666666666666666666666");
+      //console.log("6666666666666666666666666666666");
       }
       else{
-       console.log("77777777777777777777777777777");
+      //console.log("77777777777777777777777777777");
         ApiDataBaseGet(`favorite/all/user_id?user_id=${idSp}`).then((data) =>{setAll(data);setCount(0);setSameID('')}).catch((err) =>{console.log(err?.message);});
       }
     }

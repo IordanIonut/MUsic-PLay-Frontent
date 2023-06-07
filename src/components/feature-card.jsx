@@ -25,9 +25,10 @@ const FeatureCard = ({playlist, text, mood, idxx, userDate, count, moood }) => {
       setImage(a?.[0] + "1425x1425" + a?.[1]);
     }
   },[playlist]);
-  
+
   return (
-    <div className={`feature-card-feature-card card-music`} style={(playlist?.id || playlist?.[0]?.content_id?.idPage || playlist?.playParams?.id) && text === '0' ?{opacity: '0.6', transform: 'scale(1.02)', pointerEvents: 'none'}: null}>
+    <div className={`feature-card-feature-card card-music`} style={(playlist?.id || playlist?.[0]?.content_id?.idPage || playlist?.playlist_id || playlist?.playParams?.id) &&
+        text === '0' ? {opacity: '0.8', transform: 'scale(1.02)', pointerEvents: 'none'}: null}>
       <Link to={ playlist?.playlistId ? `/video/${playlist?.playlistId}` : null || playlist?.id ? `/video/${playlist?.id}` : null ||
           playlist?.[0]?.id?.id ? `/video/${playlist?.[0]?.id?.id}`: null || playlist?.data?.id?.id ? `/video/${playlist?.data?.id}` : null ||
           playlist?.data?.uri ? `/video/${id}` : null ||
@@ -37,7 +38,7 @@ const FeatureCard = ({playlist, text, mood, idxx, userDate, count, moood }) => {
           playlist?.attributes?.playParams?.id ? `/video/${playlist?.attributes?.playParams?.id}` : null ||
           playlist?.playParams?.id ? `/video/${playlist?.playParams?.id}` : null || 
           playlist?.id ? `/video/${playlist?.id}` : null} 
-       onClick={() => (moood != undefined || mood != undefined ? Cookies.set('mood',moood || mood) : null) && 
+        onClick={() => (moood != undefined || mood != undefined ? Cookies.set('mood',moood || mood) : null) && 
           playlist?.data?.uri ? playlist?.data?.uri && Cookies.set('spotifyType', playlist?.data?.uri) : null || 
           playlist?.releases?.items?.[0]?.uri ? playlist?.releases?.items?.[0]?.uri && Cookies.set('spotifyType', playlist?.releases?.items?.[0]?.uri) : null ||
           playlist?.uri ? playlist?.uri && Cookies.set('spotifyType', playlist?.uri) : null ||
@@ -54,18 +55,17 @@ const FeatureCard = ({playlist, text, mood, idxx, userDate, count, moood }) => {
         </svg>
       </button>
       </Link>
-      {!playlist?.[2] && !playlist?.[0]?.playlist_id ? <img src={playlist?.thumbnail?.url  ?  playlist?.thumbnail?.url : null ||
-           playlist?.thumbnail?.[1]?.url  ? playlist?.thumbnail[1]?.url : null ||
+      {!playlist?.[2] && !playlist?.playlist_id && !playlist?.[0]?.playlist_id ? <img src={playlist?.thumbnail?.url  ?  playlist?.thumbnail?.url : null ||
+          playlist?.thumbnail?.[1]?.url  ? playlist?.thumbnail[1]?.url : null ||
           playlist?.[0]?.id?.thumbnail?.url ? playlist?.[0]?.id?.thumbnail?.url : null ||
-           playlist?.thumbnails  ? playlist?.thumbnails[1]?.url : null || 
+          playlist?.thumbnails  ? playlist?.thumbnails[1]?.url : null || 
           playlist?.thumbnail?.[0]?.url ? playlist?.thumbnail?.[0]?.url : null ||
           playlist?.data?.images?.items?.[0]?.sources?.[0]?.url ? playlist?.data?.images?.items?.[0]?.sources?.[0]?.url : null ||
           playlist?.images?.items?.[0]?.sources?.[0]?.url ? playlist?.images?.items?.[0]?.sources?.[0]?.url : null ||
           playlist?.releases?.items?.[0]?.coverArt?.sources?.[2]?.url ? playlist?.releases?.items?.[0]?.coverArt?.sources?.[2]?.url : null || 
           playlist?.images?.[0]?.url ? playlist?.images?.[0]?.url : null ||
           image ? image : null}
-        className="feature-card-image"/> : <div className="feature-card-image" style={{backgroundColor: 
-          `${playlist?.[2] || playlist?.[0]?.playlist_id?.fill}`}}></div>}
+        className="feature-card-image"/> : <div className="feature-card-image" style={{backgroundColor: `${playlist?.[2] || playlist?.fill}`}}></div>}
       <div className="text-card" style={{ overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis'}}>
         <span className="feature-card-text1">{playlist?.title ? playlist?.title : null || 
           playlist?.[0]?.id?.title ? playlist?.[0]?.id?.title : null ||
@@ -79,6 +79,7 @@ const FeatureCard = ({playlist, text, mood, idxx, userDate, count, moood }) => {
         <span id="artist" className="feature-card-text2">
           {playlist?.channelTitle ? playlist?.channelTitle : null || 
           playlist?.channel?.name ? playlist?.channel?.name : null ||
+          playlist?.user_id?.name ? playlist?.user_id?.name : null ||
           playlist?.[0]?.id?.channel?.name ? playlist?.[0]?.id?.channel?.name : null ||
           playlist?.owner?.name ? playlist?.owner?.name : null ||  
           playlist?.data?.owner?.name ? playlist?.data?.owner?.name : null  ||

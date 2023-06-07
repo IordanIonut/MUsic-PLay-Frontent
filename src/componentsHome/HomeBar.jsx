@@ -110,9 +110,9 @@ const HomeBar = ({mood, token, idSp, setButtonYoutube, setButtonSpotify, setButt
         handleGetRandomNumbers(playlistStart, youtube_playlist, "playlist");
       }
     }
-   },[mood]);
+    },[mood]);
 
-   const styleChangeOn=((idClass)=>{
+    const styleChangeOn=((idClass)=>{
     if(mood === 'youtube'){
       if(idClass === 'video'){
         handleGetRandomNumbers1(songStart, video);
@@ -132,7 +132,7 @@ const HomeBar = ({mood, token, idSp, setButtonYoutube, setButtonSpotify, setButt
 
   return(
       <section className="home-seach music-list"style={{display: 'flex', alignContent: 'baseline'}}>
-       <span className="home-text29 text">
+        <span className="home-text29 text">
         <br></br>
         <br></br>
       </span>
@@ -153,19 +153,21 @@ const HomeBar = ({mood, token, idSp, setButtonYoutube, setButtonSpotify, setButt
             </button>
           </div>
           <div className="home-card2 music-card">
-          { mood === 'youtube' ? mood === 'youtube' &&  Array.isArray(homeSong) &&  homeSong.map((item, id) => (
-            <section key={id} style={{transitionDelay: '1s'} && (type === 'video' ? {width: '100%'}: null)}>
-            {type==='video' && <Music color={same?.find((s) => s?.content_id?.idPage === item?.[0]?.id?.id)} video={item} idx={id} page='0'></Music>}
+          {type === 'video' ? Array.isArray(homeSong) &&  homeSong.map((item, idx) => (
+            <section key={idx} style={{transitionDelay: '1s'} && (type === 'video' ? {width: '100%'}: null)}>
+            {item?.id ? <Music color={same?.find((s) => s?.content_id?.idPage === item?.[0]?.id?.id)} video={item?.id} idx={idx} page='0'></Music> : null ||
+            item ? <Music color={same?.find((s) => s?.content_id?.idPage === item?.[0]?.id?.id)} video={item} idx={idx} page='0'></Music> : null}
             </section>
-          )) : null } 
-             { mood === 'youtube' ? mood === 'youtube' &&  Array.isArray(homePlaylist) &&  homePlaylist.map((item, id) => (
-            <section key={id} style={{transitionDelay: '1s'} && (type === 'playlist' ? {marginLeft: ''} : null)}> 
-            {type==='playlist'&& <FeatureCard playlist={item} idx={id} ></FeatureCard>}
+          )) : null }
+          {type === 'playlist' ? Array.isArray(homePlaylist) &&  homePlaylist.map((item, idx) => (
+            <section key={idx} style={{transitionDelay: '1s'} && (type === 'playlist' ? {marginLeft: ''} : null)}> 
+            {item?.id ? <FeatureCard moood={item?.[0]?.mood} playlist={item?.id} idx={idx} mood={'youtube'}></FeatureCard> : null || 
+              item ? <FeatureCard moood={item?.[0]?.mood} playlist={item} idx={idx} mood={'youtube'}></FeatureCard> : null}
             </section>
           )) : null } 
           {mood === 'spotify' && <p>De implementat Spotify</p>}
           {mood === 'appleMusic' && <p>De implementat AppleMusic</p>} 
-           {mood === 'shazam' &&         <p>asdasdsaaaa</p>   }
+          {mood === 'shazam' &&         <p>asdasdsaaaa</p>   }
           </div>
       </section> 
     )

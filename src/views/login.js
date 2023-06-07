@@ -224,7 +224,7 @@ const Login = () => {
   return (
     <div className="login-container">
       <Helmet>
-        <title>MusicPLay</title>
+        <title>MUsicPLay</title>
         <meta property="og:title" content="MusicPLay" />
       </Helmet>
       <div className="login-up up">
@@ -293,13 +293,13 @@ const Login = () => {
                   </span>
                 </div>
                 <input
-                 type="text"
-                 id="email"
-                 name="email"
-                 placeholder="Your Name"
-                 value={formik1.values.email}
-                 onChange={formik1.handleChange}
-                 className="login-textinput3 input"/>
+                  type="text"
+                  id="email"
+                  name="email"
+                  placeholder="Your Name"
+                  value={formik1.values.email}
+                  onChange={formik1.handleChange}
+                  className="login-textinput3 input"/>
                 <input
                   type="password"
                   placeholder="Your Password"

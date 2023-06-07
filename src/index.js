@@ -1,37 +1,44 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, lazy, Suspense } from "react";
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import './style.css'
-import Home from './views/home'
-import Account from './views/account'
-import Login from './views/login'
-import PopUp from './views/pop-up'
-import Chanel from './views/chanel'
-import Search from './views/search'
-import Video from './views/video'
+const Home = React.lazy(() => import( './views/home'))
+const Account = React.lazy(() => import( './views/account'))
+const Login = React.lazy(() => import( './views/login'))
+const PopUp = React.lazy(() => import( './views/pop-up'))
+const Chanel = React.lazy(() => import( './views/chanel'))
+const Search = React.lazy(() => import( './views/search'))
+const Video = React.lazy(() => import( './views/video'))
 import { PersistGate } from 'redux-persist/integration/react';
 import { store, persistor } from './utils/store';
+import Loading from "./componentsHome/Loading";
+import PlayerSong from "./componentsHome/PlayerSong";
 
 const App = () => {
-
   return (
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <Router>
-          <div>
-            <Route component={Home} exact path="/:id" />
-            <Route component={Chanel} path="/channel/:id" />
-            <Route component={Video} path="/video/:id" />
-            <Route component={Search} path="/search/:searchTerm" />
-            <Route component={Account}  path="/account/:id" />
-            <Route component={Login}  path="/auth/:id" />
-            <Route component={PopUp}  path="/pop-up" />
-          </div>
-        </Router>
+    <Suspense fallback={<Loading></Loading>}>
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <Router>
+            <div>
+              <PlayerSong />
+              <Switch>
+                <Route component={Home} exact path="/:id"/>
+                <Route component={Chanel} path="/channel/:id" />
+                <Route component={Video} path="/video/:id" />
+                <Route component={Search} path="/search/:searchTerm" />
+                <Route component={Account} path="/account/:id" />
+                <Route component={Login} path="/auth/:id" />
+                <Route component={PopUp} path="/pop-up" />
+              </Switch>
+            </div>
+          </Router>
         </PersistGate>
-    </Provider>
-  )
+      </Provider>
+    </Suspense>
+    );
+
 }
 
 ReactDOM.render(<App />, document.getElementById('app'))

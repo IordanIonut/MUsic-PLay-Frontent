@@ -39,6 +39,7 @@ const Video = () => {
     const idSongPlayList = Cookies.get('idSongPlayList') || '';
     const idSong = idSongPlayList.split(',0,');
     const [same12, setSame12] = useState([]);
+    const [count, setCount] = useState([]);
 
     useEffect(() =>{
       if (token) {
@@ -63,7 +64,7 @@ const Video = () => {
     useEffect(() =>{
       styleChangeOnBar(mood);
     },[mood]);
-   
+
     const storeData = (video, text, mood) => {
       let data = new Date().toLocaleString();
       const newData = { id: video, data: data, mood: mood };
@@ -184,7 +185,17 @@ const Video = () => {
           ApiShazam2(`albums/get-details?id=${id}`).then((data1) => {setVideo(data1);setRelated(data1);});
         }
       }
-    },[id, idChannel]);
+      else if(id?.includes("|")){
+        const con = id;
+        const content = con?.split("|");
+        if(content?.length > 0 && idSp != ''){
+          setPlaylist(1);
+          ApiDataBaseGet(`playlistContent/mood/name/user_id/playlist_id?name=${content?.[1]}&user_id=${idSp}&playlist_id=${content?.[3]}`).then((data1) => {setRelated(data1);}).catch((err1) => console.error(err1?.message));
+          ApiDataBaseGet(`playList/playlist_id?playlist_id=${content?.[3]}`).then((data1) => {setVideo(data1);}).catch((err) => console.error(err?.message));
+          ApiDataBaseGet(`playList/count?playlist_id=${content?.[3]}`).then((data1) => {setCount(data1);}).catch((err) => console.error(err?.message));
+        }
+      }
+    },[id, idChannel, idSp]);
 
     useEffect(() =>{
         if(mood === 'spotify'  && !id?.includes("|")){
@@ -215,7 +226,6 @@ const Video = () => {
         }
         if(mood === 'appleMusic'){
           if(typexx?.[1] === 'song' || typexx?.[1] === 'MUSIC' || typexx?.[1] === 'SONG'){
-            
             storeData(videos,'video','appleMusic');
           }
           if(typexx?.[1] === 'albums' || typexx?.[1] === 'album'){
@@ -231,7 +241,7 @@ const Video = () => {
           }
       }
       }else{
-      if(mood === 'youtube' && videos?.length !== 0){
+      if(mood === 'youtube' && videos?.length !== 0  && !id?.includes("|")){
           if(id.length  <= 11 && !playlistActivate){
             const rezult = {description: videos, mood: 'youtube', type: 'video', idPage: id};
             ApiDataBasePost(`content/add`, rezult).then((data) => console.log(data)).catch((error) => {console.log("error");});
@@ -584,7 +594,6 @@ const Video = () => {
       if(value === 'appleMusic')
         styleChangeOnBar('appleMusic');
       styleChangeOfBar('shazam');
-
       }if(result.isConfirmed){
           Swal.fire({
           title: 'Searching ...',
@@ -859,60 +868,74 @@ const Video = () => {
     });
   };
 
-    const dispatch = useDispatch();
-    const playerRef = React.useRef(null);
-    const { url, urlReactPlayer, playing, muted, loop, played, duration, currentTime, artist_id, name, thumbnail, previous, next, randome, rad } = useSelector((state) => state);
-    const [index, setIndex] = useState(0);
-    const [last, setLast] = useState();
+  const dispatch = useDispatch();
+  const playerRef = useRef(null);
+  const {url, playing, muted, loop, played, duration, currentTime, artist_id, name, thumbnail, previous, next, randome, rad } = useSelector((state) => state);
+  const [index, setIndex] = useState(0);
+  const [last, setLast] = useState();
 
-    const handleProgress = ({ progress }) => {
-      if (!played) {
-        dispatch(setCurrentTime(progress.playedSeconds));
+  const handleProgress = ({ playedSeconds }) => {
+    if (!played) {
+      dispatch(setCurrentTime(playedSeconds));
+    }
+  };
+
+  useEffect(() => {
+    if (playerRef?.current && currentTime !== null) {
+      const current = playerRef?.current?.getCurrentTime();
+      if (Math.abs(current - currentTime) > 1) {
+        playerRef?.current?.seekTo(currentTime);
       }
-    };
-    
-    const handleDuration = (duration) => {
-      dispatch(setDuration(duration));
-    };
+    }
+  }, [currentTime]);
+
+  const handleDuration = (duration) => {
+    dispatch(setDuration(duration));
+  };
   
-    useEffect(() => {
-      if (loop && played === 1) {
-        playerRef.current.seekTo(0);
-      }
-    }, [played, loop]);
-
-    const handleMute = () => {
-      dispatch(toggleMute(!muted));
-    };
-
-    const handleLoop = () => {
-      dispatch(toggleLoop(!loop));
-    };
-
-    const handleRandome = () => {
-      dispatch(toggleRandome(!randome));
-    };
-
-    const handlePlayPause = () => {
-      if (playing) {
-        dispatch(pauseVideo());
-      } else {
-        dispatch(playVideo());
-      }
-    };
-
-    const handleSeek = time => {
-      playerRef.current.seekTo(time);
-    };
+  const handleMute = () => {
+    dispatch(toggleMute(!muted));
+  };
   
-    useEffect(() => {
-      const interval = setInterval(() => {
-        if (playerRef?.current) {
-          dispatch(setCurrentTime(playerRef?.current?.getCurrentTime()));
-        }
-      }, 500);
-      return () => clearInterval(interval);
-    }, [dispatch]);
+  const handleLoop = () => {
+    dispatch(toggleLoop(!loop));
+  };
+  
+  const handleRandome = () => {
+    dispatch(toggleRandome(!randome));
+  };
+  
+  const handlePlayPause = () => {
+    if (playing) {
+      dispatch(pauseVideo());
+    } else {
+      if (currentTime > 0) {
+        playerRef?.current?.seekTo(currentTime);
+      }
+      dispatch(playVideo());
+    }
+  };
+  
+  const handleSeek = (time) => {
+    dispatch(setCurrentTime(time));
+    playerRef?.current?.seekTo(time);
+  };
+  
+  useEffect(() => {
+  const interval = setInterval(() => {
+    if (playerRef?.current) {
+      const current = playerRef?.current?.getCurrentTime();
+      if (current !== null) {
+        dispatch(setCurrentTime(current));
+      }
+    }
+  }, 500);
+  return () => clearInterval(interval);
+}, [dispatch, playerRef]);
+
+
+
+
 
     useEffect(() =>{
       if(mood === 'youtube')
@@ -994,14 +1017,14 @@ const Video = () => {
 
     return (
     <div className="home-container"style={{transitionDelay: '4s'}}>
-      <Helmet>
-        <title>MusicPLay</title>  
+        <Helmet>
+        <title>MUsicPLay</title>
         <meta property="og:title" content="MusicPLay" />
       </Helmet>
       <div className="home-up up">
         <img alt="image" src={process.env.PUBLIC_URL+"/playground_assets/1-removebg-preview-1500h.png"} className="home-image"/>
         <img alt="image" src={process.env.PUBLIC_URL+"/playground_assets/2-removebg-preview-1500h.png"} className="home-image1"/>
-       <form style={{width: 'auto',margin: 'auto'}}> 
+        <form style={{width: 'auto',margin: 'auto'}}> 
         <Link to={`/filtre`} >
         <input
           style={{width: '90vh'}}
@@ -1135,6 +1158,7 @@ const Video = () => {
         </section>
           <VideoBar videos={videos} token={token} views={views} related={related} relatedPlayList={relatedPlayList} id={id} playlist={playlist} mood={mood} 
           idxx={idxx?.[2]}
+          count={count}
           playerRef={playerRef}
           playing={playing}
           muted={muted}
@@ -1143,6 +1167,7 @@ const Video = () => {
           index={index}
           onProgress={handleProgress}
           onDuration={handleDuration}
+          currentTime={currentTime}
           next={next}
           previous={last}
           idSp={idSp}

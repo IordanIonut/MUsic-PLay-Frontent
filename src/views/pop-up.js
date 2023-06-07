@@ -7,8 +7,8 @@ import './pop-up.css'
 const PopUp = (props) => {
   return (
     <div className="pop-up-container">
-      <Helmet>
-        <title>MusicPLay</title>
+        <Helmet>
+        <title>MUsicPLay</title>
         <meta property="og:title" content="MusicPLay" />
       </Helmet>
       <section className="pop-up-error-corect">

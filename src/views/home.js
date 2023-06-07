@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { Helmet } from 'react-helmet'
 import './home.css'
 import {useParams} from 'react-router-dom';
@@ -20,11 +20,12 @@ import { Link } from 'react-router-dom';
 import {useHistory} from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
-import {setDuration, toggleLoop, toggleMute, playVideo, pauseVideo, setPreview, setNext  } from '../utils/actions';
-import ReactPlayer from 'react-player';
+import {setDuration, toggleLoop, toggleMute, playVideo, pauseVideo, setPreview, setNext, setCurrentTime  } from '../utils/actions';
 import colors from '../utils/colors';
 import Swal from 'sweetalert2';
 import axios from 'axios';
+import PlayerSong from '../componentsHome/PlayerSong';
+const ReactPlayer = React.lazy(() => import('react-player'));
 
 const Home = () => {
   const [statusHomeButton, setStatusHomeButton] = React.useState(false);
@@ -130,7 +131,6 @@ const Home = () => {
    // ApiYouTube2(`sugestions?q=${seachText}`).then((data) => setAuto(data));
   },[seachText]);
 
-
   useEffect(() =>{
     if (token) {
       ApiDataBaseGet(`users/token?token=${token}`)
@@ -207,104 +207,7 @@ const Home = () => {
       document.getElementById('appleMusic1').classList.add("accoun5");
   });
 
-  const dispatch = useDispatch();
-  const playerRef = React.useRef(null);
-  const { url, urlReactPlayer, playing, muted, loop, played, duration, currentTime: storedTime, artist, name, thumbnail, previous, next } = useSelector((state) => state);
-  const [index, setIndex] = useState(0);
-  const [last, setLast] = useState();
-  const [currentTime, setCurrentTime] = useState(storedTime);
-
-  const handleProgress = (currentTime) => {
-    if (!currentTime?.played) {
-      dispatch(setCurrentTime(currentTime?.playedSeconds));
-    }
-  };
-
-  const handleDuration = (duration) => {
-    dispatch(setDuration(duration));
-  };
-
-  useEffect(() => {
-    if (loop && played === 1) {
-      playerRef?.current.seekTo(0);
-    }
-  }, [played, loop]);
-
-  const handleMute = () => {
-    dispatch(toggleMute(!muted));
-  };
-
-  const handleLoop = () => {
-    dispatch(toggleLoop(!loop));
-  };
-
-  const handlePlayPause = () => {
-    if (playing) {
-      dispatch(pauseVideo());
-    } else {
-      dispatch(playVideo());
-    }
-  };
   
-  const handleSeek = time => {
-    playerRef.current.seekTo(time);
-  };
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (playerRef?.current) {
-        const current = playerRef?.current?.getCurrentTime();
-        if (current !== null) {
-          dispatch(setCurrentTime(current));
-        }
-      }
-    }, 500);
-    return () => clearInterval(interval);
-  }, [dispatch, playerRef]);
-
-
-  const handleNext = () => {
-    if(mood === 'youtube'){
-      if(playlist === 0){
-        let x = Math.floor((Math.random() * related?.length)); 
-        dispatch(setPreview(id));
-        hist.push('/video/'+related?.[x]?.videoId);
-      }
-      if(playlist === 1){
-        dispatch(setPreview(related?.videos?.[index]?.id));
-        dispatch(setNext(related?.videos?.[index]?.id));
-        if(related?.videos?.length === index){
-          setIndex(0);
-        }
-        else
-          setIndex(index+1);
-      }
-    }
-  };
-
-  const handlePreview = () => {
-    if(mood === 'youtube'){
-      if(playlist === 0){
-        let last1 = previous[previous?.length - 1];
-        const removeLast = previous?.pop();
-        if(last1 !== undefined) 
-          hist.push('/video/'+last1);
-        else 
-          playerRef?.current?.seekTo(0);
-      }
-      if(playlist === 1){
-        let last1 = previous[previous?.length - 1];
-        const removeLast = previous?.pop();
-        if(last1 !== undefined){
-          setLast(last1);
-          setIndex(index-1);
-        }
-        else 
-          playerRef?.current?.seekTo(0);
-      }
-    }
-  };
-
   const handleClick = () => {
     let value = type;
     dispatch(pauseVideo());
@@ -756,10 +659,114 @@ const Home = () => {
     });
   };
 
+  const dispatch = useDispatch();
+  const playerRef = React.useRef(null);
+  const {url, urlReactPlayer, playing, muted, loop, played, duration, currentTime: storedTime, artis_id, name, thumbnail, previous, next} = useSelector((state) => state);
+  const [index, setIndex] = useState(0);
+  const [last, setLast] = useState();
+  
+  const handleMute = () => {
+    dispatch(toggleMute(!muted));
+  };
+  
+  const handleLoop = () => {
+    dispatch(toggleLoop(!loop));
+  };
+  
+  const handlePlayPause = () => {
+    if (playing) {
+      dispatch(pauseVideo());
+    } else {
+      dispatch(playVideo());
+    }
+  };
+
+  useEffect(() => {
+    if (playing) {
+      dispatch(playVideo());
+    }
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (playerRef?.current && storedTime !== null) {
+      playerRef?.current?.seekTo(storedTime);
+    }
+  }, [dispatch, playing, storedTime]);
+  
+  useEffect(() => {
+    if (playerRef?.current && storedTime !== null) {
+      playerRef.current.onReady(() => {
+        playerRef.current.seekTo(storedTime);
+      });
+    }
+  }, [dispatch, storedTime]);
+  
+  const handleSeek = (time) => {
+    dispatch(setCurrentTime(time));
+    playerRef.current?.seekTo(time);
+  };
+  
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (playerRef?.current) {
+        const current = playerRef?.current?.getCurrentTime();
+        if (current !== null) {
+          dispatch(setCurrentTime(current));
+        }
+      }
+    }, 500);
+    return () => clearInterval(interval);
+  }, [dispatch, playerRef]);
+  
+  
+
+  
+  const handleNext = () => {
+    if(mood === 'youtube'){
+      if(playlist === 0){
+        let x = Math.floor((Math.random() * related?.length)); 
+        dispatch(setPreview(id));
+        hist.push('/video/'+related?.[x]?.videoId);
+      }
+      if(playlist === 1){
+        dispatch(setPreview(related?.videos?.[index]?.id));
+        dispatch(setNext(related?.videos?.[index]?.id));
+        if(related?.videos?.length === index){
+          setIndex(0);
+        }
+        else
+          setIndex(index+1);
+      }
+    }
+  };
+
+  const handlePreview = () => {
+    if(mood === 'youtube'){
+      if(playlist === 0){
+        let last1 = previous[previous?.length - 1];
+        const removeLast = previous?.pop();
+        if(last1 !== undefined) 
+          hist.push('/video/'+last1);
+        else 
+          playerRef?.current?.seekTo(0);
+      }
+      if(playlist === 1){
+        let last1 = previous[previous?.length - 1];
+        const removeLast = previous?.pop();
+        if(last1 !== undefined){
+          setLast(last1);
+          setIndex(index-1);
+        }
+        else 
+          playerRef?.current?.seekTo(0);
+      }
+    }
+  };
+
   return (
     <div className="home-container">
       <Helmet>
-        <title>MusicPLay</title>
+        <title>MUsicPLay</title>
         <meta property="og:title" content="MusicPLay" />
       </Helmet>
       <div className="home-up up">
@@ -1210,21 +1217,6 @@ const Home = () => {
             {statusVideoButton? <VideoBar></VideoBar> :null}
 
       </div>
-      <ReactPlayer autoFocus volume on  playsInline frameBorder='0' allow='autoplay; encrypted-media' width='100%' height='100%'  loaded style={{display: 'none'}} 
-        url={`https://www.youtube.com/watch?v=${urlReactPlayer}`}
-        ref={playerRef}
-        playing={playing}
-        muted={muted}
-        loop={loop}
-        startTime={currentTime}
-        onStart={() => {
-          if (storedTime > 0) {
-            playerRef.current.seekTo(storedTime);
-          }
-        }}
-        onProgress={handleProgress}
-        onDuration={handleDuration} 
-        />
       <MusicBar 
         playing={playing}
         playerRef={playerRef}
@@ -1235,10 +1227,10 @@ const Home = () => {
         onPlayStop={handlePlayPause}
         next={handleNext}
         previous={handlePreview}
-        onProgress={currentTime}
+        onProgress={storedTime}
         onDuration={duration}
         handleSeek={handleSeek}
-        artist={artist} 
+        artist={artis_id} 
         name={name} 
         thumbnail={thumbnail}
         url={url}

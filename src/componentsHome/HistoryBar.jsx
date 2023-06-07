@@ -34,19 +34,6 @@ const HistoryBar = ({mood, idSp, userDate, setButtonYoutube, setButtonSpotify, s
     document.getElementById(idClass).classList.remove("hoverType");
   });
 
-  function parseCustomDate(dateString) {
-    if (!dateString) {
-      return null;
-    }
-    const [datePart, timePart] = dateString.split(', ');
-    const [day, month, year] = datePart.split('.');
-    const [hour, minute, second] = timePart.split(':');
-    if (isNaN(day) || isNaN(month) || isNaN(year) || isNaN(hour) || isNaN(minute) || isNaN(second)) {
-      return null;
-    }
-    return new Date(parseInt(year), parseInt(month) - 1, parseInt(day), parseInt(hour), parseInt(minute), parseInt(second));
-  }
-
   useEffect(() =>{
     if(idSp != ''){
       if(type === 'video'){
@@ -137,7 +124,7 @@ const HistoryBar = ({mood, idSp, userDate, setButtonYoutube, setButtonSpotify, s
                 item?.content_id?.mood === 'appleMusic' ? <Music moood={item?.content_id?.mood} video={item?.content_id?.description} idx={idx} color={same?.find((s) => s?.content_id?.idPage === item?.content_id?.description?.key)}></Music> : null }
             </section>
           ))}
-           {idSp && type === 'playlist' && Array.isArray(arrayDB) && arrayDB.map((item, idx) => (
+          {idSp && type === 'playlist' && Array.isArray(arrayDB) && arrayDB.map((item, idx) => (
             <section key={idx} style={{marginLeft: '', transitionDelay: '1s'}}>
               {Array.isArray(arrayDB) && item?.content_id?.mood === 'youtube' ? <FeatureCard moood={item?.content_id?.mood} playlist={item?.content_id?.description} idx={idx}></FeatureCard> : null ||
                 item?.content_id?.mood === 'spotify' ? <FeatureCard moood={item?.content_id?.mood} text={'2'} playlist={item?.content_id?.description} idx={idx} mood={mood}></FeatureCard> : null ||
@@ -155,7 +142,8 @@ const HistoryBar = ({mood, idSp, userDate, setButtonYoutube, setButtonSpotify, s
             <section  key={idx} style={{width: '99%', transitionDelay: '1s' }}> 
             { item?.mood === 'youtube' ? <Music moood={item?.[0]?.mood} video={item?.id} idx={idx} mood={'youtube'}></Music>: null ||
               item?.mood === 'appleMusic' ? <Music moood={item?.[0]?.mood} video={item?.id} idx={idx} mood={'appleMusic'}></Music> : null ||
-              item?.mood === 'spotify' ? <Music moood={item?.[0]?.mood} video={item?.id} idx={idx} mood={'spotify'}></Music>: null}
+              item?.[0]?.mood === 'spotify' ? <Music moood={item?.[0]?.mood} video={item?.[0]?.id?.[0]} idx={idx} mood={'spotify'}></Music>: null
+            }
             </section>
           ))}
           {idSp === '' && type === 'playlist' && Array.isArray(combinedArrayBD) && combinedArrayBD.map((item, idx) => (
@@ -167,7 +155,7 @@ const HistoryBar = ({mood, idSp, userDate, setButtonYoutube, setButtonSpotify, s
           ))}
           {idSp === '' && type === 'channel' && Array.isArray(combinedArrayBD) && combinedArrayBD.map((item, idx) => (
             <section key={idx} style={{width: '99%' , transitionDelay: '1s' }}> 
-            {Array.isArray(youtube_channel?.[idx]) && item?.[0]?.mood === 'youtube' ?<ChanelCard moood={item?.[0]?.mood} channelDetail={item?.[0]?.id} idx={idx} mood={'youtube'}></ChanelCard> : null || 
+            {item?.[0]?.mood === 'youtube' ?<ChanelCard moood={item?.[0]?.mood} channelDetail={item?.[0]?.id} idx={idx} mood={'youtube'}></ChanelCard> : null || 
               item?.[0]?.mood === 'spotify' ? <ChanelCard moood={item?.[0]?.mood} channelDetail={item?.[0]?.id?.data?.artist} text={"1"} mood={'spotify'} idx={idx}></ChanelCard> : null || 
               item?.[0]?.mood === 'appleMusic' ? <ChanelCard moood={item?.[0]?.mood} channelDetail={item?.[0]?.id} text={"1"} mood={'appleMusic'} idx={idx}></ChanelCard> : null}
             </section>

@@ -35,11 +35,12 @@ const Music1 = ({video, color, idx, idSearch,pointerEvents, text, mood, albums, 
 
   return (
     <div className="music1-music" style={video?.videoId ? {opacity: '0.6', marginLeft: '0px', marginRight: '0px'} : null || {pointerEvents}}>
-      <Link id={video?.id} to={ mood === 'youtube' ? (video?.videoId ? `/video/${video?.videoId}` : null || video?.id ? `/video/${idSearch}` : null) : null || 
-        mood === 'spotify' ? (video?.id && playlist === '0'  ? `/video/${video?.id}` : `/video/${idSearch}`) : null ||
-        mood === 'appleMusic' ? (video?.id && playlist === '0' ? `/video/${video?.id}` : `/video/${idSearch}`) : null}
+      <Link id={video?.id} to={ mood === 'youtube' ? (video?.videoId && playlist === '0'  ? `/video/${video?.videoId}` : null || 
+                video?.id && playlist === '0'  ? `/video/${idSearch}` : null) : null || 
+          mood === 'spotify' ? (video?.id && playlist === '0'  ? `/video/${video?.id}` : `/video/${idSearch}`) : null ||
+          mood === 'appleMusic' ? (video?.id && playlist === '0' ? `/video/${video?.id}` : `/video/${idSearch}`) : null}
         className="button music-line music1-line"
-           onClick={() => { 
+          onClick={() => { 
                   mood ==='youtube' ?  (video?.id ? (Cookies.set('idSongPlayList',[video?.id,"0", video?.thumbnail?.url,"0", video?.title,"0",
                           video?.channel?.name,"0", video?.duration_formatted,"0", video?.channel?.id]),Cookies.set('idChannel', video?.id), Cookies.set('playlistActivate', '1')): null) :null||
                   mood === 'spotify' ? (playlist === '0' && video?.id ? Cookies.set('spotifyType', '123:'+video?.type+":"+video?.id) :
@@ -85,14 +86,12 @@ const Music1 = ({video, color, idx, idSearch,pointerEvents, text, mood, albums, 
           <br></br>
         </span> 
       </Link>
-      <button className="music1-button button favorite">
-        <svg viewBox="0 0 1024 1024"  style={{fill: colors?.[color]?.hex || colors?.[color?.fill]?.hex}} className="music1-icon4">
-          <path d="M512 910l-62-56q-106-96-154-142t-107-114-81-123-22-113q0-98 67-166t167-68q116 0 192 90 76-90 192-90 100 0 167 68t67 166q0 78-52 162t-113 146-199 186z"></path>
-        </svg>
-      </button>
-      <button className="music1-button1 button favorite">
-        <svg viewBox="0 0 1024 1024" className="music1-icon6">
-          <path d="M512 682q34 0 60 26t26 60-26 60-60 26-60-26-26-60 26-60 60-26zM512 426q34 0 60 26t26 60-26 60-60 26-60-26-26-60 26-60 60-26zM512 342q-34 0-60-26t-26-60 26-60 60-26 60 26 26 60-26 60-60 26z"></path>
+      <button className="button favorite music-button">
+        <svg viewBox="0 0 1024 1024" style={{fill: colors?.[color]?.hex || colors?.[color?.fill]?.hex}} className="music-icon6">
+          <path
+            d="M512 910l-62-56q-106-96-154-142t-107-114-81-123-22-113q0-98 67-166t167-68q116 0 192 90 76-90 192-90 100 0 167 68t67 166q0 78-52 162t-113 146-199 186z"
+            className=""
+          ></path>
         </svg>
       </button>
     </div>

@@ -12,7 +12,7 @@ const PlaylistBar = ({mood, idSp, userDate, setButtonYoutube, setButtonSpotify, 
     setButtonAppleMusic(true);
 
     useEffect(() =>{
-      ApiDataBaseGet(`playlistContent/mood/user_id?mood=${mood}&user_id=${idSp}`).then((data) =>{setPlaylist(data)});
+      ApiDataBaseGet(`playlistContent/mood/user_id?user_id=${idSp}`).then((data) =>{setPlaylist(data)});
     },[mood, idSp]);
 
     return(

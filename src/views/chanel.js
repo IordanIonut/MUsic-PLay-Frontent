@@ -670,8 +670,8 @@ const Chanel = () => {
 
   return ( 
       <div className="home-container">
-      <Helmet>
-        <title>MusicPLay</title>
+        <Helmet>
+        <title>MUsicPLay</title>
         <meta property="og:title" content="MusicPLay" />
       </Helmet>
       <div className="home-up up">

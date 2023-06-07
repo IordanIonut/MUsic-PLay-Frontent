@@ -301,12 +301,9 @@ const Account = () => {
 
   return (
     <div className="account-container">
-      <Helmet>
-        <title>MusicPLay</title>
-        <meta
-          property="og:title"
-          content="MusicPLay"
-        />
+          <Helmet>
+        <title>MUsicPLay</title>
+        <meta property="og:title" content="MusicPLay" />
       </Helmet>
       <div className="home-up up">
         <img alt="image" src={process.env.PUBLIC_URL+`/playground_assets/1-removebg-preview-1500h.png`} className="home-image" />
