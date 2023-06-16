@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback  } from 'react';
 import { Helmet } from 'react-helmet';
 import { useDispatch, useSelector } from 'react-redux';
 import './home.css';
@@ -7,13 +7,14 @@ import {useParams} from 'react-router-dom';
 import MusicBar from '../componentsHome/MusicBar';
 import VideoBar from '../componentsHome/VideoBar';
 import { useHistory } from 'react-router-dom';
-import { ApiYouTube7, ApiYouTube3, ApiYouTube1, ApiYouTube10, ApiSpotify3, ApiShazam4, ApiSpotify6, ApiShazam1, ApiShazam2, ApiDataBaseGet, ApiDataBasePost} from '../utils/fetchAPI';
+import {ApiYouTube3, ApiYouTube1, ApiSpotify3, ApiShazam4, ApiSpotify6, ApiShazam2, ApiDataBaseGet, ApiDataBasePost} from '../utils/fetchAPI';
 import {setCurrentTime, setDuration, toggleLoop, toggleMute, playVideo, pauseVideo, setPreview, setNext, toggleRandome, setRad  } from '../utils/actions';
 import { Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import colors from '../utils/colors';
 import Swal from 'sweetalert2';
 import axios from 'axios';
+import { debounce } from 'lodash';
 
 const Video = () => {
     const [videos, setVideo] = React.useState([]);
@@ -22,6 +23,7 @@ const Video = () => {
     const [a, setA] = useState([]);
     const [views, setviews] = useState([])
     const [playlist, setPlaylist] = useState(0);
+    const [ok, setOk] = useState(false);
     const {id} = useParams();
     const [type, setType] = React.useState("youtube");
     const mood = Cookies.get('mood') || 'youtube';
@@ -40,6 +42,8 @@ const Video = () => {
     const idSong = idSongPlayList.split(',0,');
     const [same12, setSame12] = useState([]);
     const [count, setCount] = useState([]);
+    const [click, setClick] = useState(false);
+    const [delete1, setDelete1] = useState([]);
 
     useEffect(() =>{
       if (token) {
@@ -49,7 +53,20 @@ const Video = () => {
           })
           .catch((error) => {
             console.log(error?.message);
-            localStorage.removeItem('token')
+            localStorage.removeItem('token');
+            Swal.fire({
+              icon: 'error',
+              text: "There is a problem with the internet connection. As a security measure, we have logged you out of your account.",
+              showConfirmButton: false,
+              customClass: {
+                container: 'blur-background popup'
+              },
+              timer: 2000,
+              buttons: false
+            }).then(() => {
+              window.location.href = '/home';
+            });
+            
           });
         ApiDataBaseGet(`users/get/${idSp}`)
         .then((response) => {
@@ -62,6 +79,11 @@ const Video = () => {
     },[token, idSp]);
     
     useEffect(() =>{
+      if(id?.includes("|")){
+        styleChangeOnBar('youtube');
+        styleChangeOnBar('spotify');
+        styleChangeOnBar('appleMusic');
+      }
       styleChangeOnBar(mood);
     },[mood]);
 
@@ -149,7 +171,7 @@ const Video = () => {
         localStorage.setItem(`${mood}_${text}`, JSON.stringify(arrayUniqueByKey));
       }
     };
-    
+
     useEffect(() =>{
       if(mood === 'youtube' && !id?.includes("|")){
         if(id.length  <= 11 && !playlistActivate){
@@ -171,7 +193,8 @@ const Video = () => {
           }
           if(typexx?.[1] === 'playlist'){
             setPlaylist(1);
-            ApiSpotify3(`playlist?id=${id}`).then((data) => setVideo(data));
+            ApiSpotify3(`playlist?id=${id}`).then((data) => {setVideo(data);setRelated(data);setDelete1(data);});
+            
           }
       }
       if(mood === 'appleMusic' && !id?.includes("|")){
@@ -182,7 +205,7 @@ const Video = () => {
         }
         if(typexx?.[1] === 'albums' || typexx?.[1] === 'album'){
           setPlaylist(1);
-          ApiShazam2(`albums/get-details?id=${id}`).then((data1) => {setVideo(data1);setRelated(data1);});
+          ApiShazam2(`albums/get-details?id=${id}`).then((data1) => {setVideo(data1);setRelated(data1);setDelete1(data1);});
         }
       }
       else if(id?.includes("|")){
@@ -190,6 +213,10 @@ const Video = () => {
         const content = con?.split("|");
         if(content?.length > 0 && idSp != ''){
           setPlaylist(1);
+          if(ok === false){
+            Cookies.set('mood',content?.[0]);
+            setOk(true);
+          }
           ApiDataBaseGet(`playlistContent/mood/name/user_id/playlist_id?name=${content?.[1]}&user_id=${idSp}&playlist_id=${content?.[3]}`).then((data1) => {setRelated(data1);}).catch((err1) => console.error(err1?.message));
           ApiDataBaseGet(`playList/playlist_id?playlist_id=${content?.[3]}`).then((data1) => {setVideo(data1);}).catch((err) => console.error(err?.message));
           ApiDataBaseGet(`playList/count?playlist_id=${content?.[3]}`).then((data1) => {setCount(data1);}).catch((err) => console.error(err?.message));
@@ -198,16 +225,16 @@ const Video = () => {
     },[id, idChannel, idSp]);
 
     useEffect(() =>{
-        if(mood === 'spotify'  && !id?.includes("|")){
-          if(typexx?.[1] === 'track')
-            ApiSpotify3(`albums?ids=${videos?.[0]?.album?.id}`).then((data) => setRelated(data?.albums?.[0]?.tracks?.items));
-        }
+      if(mood === 'spotify'  && !id?.includes("|")){
+        if(typexx?.[1] === 'track')
+          ApiSpotify3(`albums?ids=${videos?.[0]?.album?.id}`).then((data) => {setRelated(data?.albums?.[0]?.tracks?.items);});
+      }
     },[videos]);
 
     useEffect(() =>{
       if(mood === 'spotify'  && !id?.includes("|")){
         if(typexx?.[1] === 'track')
-          ApiSpotify6(`playlist/?id=${idxx?.[2]}`).then((data) => setRelatedPlayList(data));
+          ApiSpotify6(`playlist/?id=${idxx?.[2]}`).then((data) => {setRelatedPlayList(data);});
       }
     },[idxx?.[2]]);
 
@@ -239,61 +266,76 @@ const Video = () => {
           if(typexx?.[1] === 'playlist'){
             storeData(videos,'playlist','spotify');
           }
-      }
+        }
       }else{
-      if(mood === 'youtube' && videos?.length !== 0  && !id?.includes("|")){
-          if(id.length  <= 11 && !playlistActivate){
-            const rezult = {description: videos, mood: 'youtube', type: 'video', idPage: id};
-            ApiDataBasePost(`content/add`, rezult).then((data) => console.log(data)).catch((error) => {console.log("error");});
-          }else if(playlistActivate === null){
-            const aaaa = videos;
-            delete aaaa.videos; 
-            const rezult = {description: aaaa, mood: 'youtube', type: 'playlist', idPage: id};
-            ApiDataBasePost(`content/add`, rezult).then((data) => console.log(data)).catch((error) => {console.log(error?.message);});
+        if(mood === 'youtube' && videos?.length !== 0  && !id?.includes("|")){
+            if(id.length  <= 11 && !playlistActivate){
+              const rezult = {description: videos, mood: 'youtube', type: 'video', idPage: id};
+              ApiDataBasePost(`content/add`, rezult).then((data) => {}).catch((error) => {console.log("error");});
+            }else if(playlistActivate === null){
+              const aaaa = videos;
+              delete aaaa.videos; 
+              const rezult = {description: aaaa, mood: 'youtube', type: 'playlist', idPage: id};
+              ApiDataBasePost(`content/add`, rezult).then((data) => {}).catch((error) => {console.log(error?.message);});
+              if(idSongPlayList === '' && playlist === 1){
+                if(!id?.includes("|")){
+                  const rezult1 = {description: related?.videos?.[0], mood: 'youtube', type: 'video', idPage: related?.videos?.[0]?.id};
+                  ApiDataBasePost(`content/add`, rezult1).then((data) => {}).catch((error) => {console.log("error");});
+                }
+              }
+            }
+          }
+        if(mood === 'appleMusic' && !id?.includes("|") && videos?.length !== 0){
+          if(typexx?.[1] === 'song' || typexx?.[1] === 'MUSIC' || typexx?.[1] === 'SONG'){
+            const rezult = {description: videos, mood: 'appleMusic', type: 'video', idPage: id};
+            ApiDataBasePost(`content/add`, rezult).then((data) =>{}).catch((error) => {console.log("error");});
+          }
+          if(typexx?.[1] === 'albums' || typexx?.[1] === 'album'){
+            const aaaa = JSON.parse(JSON.stringify(delete1));
+            delete aaaa?.data?.[0]?.relationships;
+            const rezult = {description: aaaa, mood: 'appleMusic', type: 'playlist', idPage: id};
+            ApiDataBasePost(`content/add`, rezult).then((data) => {}).catch((error) => {console.log(error?.message);});
             if(idSongPlayList === '' && playlist === 1){
               if(!id?.includes("|")){
-                const rezult1 = {description: related?.videos?.[0], mood: 'youtube', type: 'video', idPage: related?.videos?.[0]?.id};
-                ApiDataBasePost(`content/add`, rezult1).then((data) => console.log(data)).catch((error) => {console.log("error");});
+                const rezult1 = {description: videos?.data?.[0]?.relationships?.tracks?.data?.[0], mood: 'appleMusic', type: 'video', idPage: videos?.data?.[0]?.relationships?.tracks?.data?.[0]?.id};
+                ApiDataBasePost(`content/add`, rezult1).then((data) => {}).catch((error) => {console.log(error?.message);});
               }
             }
           }
         }
-      if(mood === 'appleMusic' && !id?.includes("|") && videos?.length !== 0){
-        if(typexx?.[1] === 'song' || typexx?.[1] === 'MUSIC' || typexx?.[1] === 'SONG'){
-          const rezult = {description: videos, mood: 'appleMusic', type: 'video', idPage: id};
-          ApiDataBasePost(`content/add`, rezult).then((data) =>{}).catch((error) => {console.log("error");});
-        }
-        if(typexx?.[1] === 'albums' || typexx?.[1] === 'album'){
-          const aaaa = {...videos};
-          delete aaaa?.data?.[0]?.relationships;
-          console.log(aaaa);
-          const rezult = {description: aaaa, mood: 'appleMusic', type: 'playlist', idPage: id};
-          ApiDataBasePost(`content/add`, rezult).then((data) => console.log(data)).catch((error) => {console.log(error?.message);});
-          if(idSongPlayList === '' && playlist === 1){
-            if(!id?.includes("|")){
-              const rezult1 = {description: videos?.data?.[0]?.relationships?.tracks?.data?.[0], mood: 'appleMusic', type: 'video', idPage: videos?.data?.[0]?.relationships?.tracks?.data?.[0]?.id};
-              ApiDataBasePost(`content/add`, rezult1).then((data) => console.log(data)).catch((error) => {console.log(error?.message);});
+        if(mood === 'spotify' && !id?.includes("|") && videos?.length !== 0){
+          if(typexx?.[1] === 'track'){
+            const rezult = {description: videos, mood: 'spotify', type: 'video', idPage: id};
+            ApiDataBasePost(`content/add`, rezult).then((data) =>{}).catch((error) => {console.log("error");});
+          }
+          if(typexx?.[1] === 'playlist'){
+            const aaaa = JSON.parse(JSON.stringify(delete1));
+            delete aaaa?.tracks?.items;
+            const rezult = {description: aaaa, mood: 'spotify', type: 'playlist', idPage: id};
+            ApiDataBasePost(`content/add`, rezult).then((data) => {}).catch((error) => {console.log(error?.message);});
+            if(idSongPlayList === '' && playlist === 1){
+              if(!id?.includes("|")){
+                const rezult1 = {description: related?.tracks?.items?.[0], mood: 'spotify', type: 'video', idPage: related?.tracks?.items?.[0]?.track?.id};
+                ApiDataBasePost(`content/add`, rezult1).then((data) => {}).catch((error) => {console.log("error");});
+              }
             }
           }
         }
-      }
-      if(mood === 'spotify' && !id?.includes("|") && videos?.length !== 0){
-        if(typexx?.[1] === 'track'){          
-          const rezult = {description: videos, mood: 'spotify', type: 'video', idPage: id};
-          ApiDataBasePost(`content/add`, rezult).then((data) =>{}).catch((error) => {console.log("error");});
+        if(id?.includes('|')){
+          if(related?.length !== 0 ){
+            let res = null;
+            if(idSong[0])
+              res = related?.find(obj => obj?.content_id?.idPage ===  idSong[0]);
+            let rezult;
+            if(res === null){
+              rezult = {description: related?.[0]?.content_id?.description, mood: mood, type: 'video', idPage: related?.[0]?.content_id?.idPage};
+            }else{
+              rezult = {description: res, mood: mood, type: 'video', idPage: idSong[0]};
+            }
+            if(rezult?.description != null)
+              ApiDataBasePost(`content/add`, rezult).then((data) => {}).catch((error) => {console.log(error?.message);});
+          }
         }
-        if(typexx?.[1] === 'playlist'){
-          const aaaa = related; 
-          delete aaaa?.tracks?.items; 
-          const rezult = {description: aaaa, mood: 'spotify', type: 'playlist', idPage: id};
-          console.log(rezult);
-          ApiDataBasePost(`content/add`, rezult).catch((error) => {console.log(error?.message);});
-        }
-      }
-      if(mood === 'spotify'  && !id?.includes("|")){
-        if(typexx?.[1] === 'playlist') 
-          setRelated(videos);
-      }
     }
     },[videos, token]);
 
@@ -311,28 +353,27 @@ const Video = () => {
         ApiDataBaseGet(`content/last`);
         ApiDataBaseGet(`content/last`);
         ApiDataBaseGet(`content/last`);
-        ApiDataBaseGet(`favorite/search?userId=${idSp}&type=video&mood=${mood}`).then((data) =>{setSame12(data)}).catch((err) =>{console.log(err?.message)});
         if(mood === 'youtube' && videos?.length != 0 && related?.length != 0 && !id?.includes("|")){
           if(id.length  <= 11 && !playlistActivate){
-            ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=video&description=${id}`).then((data1) => {console.log(data1);ApiDataBaseGet(`history/unused-content`)}).catch((err) => {console.log(err?.message);});    
+            ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=video&description=${id}`).then((data1) => {ApiDataBaseGet(`history/unused-content`)}).catch((err) => {console.log(err?.message);});    
           }else if(playlistActivate === null){
-            ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=playlist&description=${id}`).then((data1) => {console.log(data1);}).catch((err) => {console.log(err?.message);});    
+            ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=playlist&description=${id}`).then((data1) => {}).catch((err) => {console.log(err?.message);});    
           }
         }
-        if(mood === 'appleMusic'  && related?.length !== 0 && !id?.includes("|")){
+        if(mood === 'appleMusic' && related?.length !== 0 && videos?.length !== 0 && !id?.includes("|")){
           if(typexx?.[1] === 'song' || typexx?.[1] === 'MUSIC' || typexx?.[1] === 'SONG'){
-            ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=video&description=${id}`).then((data1) => {console.log(data1);ApiDataBaseGet(`history/unused-content`)}).catch((err) => {console.log(err?.message);});    
+            ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=video&description=${id}`).then((data1) => {ApiDataBaseGet(`history/unused-content`)}).catch((err) => {console.log(err?.message);});    
           }
           if(typexx?.[1] === 'albums' || typexx?.[1] === 'album'){
-            ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=playlist&description=${id}`).then((data1) => {console.log(data1);}).catch((err) => {console.log(err?.message);});    
+            ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=playlist&description=${id}`).then((data1) => {}).catch((err) => {console.log(err?.message);});    
           }
         }
         if(mood === 'spotify' && related?.length !== 0 && videos?.length !== 0 && !id?.includes("|")){
           if(typexx?.[1] === 'track'){
-            ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=video&description=${id}`).then((data1) => {console.log(data1);ApiDataBaseGet(`history/unused-content`)}).catch((err) => {console.log(err?.message);});    
+            ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=video&description=${id}`).then((data1) => {;ApiDataBaseGet(`history/unused-content`)}).catch((err) => {console.log(err?.message);});    
           }
           if(typexx?.[1] === 'playlist'){
-            ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=playlist&description=${id}`).then((data1) => {console.log(data1);ApiDataBaseGet(`history/unused-content`)}).catch((err) => {console.log(err?.message);});    
+            ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=playlist&description=${id}`).then((data1) => {}).catch((err) => {console.log(err?.message);});    
           }
         }
     }
@@ -366,13 +407,43 @@ const Video = () => {
             }else{
               rezult = {description: res, mood: 'spotify', type: 'video', idPage: idSong[0]};
             }
-            console.log(rezult);
+            if(rezult?.description != null)
+              ApiDataBasePost(`content/add`, rezult).then((data) => {}).catch((error) => {console.log(error?.message);});
+          }
+        }
+        if(mood === 'appleMusic' && videos?.length !== 0 ){
+          if(playlist === 1){
+            let res = null;  
+            if(idSong[0])
+              res = related?.data?.[0]?.relationships?.tracks?.data?.find(obj => obj?.id ===  idSong[0]);
+            let rezult;
+            if(res === null){
+              rezult = {description: related?.data?.[0], mood: 'appleMusic', type: 'video', idPage: related?.data?.[0]?.id};
+            }else{
+              rezult = {description: res, mood: 'appleMusic', type: 'video', idPage: idSong[0]};
+            }
             if(rezult?.description != null)
               ApiDataBasePost(`content/add`, rezult).then((data) => {}).catch((error) => {console.log(error?.message);});
           }
         }
       }
     },[related, videos, idSongPlayList]);
+
+    const handleValueChange = () => {
+      setClick(click => !click); 
+    };
+
+    const debouncedApiCall = useCallback(
+      debounce((params) => {ApiDataBaseGet(`favorite/search?userId=${params?.idSp}&type=video`)
+          .then((data) => {setSame12(data);})
+          .catch((err) => {console.log(err?.message);});
+      }, 300),
+      []
+    );
+  
+    useEffect(() => {
+      debouncedApiCall({ idSp });
+    }, [debouncedApiCall, idSp, click]);
 
     const styleChangeOnBar=((idClass)=>{
       document.getElementById(idClass).classList.add("accoun1");
@@ -401,7 +472,7 @@ const Video = () => {
     });
   
     const handleChange = (namePlatform) =>{
-      if(mood !== namePlatform)
+      if(mood !== namePlatform && !id.includes('|'))
         Swal.fire({
           title: 'Error...',
           html: `Possibility to change platform do not is permitted. <br></br> ${mood?.toLocaleUpperCase()} to ${namePlatform?.toLocaleUpperCase()}!`,
@@ -1127,14 +1198,6 @@ const Video = () => {
               <path d="M2.5 15a.5.5 0 1 1 0-1h1v-1a4.5 4.5 0 0 1 2.557-4.06c.29-.139.443-.377.443-.59v-.7c0-.213-.154-.451-.443-.59A4.5 4.5 0 0 1 3.5 3V2h-1a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1h-1v1a4.5 4.5 0 0 1-2.557 4.06c-.29.139-.443.377-.443.59v.7c0 .213.154.451.443.59A4.5 4.5 0 0 1 12.5 13v1h1a.5.5 0 0 1 0 1h-11zm2-13v1c0 .537.12 1.045.337 1.5h6.326c.216-.455.337-.963.337-1.5V2h-7zm3 6.35c0 .701-.478 1.236-1.011 1.492A3.5 3.5 0 0 0 4.5 13s.866-1.299 3-1.48V8.35zm1 0v3.17c2.134.181 3 1.48 3 1.48a3.5 3.5 0 0 0-1.989-3.158C8.978 9.586 8.5 9.052 8.5 8.351z"/>
             </svg>
           </Link>
-          <Link id="live" className="navbar button account" to="/live">
-            <svg viewBox="0 0 1024 1024" name='img1' className="home-icon028">
-              <path d="M384 512c0-70.692 57.308-128 128-128s128 57.308 128 128c0 70.692-57.308 128-128 128s-128-57.308-128-128zM664.348 230.526c99.852 54.158 167.652 159.898 167.652 281.474s-67.8 227.316-167.652 281.474c44.066-70.126 71.652-170.27 71.652-281.474s-27.586-211.348-71.652-281.474zM288 512c0 111.204 27.584 211.348 71.652 281.474-99.852-54.16-167.652-159.898-167.652-281.474s67.8-227.314 167.652-281.474c-44.068 70.126-71.652 170.27-71.652 281.474zM96 512c0 171.9 54.404 326.184 140.652 431.722-142.302-90.948-236.652-250.314-236.652-431.722s94.35-340.774 236.652-431.722c-86.248 105.538-140.652 259.822-140.652 431.722zM787.352 80.28c142.298 90.946 236.648 250.312 236.648 431.72s-94.35 340.774-236.648 431.72c86.244-105.536 140.648-259.82 140.648-431.72s-54.404-326.184-140.648-431.72z"></path>
-            </svg>
-            <svg xmlns="http://www.w3.org/2000/svg" name='img2' className="home-icon030" viewBox="0 0 16 16">
-              <path d="M3.05 3.05a7 7 0 0 0 0 9.9.5.5 0 0 1-.707.707 8 8 0 0 1 0-11.314.5.5 0 0 1 .707.707zm2.122 2.122a4 4 0 0 0 0 5.656.5.5 0 1 1-.708.708 5 5 0 0 1 0-7.072.5.5 0 0 1 .708.708zm5.656-.708a.5.5 0 0 1 .708 0 5 5 0 0 1 0 7.072.5.5 0 1 1-.708-.708 4 4 0 0 0 0-5.656.5.5 0 0 1 0-.708zm2.122-2.12a.5.5 0 0 1 .707 0 8 8 0 0 1 0 11.313.5.5 0 0 1-.707-.707 7 7 0 0 0 0-9.9.5.5 0 0 1 0-.707zM6 8a2 2 0 1 1 2.5 1.937V15.5a.5.5 0 0 1-1 0V9.937A2 2 0 0 1 6 8z"/>
-            </svg>
-          </Link>
           {token ? <Link id="qr" className="home-button10 navbar button account" to="/qr">
                           <svg xmlns="http://www.w3.org/2000/svg" name='img2' className="home-icon034" viewBox="0 0 16 16">
                             <path d="M0 .5A.5.5 0 0 1 .5 0h3a.5.5 0 0 1 0 1H1v2.5a.5.5 0 0 1-1 0v-3Zm12 0a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0V1h-2.5a.5.5 0 0 1-.5-.5ZM.5 12a.5.5 0 0 1 .5.5V15h2.5a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5v-3a.5.5 0 0 1 .5-.5Zm15 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1 0-1H15v-2.5a.5.5 0 0 1 .5-.5ZM4 4h1v1H4V4Z"/>
@@ -1198,6 +1261,7 @@ const Video = () => {
           token={token}
           related={related}
           mood={mood}
+          setClick={handleValueChange}
         ></MusicBar>
     </div>
   )

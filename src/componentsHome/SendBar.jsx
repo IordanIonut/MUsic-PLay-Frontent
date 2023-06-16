@@ -113,14 +113,14 @@ const SendBar = ({idSp, userDate, setButtonYoutube, setButtonSpotify, setButtonA
                   <br></br>
                 </span>
                 <input type="text" id="name" name="name" placeholder="Your Name" className="home-textinput input"
-                 value={formik.values.name}
-                 onChange={formik.handleChange}/>
+                  value={formik.values.name}
+                  onChange={formik.handleChange}/>
                 {idSp === '' ? <input  type="text" id="email" name="email" placeholder="Your Email" className="home-textinput1 input"
-                 value={formik.values.email}
-                 onChange={formik.handleChange}/>: null}
+                  value={formik.values.email}
+                  onChange={formik.handleChange}/>: null}
                 <input type="text" id="subject" name="subject" placeholder="Subject" className="home-textinput2 input"
-                 value={formik.values.subject}
-                 onChange={formik.handleChange}/>
+                  value={formik.values.subject}
+                  onChange={formik.handleChange}/>
                 <textarea cols="30" rows="7" id="message" name="message" placeholder="Your Message" className="home-textarea input textarea"
                     value={formik.values.message}
                     onChange={formik.handleChange}></textarea>

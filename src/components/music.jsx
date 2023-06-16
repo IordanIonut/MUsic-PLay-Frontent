@@ -52,11 +52,12 @@ const Music = ({video, idx, color, page, mood, treding, treding1, moood}) => {
   useEffect(()=>{
     if(mood === 'appleMusic'){
       if(video !== undefined){
-        const a = video?.artwork?.url.split('{w}x{h}');
+        const a = video?.artwork?.url.split('{w}x{h}') || video?.attributes?.artwork?.url.split('{w}x{h}');
         setImage(a?.[0] + "3000x3000" + a?.[1]);
       }
     }
   },[video]);
+//console.log(video?.attributes);
 
   return (
     <div className={`music-music `} style={{display: 'flex'}}>
@@ -71,7 +72,8 @@ const Music = ({video, idx, color, page, mood, treding, treding1, moood}) => {
           video?.id ? `/video/${video?.id}` : null ||
           video?.trackMetadata?.trackUri ? `/video/${idxx?.[2]}` : null ||
           video?.key ? `/video/${video?.key}` : null ||
-          video?.playParams?.id ? `/video/${video?.playParams?.id}` : null} 
+          video?.playParams?.id ? `/video/${video?.playParams?.id}` : null ||
+          video?.attributes?.playParams?.id ? `/video/${video?.attributes?.playParams?.id}` : null} 
           onClick={() =>(mood != undefined || moood != undefined ? Cookies.set('mood',mood || moood) : null) &&
               video?.id ? video?.id && Cookies.set('spotifyType', "123:"+video?.type+':'+video?.id) : null ||
               video?.track?.uri ? video?.track?.uri && Cookies.set('spotifyType', video?.track?.uri) : null || 
@@ -118,7 +120,8 @@ const Music = ({video, idx, color, page, mood, treding, treding1, moood}) => {
             video?.channel?.name ? video?.channel?.name : null ||
             video?.video?.channelName ? video?.video?.channelName : null ||
             video?.publishedText ? video?.publishedText.slice(0,50) : null ||
-            video?.[0]?.id?.author ? video?.[0]?.id?.author : null || 
+            video?.[0]?.id?.author ? video?.[0]?.id?.author : null ||
+            video?.attributes?.artistName ? video?.attributes?.artistName : null ||
             video?.[0]?.album?.artists?.[0]?.name ? video?.[0]?.album?.artists?.[0]?.name : null ||
             video?.track?.album?.artists?.[0]?.name ? video?.track?.album?.artists?.[0]?.name : null ||
             video?.[0]?.id?.channel?.name ? video?.[0]?.id?.channel?.name : null ||
@@ -137,6 +140,7 @@ const Music = ({video, idx, color, page, mood, treding, treding1, moood}) => {
           video?.[0]?.id?.title ? video?.[0]?.id?.title : null || 
           video?.data?.name ? video?.data?.name : null || 
           video?.name ? video?.name : null ||
+          video?.attributes?.name ? video?.attributes?.name.slice(0,50) : null ||
           video?.[0]?.name ? video?.[0]?.name : null ||
           video?.track?.name ? video?.track?.name : null ||
           video?.heading?.title ? video?.heading?.title : null ||
@@ -144,7 +148,7 @@ const Music = ({video, idx, color, page, mood, treding, treding1, moood}) => {
           video?.trackMetadata?.trackName ? video?.trackMetadata?.trackName : null}</span>
           <br className=""></br>
         </span>
-          {mood != 'appleMusic' ? <svg viewBox="0 0 1024 1024" className="music-icon">
+          {mood != 'appleMusic' && mood != 'spotify' ? <svg viewBox="0 0 1024 1024" className="music-icon">
           <path
             d="M512 192c-223.318 0-416.882 130.042-512 320 95.118 189.958 288.682 320 512 320 223.312 0 416.876-130.042 512-320-95.116-189.958-288.688-320-512-320zM764.45 361.704c60.162 38.374 111.142 89.774 149.434 150.296-38.292 60.522-89.274 111.922-149.436 150.296-75.594 48.218-162.89 73.704-252.448 73.704-89.56 0-176.858-25.486-252.452-73.704-60.158-38.372-111.138-89.772-149.432-150.296 38.292-60.524 89.274-111.924 149.434-150.296 3.918-2.5 7.876-4.922 11.86-7.3-9.96 27.328-15.41 56.822-15.41 87.596 0 141.382 114.616 256 256 256 141.382 0 256-114.618 256-256 0-30.774-5.452-60.268-15.408-87.598 3.978 2.378 7.938 4.802 11.858 7.302v0zM512 416c0 53.020-42.98 96-96 96s-96-42.98-96-96 42.98-96 96-96 96 42.982 96 96z"
             className=""
@@ -175,8 +179,10 @@ const Music = ({video, idx, color, page, mood, treding, treding1, moood}) => {
                 video?.[0]?.id?.duration_formatted ? video?.[0]?.id?.duration_formatted : null ||
                 video?.duration_ms ? formatTime(video?.duration_ms) : null ||
                 video?.releasedate ? video?.releasedate : null ||
+                video?.attributes?.releaseDate ? video?.attributes?.releaseDate : null ||
                 mood === 'youtube' && video?.timeText ? video?.timeText || 'Live' : null ||
                 mood === 'youtube' && video?.durationText ? video?.durationText : null ||
+                mood === 'spotify' && video?.durationText ? video?.durationText : null ||
                 video?.track?.duration_ms ? millisToMinutesAndSeconds(video?.track?.duration_ms) : null ||
                 video?.data?.duration?.totalMilliseconds ? toTime(video?.data?.duration?.totalMilliseconds) : null ||
                 video?.track?.duration?.totalMilliseconds ? millisToMinutesAndSeconds(video?.track?.duration?.totalMilliseconds) : null ||
@@ -185,7 +191,7 @@ const Music = ({video, idx, color, page, mood, treding, treding1, moood}) => {
         </span>
       </div>
       <button className="button favorite music-button">
-        <svg viewBox="0 0 1024 1024" style={{fill: colors?.[color]?.hex || colors?.[color?.fill]?.hex}} className="music-icon6">
+        <svg viewBox="0 0 1024 1024" style={{fill: colors?.[color]?.hex || colors?.[color?.fill]?.hex || '#999999'}} className="music-icon6">
           <path
             d="M512 910l-62-56q-106-96-154-142t-107-114-81-123-22-113q0-98 67-166t167-68q116 0 192 90 76-90 192-90 100 0 167 68t67 166q0 78-52 162t-113 146-199 186z"
             className=""

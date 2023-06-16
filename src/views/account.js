@@ -49,7 +49,7 @@ const Account = () => {
     document.getElementById(idClass).lastElementChild.style.display='flex';
     document.getElementById(idClass).firstElementChild.style.display='none';
   });
- 
+  
   const handleLogout = () => {
     localStorage.removeItem('token');
     history.push('/home');

@@ -14,10 +14,12 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { store, persistor } from './utils/store';
 import Loading from "./componentsHome/Loading";
 import PlayerSong from "./componentsHome/PlayerSong";
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 const App = () => {
   return (
     <Suspense fallback={<Loading></Loading>}>
+      <GoogleOAuthProvider clientId={process.env.REACT_APP_CLIENT_ID}>
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           <Router>
@@ -36,6 +38,7 @@ const App = () => {
           </Router>
         </PersistGate>
       </Provider>
+      </GoogleOAuthProvider>
     </Suspense>
     );
 

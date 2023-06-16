@@ -65,7 +65,7 @@ const SearchBar = ({selectedFiltre, mood, idSp}) => {
         <br></br>
         <br></br>
       </span>
-         <div className="home-share2 posibili buttonChange" name="music" onClick={() => {setType('video');
+        <div className="home-share2 posibili buttonChange" name="music" onClick={() => {setType('video');
             styleChangeOn('video'); styleChangeOf('playlist'); styleChangeOf('channel');styleChangeOf('live1');}}>
             <button id="video" className="home-button22 button account hoverType">
               <svg viewBox="0 0 1024 1024" className="home-icon070">
@@ -118,7 +118,7 @@ const SearchBar = ({selectedFiltre, mood, idSp}) => {
           ))}
           {mood === 'spotify' && Array.isArray(videos?.tracks?.items) && videos?.tracks?.items.map((item, id) => (
             <section key={id} style={{transitionDelay: '1s'} && (type === 'video' ? {width: '100%'}: null)}> 
-              {type==='video' && <Music color={arrayDB?.find((s) => s?.content_id?.idPage === item?.id)} video={item} idx={id} page='0' mood={mood}></Music>}
+              {type === 'video' && <Music color={arrayDB?.find((s) => s?.content_id?.idPage === item?.id)} video={item} idx={id} page='0' mood={mood}></Music>}
             </section>
           ))}
           {mood === 'spotify' && Array.isArray(videos?.episodes?.items) && videos?.episodes?.items.map((item, id) => (
@@ -133,10 +133,10 @@ const SearchBar = ({selectedFiltre, mood, idSp}) => {
           ))}
           {mood === 'appleMusic' && type === 'video' && Array.isArray(videos?.tracks?.hits) && videos?.tracks?.hits.map((item, id) => (
             <section key={id} style={{transitionDelay: '1s'} && (type === 'video' ? {width: '100%'}: null)}> 
-              {type==='video' && <Music video={item} treding={'1'} treding1={'1'} idx={id} page='0' mood={mood}></Music>}
+              {type==='video' && <Music color={arrayDB?.find((s) => s?.content_id?.idPage === item?.key)} video={item} treding={'1'} treding1={'1'} idx={id} page='0' mood={mood}></Music>}
             </section>
           ))}
-           {mood === 'appleMusic' && type === 'channel' && Array.isArray(videos?.artist?.hits) && videos?.artist?.hits.map((item, id) => (
+          {mood === 'appleMusic' && type === 'channel' && Array.isArray(videos?.artist?.hits) && videos?.artist?.hits.map((item, id) => (
             <section key={id} style={{transitionDelay: '1s'} && type === 'channel' ? {width: '100%'}: null }> 
               {type==='channel' && <ChanelCard channelDetail={item?.artist} idx={id} mood={mood}></ChanelCard>}
             </section>

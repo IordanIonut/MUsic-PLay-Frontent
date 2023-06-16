@@ -773,3 +773,11 @@
     margin-bottom: 10px;
   }
 }
+.otp{
+  opacity: 0.8;
+  background-color: rgb(44, 62, 80);
+}
+.otp:hover{
+  opacity: 0.9;
+  background-color: rgb(44, 62, 80);
+}

@@ -8,7 +8,7 @@ import Slider from '@mui/material/Slider';
 import Swal from 'sweetalert2';
 
 export const MusicBar = ({previous, playing, muted, onProgress, onDuration, loop, onPlayStop, onMute, onLoop, handleSeek, url, idSp, id, token, related,
-      name, thumbnail, next, onRandome, playlist, mood, urlReactPlayer}) => {
+      name, thumbnail, next, onRandome, playlist, mood, urlReactPlayer, setClick}) => {
   const currentTimeFormatted = onProgress && typeof onProgress === 'number' ? new Date(onProgress * 1000).toISOString().substr(11, 8) : '00:00:00';
   const durationFormatted = onDuration && typeof onDuration === 'number' ? new Date(onDuration * 1000).toISOString().substr(11, 8) : '00:00:00';
   const [count, setCount] = useState(0);
@@ -69,7 +69,7 @@ export const MusicBar = ({previous, playing, muted, onProgress, onDuration, loop
             else
               aa = data?.description?.[0]?.content_id?.content_id;
             const val={content_id: {content_id: aa},  fill: ran, user_id: {user_id: idSp}};
-            ApiDataBasePost(`favorite/add`, val).then((data) => {console.log(data);
+            ApiDataBasePost(`favorite/add`, val).then((data) => {
               ApiDataBaseGet(`favorite/all/user_id/1?user_id=${idSp}`).then((data) =>{setAll(data); //console.log("4444444444444444444444"); 
               setSameID('as'); setCheck(true);})}).catch((err) => {console.log(err?.message)})})
           .catch((err) => {console.log(err)});
@@ -128,8 +128,7 @@ export const MusicBar = ({previous, playing, muted, onProgress, onDuration, loop
       if(mood === 'appleMusic'){
         if(idSongPlayList === '' && playlist === 1){
           if(!id?.includes("|")){
-            let a = related?.tracks?.items?.[0]?.sharing_info?.uri.split(":");
-            setIdx(a?.[2]);
+            setIdx(related?.data?.[0]?.relationships?.tracks?.data?.[0]?.id);
           }else{
             setIdx(related?.[0]?.content_id?.idPage);
           }
@@ -197,16 +196,16 @@ export const MusicBar = ({previous, playing, muted, onProgress, onDuration, loop
       window.removeEventListener('mouseup', handleMouseUp);
     };
   }, [isDragging]);
-  
+
   return (
     <section className="home-bar bar" style={{  opacity: 0.8    }}>
         <div className="home-music-play">
           <div className="home-music music-bar">
             <Link to={`/video/${url}`} className="home-button35 button">
-              <img
+              {thumbnail !== '' ? <img
                 alt="image"
                 src={thumbnail}
-                className="home-image7"/>
+                className="home-image7"/> : null}
             </Link>
             <span className="home-text66">
               <span>{name}</span>
@@ -245,7 +244,7 @@ export const MusicBar = ({previous, playing, muted, onProgress, onDuration, loop
                 <path d="M726 726v-172h84v256h-512v128l-170-170 170-170v128h428zM298 298v172h-84v-256h512v-128l170 170-170 170v-128h-428z"></path>
               </svg>
             </button>
-            {token != undefined ? <button id="save" className="home-button41 navbar button music1 account hover113" onClick={()=>{handleClick();}}>
+            {token != undefined ? <button id="save" className="home-button41 navbar button music1 account hover113" onClick={()=>{handleClick(); setClick();}}>
               <svg viewBox="0 0 1024 1024"  className="home-icon120">
                 <path fill={colors?.[sameID]?.hex} d="M512 910l-62-56q-106-96-154-142t-107-114-81-123-22-113q0-98 67-166t167-68q116 0 192 90 76-90 192-90 100 0 167 68t67 166q0 78-52 162t-113 146-199 186z"></path>
               </svg> 

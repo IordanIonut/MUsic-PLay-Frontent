@@ -56,6 +56,8 @@ const videoReducer = (state = initialState, action) => {
       return { ...state, next: action.payload };
     case "SET_RAD": 
       return { ...state, rad: [...state.rad, action.payload]};
+    case "RESET_STATE":
+      return initialState;
     default:
       return state;
   }
