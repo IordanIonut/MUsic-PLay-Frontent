@@ -1,71 +1,88 @@
 import React, {useEffect, useState} from 'react'
 import Swal from 'sweetalert2';
 import axios from 'axios';
-import { ApiLogoGet } from '../utils/fetchAPI';
+import { ApiAllPlatforms } from '../utils/fetchAPI';
 
-export const QrBar = ({setButtonYoutube, setButtonSpotify, setButtonAppleMusic}) => {
+export const QrBar = ({setButtonYoutube, setButtonSpotify, setButtonAppleMusic, qr, name}) => {
   setButtonYoutube(false);
   setButtonSpotify(false);
   setButtonAppleMusic(false);
 
-  const handleChange = async (name) => {
+  const handleChange = async (mood) => {
     let color = null;
-    if(name === 'youtube')
+    if(mood === 'youtube')
       color = '#FF0000';
-    else if(name === 'spotify')
+    else if(mood === 'spotify')
       color = '#18D860';
-    else if(name === 'appleMusic')
+    else if(mood === 'appleMusic')
       color = '#FD4960';
-    axios.get(`https://custom-qr-code1.p.rapidapi.com/custom`,{
-      params: {
-        data: 'https://www.qrgraphix.com/',
-        bgColor: '#131313',
-        bodyColor: color,
-        eyeTopLeft: '#FF0000',
-        eyeTopRight: '#18D860',
-        eyeBottomLeft: 'FD4960',
-        bodyStyle: 'square',
-        eyeStyle: 'frame9',
-        eyeballStyle: 'ball13',
-        size: '2000',
-        file: 'PNG'
-      },
-      headers: {
-        'X-RapidAPI-Key': process.env.REACT_APP_RAPID_API_KEY,
-        'X-RapidAPI-Host': 'custom-qr-code1.p.rapidapi.com'
-      },
-      responseType: 'arraybuffer',
-    })
-    .then((response) => {
-      const imageBlob = new Blob([response.data], { type: 'image/png' });
-      const imageUrl = URL.createObjectURL(imageBlob);
-      console.log(imageUrl);
-      Swal.fire({
-        title: 'Scanner with phone',
-        imageUrl: imageUrl,
-        imageAlt: 'Scanner with phone',
-        showConfirmButton: false,
-        showCancelButton: false,
-        imageWidth: 300,
-        imageHeight: 300,
-        showDenyButton: false,
-        customClass: {
-          container: 'blur-background popup ',
-          validationMessage: 'blur-background-i popup'
-        }
-      });
-    })
-    .catch((err) => {
-      console.log(err?.message);
-    }); 
+    const val = { 
+      track: name,
+      artist: '',
+      type: 'track',
+      sources: [ 'spotify', 'appleMusic', 'youtube']
+    };
+    ApiAllPlatforms(`public/search`,val).then((data) => {
+      let text = '';
+      if(mood === 'youtube'){
+        text = 'https://www.youtube.com/watch?v=' + data?.tracks?.[2]?.data?.externalId;
+      }
+      if(mood === 'spotify'){
+        text = data?.tracks?.[0]?.data?.url;
+      }
+      if(mood === 'appleMusic'){
+        text = data?.tracks?.[1]?.data?.url;
+      }
+      axios.get(`https://custom-qr-code1.p.rapidapi.com/custom`,{
+        params: {
+          data: text,
+          bgColor: '#131313',
+          bodyColor: color,
+          eyeTopLeft: '#FF0000',
+          eyeTopRight: '#18D860',
+          eyeBottomLeft: 'FD4960',
+          bodyStyle: 'square',
+          eyeStyle: 'frame9',
+          eyeballStyle: 'ball13',
+          size: '2000',
+          file: 'PNG'
+        },
+        headers: {
+          'X-RapidAPI-Key': process.env.REACT_APP_RAPID_API_KEY,
+          'X-RapidAPI-Host': 'custom-qr-code1.p.rapidapi.com'
+        },
+        responseType: 'arraybuffer',
+      })
+      .then((response) => {
+        const imageBlob = new Blob([response.data], { type: 'image/png' });
+        const imageUrl = URL.createObjectURL(imageBlob);
+        console.log(imageUrl);
+        Swal.fire({
+          title: 'Scanner with phone',
+          imageUrl: imageUrl,
+          imageAlt: 'Scanner with phone',
+          showConfirmButton: false,
+          showCancelButton: false,
+          imageWidth: 300,
+          imageHeight: 300,
+          showDenyButton: false,
+          customClass: {
+            container: 'blur-background popup ',
+            validationMessage: 'blur-background-i popup'
+          }
+        });
+      })
+      .catch((err) => {
+        console.log(err?.message);
+      }); 
+    }).catch((err) => {console.log(err);});
   };
   
   //custom logo de incercat cu post pe link : https://rapidapi.com/belchiorarkad-FqvHs2EDOtP/api/custom-qr-code-with-logo2 
 
- 
   return (
     <section className="home-qr" style={{display: 'flex'}}>
-       <div className="home-posibili posibili" style={{width: '60%', height: '30%', backgroundColor: 'transparent'}}>
+      <div className="home-posibili posibili" style={{width: '60%', height: '30%', backgroundColor: 'transparent'}}>
         <button id="youtube" className="home-button button account1" onClick={() => {handleChange("youtube");
           }}>
             <svg id='youtube1' viewBox="0 0 1024 1024" className="home-icon002 accoun2">

@@ -68,7 +68,6 @@ const Login = () => {
         .required('Email address is mandatory!'),
     }),
     onSubmit: (values) => {
-      console.log(values);
       ApiDataBasePost(`users/add`, values)
       .then((response) => {
         history.push('/auth/login');
@@ -471,17 +470,14 @@ const Login = () => {
     },
   });
 
-// process.env.REACT_APP_CLIENT_ID
-// process.env.REACT_APP_SECRET_ID
-
   return (
     <div className="login-container">
       <Helmet>
         <title>MUsicPLay</title>
         <meta property="og:title" content="MusicPLay" />
       </Helmet>
-      <div className="login-up up">
-        <Link to={'/home'} style={{display: 'block ruby'}}>
+      <div className="login-up up" style={{flexWrap: 'wrap'}}>
+        <Link to={'/home'} style={{display: 'flex'}}>
           <img 
             alt="image"
             src={process.env.PUBLIC_URL+`/playground_assets/1-removebg-preview-1500h.png`}

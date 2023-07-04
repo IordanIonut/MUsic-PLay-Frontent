@@ -11,6 +11,8 @@ import Cookies from 'js-cookie';
 import colors from '../utils/colors';
 import Swal from 'sweetalert2';
 import axios from 'axios';
+import {setDuration, toggleLoop, toggleMute, playVideo, pauseVideo, setPreview, setNext, setCurrentTime  } from '../utils/actions';
+import { useDispatch, useSelector } from 'react-redux';
 
 const Chanel = () => {
   const [channelDetail, setchannelDetail] = React.useState([]);
@@ -157,27 +159,20 @@ const Chanel = () => {
   },[videos, token, id, channelDetail]);
 
   useEffect(() =>{
-    if(token){
-      ApiDataBaseGet(`content/last`);
-      ApiDataBaseGet(`content/last`);
-      ApiDataBaseGet(`content/last`);
-      ApiDataBaseGet(`content/last`);
-      ApiDataBaseGet(`content/last`);
-      ApiDataBaseGet(`content/last`);
-      ApiDataBaseGet(`content/last`);
-      ApiDataBaseGet(`content/last`);
-      ApiDataBaseGet(`content/last`);
-      ApiDataBaseGet(`content/last`);
-      ApiDataBaseGet(`content/last`);
-      if(mood === 'youtube' && channelDetail?.length != 0 && !id?.includes("|")){
-        ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=channel&description=${id}`).then((data1) => {console.log(data1);ApiDataBaseGet(`history/unused-content`)}).catch((err) => {console.log(err?.message);});   
-      }
-      if(mood === 'spotify' && channelDetail?.length != 0  && !id?.includes("|")){
-        ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=channel&description=${id}`).then((data1) => {console.log(data1);ApiDataBaseGet(`history/unused-content`)}).catch((err) => {console.log(err?.message);});   
-      }
-      if(mood === 'appleMusic' && videos?.length != 0  && !id?.includes("|")){
-        ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=channel&description=${id}`).then((data1) => {console.log(data1);ApiDataBaseGet(`history/unused-content`)}).catch((err) => {console.log(err?.message);});   
-      }
+    if(token && channelDetail != 0){
+      ApiDataBaseGet(`history/last?user_id=${idSp}`).then((data) => {
+        if (data?.content_id?.idPage != id) {
+          if(mood === 'youtube' && channelDetail?.length != 0 && !id?.includes("|")){
+            ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=channel&description=${id}`).then((data1) => {console.log(data1);ApiDataBaseGet(`history/unused-content`)}).catch((err) => {console.log(err?.message);});   
+          }
+          if(mood === 'spotify' && channelDetail?.length != 0  && !id?.includes("|")){
+            ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=channel&description=${id}`).then((data1) => {console.log(data1);ApiDataBaseGet(`history/unused-content`)}).catch((err) => {console.log(err?.message);});   
+          }
+          if(mood === 'appleMusic' && videos?.length != 0  && !id?.includes("|")){
+            ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=channel&description=${id}`).then((data1) => {console.log(data1);ApiDataBaseGet(`history/unused-content`)}).catch((err) => {console.log(err?.message);});   
+          }
+        }
+      });
     }
   },[channelDetail, videos, idSp, mood, token]);
 
@@ -573,7 +568,7 @@ const Chanel = () => {
             const base64Data = reader.result.replace(/^data:audio\/\w+;base64,/, '');
             try {
               const response = await axios.post('https://cors-anywhere.herokuapp.com/https://api.audd.io/', {
-                api_token: '04f7152000a9a1126f1285785133a0eb',
+                api_token: process.env.REACT_APP_AUDD_KEY,
                 return: 'apple_music,spotify,deezer,napster',
                 audio: base64Data
               });
@@ -679,6 +674,69 @@ const Chanel = () => {
     });
   };
 
+  const dispatch = useDispatch();
+  const playerRef = React.useRef(null);
+  const {url, playing, muted, loop, played, duration, urlReactPlayer, currentTime: storedTime, artis_id, allVideo, 
+    name, thumbnail, previous, next, randome, rad } = useSelector((state) => state);
+  const [index, setIndex] = useState(0);
+  const [last, setLast] = useState();
+  
+  const handleMute = () => {
+    dispatch(toggleMute(!muted));
+  };
+  
+  const handleLoop = () => {
+    dispatch(toggleLoop(!loop));
+  };
+
+  const handleRandome = () => {
+    dispatch(toggleRandome(!randome));
+  };
+  
+  const handlePlayPause = () => {
+    if (playing) {
+      dispatch(pauseVideo());
+    } else {
+      dispatch(playVideo());
+    }
+  };
+
+  useEffect(() => {
+    if (playing) {
+      dispatch(playVideo());
+    }
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (playerRef?.current && storedTime !== null) {
+      playerRef?.current?.seekTo(storedTime);
+    }
+  }, [dispatch, playing, storedTime]);
+  
+  useEffect(() => {
+    if (playerRef?.current && storedTime !== null) {
+      playerRef.current.onReady(() => {
+        playerRef.current.seekTo(storedTime);
+      });
+    }
+  }, [dispatch, storedTime]);
+  
+  const handleSeek = (time) => {
+    dispatch(setCurrentTime(time));
+    playerRef.current?.seekTo(time);
+  };
+  
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (playerRef?.current) {
+        const current = playerRef?.current?.getCurrentTime();
+        if (current !== null) {
+          dispatch(setCurrentTime(current));
+        }
+      }
+    }, 500);
+    return () => clearInterval(interval);
+  }, [dispatch, playerRef]);
 
   return ( 
       <div className="home-container">
@@ -816,7 +874,25 @@ const Chanel = () => {
         </section>
           <ChanelBar channelDetail={channelDetail} idSp={idSp} videos={videos} live={live} playlist={playlist} mood={mood}></ChanelBar> 
       </div>
-      <MusicBar></MusicBar>
+      <MusicBar 
+          playing={playing}
+          playerRef={playerRef}
+          muted={muted}
+          randome={randome}
+          loop={loop}
+          onMute={handleMute}
+          onLoop={handleLoop}
+          onPlayStop={handlePlayPause}
+          onRandome={handleRandome}
+          onProgress={storedTime}
+          onDuration={duration}
+          handleSeek={handleSeek}
+          artist={artis_id} 
+          name={name} 
+          thumbnail={thumbnail}
+          url={url}
+          urlReactPlayer={urlReactPlayer}
+        ></MusicBar>
     </div>
   )
 }

@@ -11,6 +11,8 @@ import colors from '../utils/colors';
 import { ApiDataBaseGet, ApiYouTube3  } from '../utils/fetchAPI';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import {setDuration, toggleLoop, toggleMute, playVideo, pauseVideo, setPreview, setNext, setCurrentTime  } from '../utils/actions';
+import { useDispatch, useSelector } from 'react-redux';
 
 const Search = () => {
   const {searchTerm} = useParams();
@@ -433,7 +435,7 @@ const Search = () => {
             const base64Data = reader.result.replace(/^data:audio\/\w+;base64,/, '');
             try {
               const response = await axios.post('https://cors-anywhere.herokuapp.com/https://api.audd.io/', {
-                api_token: '04f7152000a9a1126f1285785133a0eb',
+                api_token: process.env.REACT_APP_AUDD_KEY,
                 return: 'apple_music,spotify,deezer,napster',
                 audio: base64Data
               });
@@ -539,6 +541,69 @@ const Search = () => {
     });
   };
 
+  const dispatch = useDispatch();
+  const playerRef = React.useRef(null);
+  const {url, playing, muted, loop, played, duration, urlReactPlayer, currentTime: storedTime, artis_id, allVideo, 
+    name, thumbnail, previous, next, randome, rad } = useSelector((state) => state);
+  const [index, setIndex] = useState(0);
+  const [last, setLast] = useState();
+  
+  const handleMute = () => {
+    dispatch(toggleMute(!muted));
+  };
+  
+  const handleLoop = () => {
+    dispatch(toggleLoop(!loop));
+  };
+
+  const handleRandome = () => {
+    dispatch(toggleRandome(!randome));
+  };
+  
+  const handlePlayPause = () => {
+    if (playing) {
+      dispatch(pauseVideo());
+    } else {
+      dispatch(playVideo());
+    }
+  };
+
+  useEffect(() => {
+    if (playing) {
+      dispatch(playVideo());
+    }
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (playerRef?.current && storedTime !== null) {
+      playerRef?.current?.seekTo(storedTime);
+    }
+  }, [dispatch, playing, storedTime]);
+  
+  useEffect(() => {
+    if (playerRef?.current && storedTime !== null) {
+      playerRef.current.onReady(() => {
+        playerRef.current.seekTo(storedTime);
+      });
+    }
+  }, [dispatch, storedTime]);
+  
+  const handleSeek = (time) => {
+    dispatch(setCurrentTime(time));
+    playerRef.current?.seekTo(time);
+  };
+  
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (playerRef?.current) {
+        const current = playerRef?.current?.getCurrentTime();
+        if (current !== null) {
+          dispatch(setCurrentTime(current));
+        }
+      }
+    }, 500);
+    return () => clearInterval(interval);
+  }, [dispatch, playerRef]);
 
     return ( 
         <div className="home-container">
@@ -552,11 +617,12 @@ const Search = () => {
             <form  style={{width: 'auto',margin: 'auto'}}> 
           <Link to={`/filtre`} >
           <input
-             style={{width: '90vh'}}
+            style={{width: '90vh'}}
             type="text"
             id="search"
             name="search-bar"
             required
+            value={searchTerm}
             placeholder="Search..."
             autoComplete='off'
             className="home-search-bar input search-bar"
@@ -676,7 +742,25 @@ const Search = () => {
           </section>
             <SearchBar idSp={idSp} selectedFiltre={searchTerm} mood={mood}></SearchBar>
         </div>
-        <MusicBar></MusicBar>
+        <MusicBar 
+          playing={playing}
+          playerRef={playerRef}
+          muted={muted}
+          randome={randome}
+          loop={loop}
+          onMute={handleMute}
+          onLoop={handleLoop}
+          onPlayStop={handlePlayPause}
+          onRandome={handleRandome}
+          onProgress={storedTime}
+          onDuration={duration}
+          handleSeek={handleSeek}
+          artist={artis_id} 
+          name={name} 
+          thumbnail={thumbnail}
+          url={url}
+          urlReactPlayer={urlReactPlayer}
+        ></MusicBar>
       </div>
     )
 }

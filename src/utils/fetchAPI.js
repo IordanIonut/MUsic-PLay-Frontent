@@ -21,6 +21,8 @@ const BASE_URL19='https://shazam.p.rapidapi.com';
 const BASE_URL20='https://shazam8.p.rapidapi.com';
 const BASE_URL21='http://localhost:8080/api';
 const BASE_URL22 ='https://shazam-core7.p.rapidapi.com';
+const BASE_URL23 ='https://youtube-data8.p.rapidapi.com';
+const BASE_URL24 = "https://musicapi13.p.rapidapi.com";
 
 const apiYouTube1 = {
     params: {
@@ -116,7 +118,7 @@ const apiSpotify1 = {
     numberOfTopResults: '20',},
   headers: {
     'X-RapidAPI-Key': process.env.REACT_APP_RAPID_API_KEY,
-    'X-RapidAPI-Host': 'spotify-data.p.rapidapi.com'
+    'X-RapidAPI-Host': 'spotify81.p.rapidapi.com'
   }
 };
 
@@ -189,6 +191,21 @@ const apiShazam4 = {
 };
 
 const apiDataBase = {
+};
+
+const apiYouTube12 = {
+  headers: {
+    'X-RapidAPI-Key': process.env.REACT_APP_RAPID_API_KEY,
+    'X-RapidAPI-Host': 'youtube-data8.p.rapidapi.com',
+  }
+};
+
+const apiAllPlatforms = {
+  headers: {
+    'content-type': 'application/json',
+    'X-RapidAPI-Key': process.env.REACT_APP_RAPID_API_KEY,
+    'X-RapidAPI-Host': 'musicapi13.p.rapidapi.com'
+  }
 };
 
 export const ApiYouTube1 = async(url) =>{
@@ -308,5 +325,15 @@ export const ApiDataBasePut = async (url, putData) => {
 
 export const ApiDataBaseDelete = async (url) => {
   const { data } = await axios.delete(`${BASE_URL21}/${url}`, apiDataBase);
+  return data;
+};
+
+export const ApiYouTube12 = async(url) =>{
+  const {data} = await axios.get(`${BASE_URL23}/${url}`,apiYouTube12);
+  return data;
+};
+
+export const ApiAllPlatforms = async (url, postData) => {
+  const { data } = await axios.post(`${BASE_URL24}/${url}`, postData, apiAllPlatforms);
   return data;
 };

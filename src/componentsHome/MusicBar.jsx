@@ -7,7 +7,7 @@ import Cookies from 'js-cookie';
 import Slider from '@mui/material/Slider';
 import Swal from 'sweetalert2';
 
-export const MusicBar = ({previous, playing, muted, onProgress, onDuration, loop, onPlayStop, onMute, onLoop, handleSeek, url, idSp, id, token, related,
+export const MusicBar = ({previous, playing, muted, randome, onProgress, onDuration, loop, onPlayStop, onMute, onLoop, handleSeek, url, idSp, id, token, related,
       name, thumbnail, next, onRandome, playlist, mood, urlReactPlayer, setClick}) => {
   const currentTimeFormatted = onProgress && typeof onProgress === 'number' ? new Date(onProgress * 1000).toISOString().substr(11, 8) : '00:00:00';
   const durationFormatted = onDuration && typeof onDuration === 'number' ? new Date(onDuration * 1000).toISOString().substr(11, 8) : '00:00:00';
@@ -198,7 +198,7 @@ export const MusicBar = ({previous, playing, muted, onProgress, onDuration, loop
   }, [isDragging]);
 
   return (
-    <section className="home-bar bar" style={{  opacity: 0.8    }}>
+    <section className="home-bar bar" style={{opacity: 0.8}}>
         <div className="home-music-play">
           <div className="home-music music-bar">
             <Link to={`/video/${url}`} className="home-button35 button">
@@ -211,12 +211,12 @@ export const MusicBar = ({previous, playing, muted, onProgress, onDuration, loop
               <span>{name}</span>
               <br></br>
             </span>
-            <button id="random" className="navbar button music account" onClick={() => {onRandome();style('random')}}>
+            <button id="random" className={`navbar button music account ${randome === true ? "hover111" : ''}`} onClick={() => {onRandome();style('random')}}>
               <svg viewBox="0 0 1024 1024" className="home-icon108">
                 <path d="M632 572l134 134 88-88v236h-236l88-88-134-134zM618 170h236v236l-88-88-536 536-60-60 536-536zM452 392l-60 60-222-222 60-60z"></path>
               </svg>
             </button>
-            <button id="last" className="navbar button music account home-button37" onClick={() => {previous();}}>
+            <button id="last"  className="navbar button music account home-button37" onClick={() => {previous();}}>
               <svg viewBox="0 0 1024 1024" className="home-icon110">
                 <path d="M490 512l364-256v512zM470 768l-364-256 364-256v512z"></path>
               </svg>
@@ -238,8 +238,8 @@ export const MusicBar = ({previous, playing, muted, onProgress, onDuration, loop
               <svg viewBox="0 0 1024 1024" className="home-icon116">
                 <path d="M554 256l364 256-364 256v-512zM170 768v-512l364 256z"></path>
               </svg>
-            </button>
-            <button id="repeat" className="navbar button music1 account home-button40" onClick={()=>{onLoop();style('repeat')}}>
+            </button> 
+            <button id="repeat" className={`navbar button music1 account home-button40 ${loop === true ? "hover112" : ''}`} onClick={()=>{onLoop();style('repeat')}}>
               <svg viewBox="0 0 1024 1024" className="home-icon118">
                 <path d="M726 726v-172h84v256h-512v128l-170-170 170-170v128h428zM298 298v172h-84v-256h512v-128l170 170-170 170v-128h-428z"></path>
               </svg>
@@ -249,7 +249,7 @@ export const MusicBar = ({previous, playing, muted, onProgress, onDuration, loop
                 <path fill={colors?.[sameID]?.hex} d="M512 910l-62-56q-106-96-154-142t-107-114-81-123-22-113q0-98 67-166t167-68q116 0 192 90 76-90 192-90 100 0 167 68t67 166q0 78-52 162t-113 146-199 186z"></path>
               </svg> 
             </button> : null}
-            <button id="volume" className="home-button42 navbar button music account hover111" onClick={()=>{onMute();style('volume')}}>
+            <button id="volume"  className="home-button42 navbar button music account hover111" onClick={()=>{onMute();style('volume')}}>
               {muted ? <svg  viewBox="0 0 16 16" className="home-icon122">
                 <path d="M6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06zM6 5.04 4.312 6.39A.5.5 0 0 1 4 6.5H2v3h2a.5.5 0 0 1 .312.11L6 10.96V5.04zm7.854.606a.5.5 0 0 1 0 .708L12.207 8l1.647 1.646a.5.5 0 0 1-.708.708L11.5 8.707l-1.646 1.647a.5.5 0 0 1-.708-.708L10.793 8 9.146 6.354a.5.5 0 1 1 .708-.708L11.5 7.293l1.646-1.647a.5.5 0 0 1 .708 0z"/>
               </svg> : <svg className="home-icon122" viewBox="0 0 16 16">

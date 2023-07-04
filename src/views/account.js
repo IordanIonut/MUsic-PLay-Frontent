@@ -9,8 +9,9 @@ import colors from '../utils/colors';
 import image from '../utils/image';
 
 const Account = () => {
-  const [statusHomeButton, setStatusHomeButton] = React.useState(false);
-  const [statusTredingButton, setStatusTredingButton] = React.useState(false);
+  const [statusHomeButton, setStatusHomeButton] = useState(false);
+  const [statusTredingButton, setStatusTredingButton] = useState(false);
+  const [procent, setProcent] = useState([]);
   const {id} = useParams();
   const history = useHistory();
   const token = localStorage.getItem('token') || undefined;
@@ -64,6 +65,29 @@ const Account = () => {
       setStatusTredingButton(true);
       styleChangeOn('personal');
     }
+    ApiDataBaseGet(`history/procent?user_id=${idSp}`).then((data) =>{
+      setProcent(data);
+      const svgElementVideoYoutube = document.querySelector('.circleVideoYoutube');
+      svgElementVideoYoutube.setAttribute('stroke-dasharray', `${(data?.[0]?.[0]?.[0]/data?.[0]?.[0]?.[9])*100}, 100`);
+      const svgElementVideoSpotify = document.querySelector('.circleVideoSpotify');
+      svgElementVideoSpotify.setAttribute('stroke-dasharray', `${(data?.[0]?.[0]?.[3]/data?.[0]?.[0]?.[9])*100}, 100`);
+      const svgElementVideoAppleMusic = document.querySelector('.circleVideoAppleMusic');
+      svgElementVideoAppleMusic.setAttribute('stroke-dasharray', `${(data?.[0]?.[0]?.[6]/data?.[0]?.[0]?.[9])*100}, 100`);
+
+      const svgElementPlaylistYoutube = document.querySelector('.circlePlaylistYoutube');
+      svgElementPlaylistYoutube.setAttribute('stroke-dasharray', `${(data?.[0]?.[0]?.[1]/data?.[0]?.[0]?.[10])*100}, 100`);
+      const svgElementPlaylistSpotify = document.querySelector('.circlePlaylistSpotify');
+      svgElementPlaylistSpotify.setAttribute('stroke-dasharray', `${(data?.[0]?.[0]?.[4]/data?.[0]?.[0]?.[10])*100}, 100`);
+      const svgElementPlaylistAppleMusic = document.querySelector('.circlePlaylistAppleMusic');
+      svgElementPlaylistAppleMusic.setAttribute('stroke-dasharray', `${(data?.[0]?.[0]?.[7]/data?.[0]?.[0]?.[10])*100}, 100`);
+
+      const svgElementChannelYoutube = document.querySelector('.circleChannelYoutube');
+      svgElementChannelYoutube.setAttribute('stroke-dasharray', `${(data?.[0]?.[0]?.[2]/data?.[0]?.[0]?.[11])*100}, 100`);
+      const svgElementChannelSpotify = document.querySelector('.circleChannelSpotify');
+      svgElementChannelSpotify.setAttribute('stroke-dasharray', `${(data?.[0]?.[0]?.[5]/data?.[0]?.[0]?.[11])*100}, 100`);
+      const svgElementChannelAppleMusic = document.querySelector('.circleChannelAppleMusic');
+      svgElementChannelAppleMusic.setAttribute('stroke-dasharray', `${(data?.[0]?.[0]?.[8]/data?.[0]?.[0]?.[11])*100}, 100`);
+    });
   },[id, statusHomeButton, statusTredingButton]);
   
   const changeNameClick = () => {
@@ -234,7 +258,7 @@ const Account = () => {
         if(input1?.length < 8 || input2?.length < 8 || input0?.length < 8)
           Swal.showValidationMessage(`The password need to have minimum 8 characters!`);
         let val = {oldPassword: input0, newPassword: input1, confirmNewPassword: input2};
-         ApiDataBasePut(`users/${idSp}/update-password`, val)
+          ApiDataBasePut(`users/${idSp}/update-password`, val)
             .then((data) => {
              // window.location.reload();
             })
@@ -424,32 +448,159 @@ const Account = () => {
         {statusTredingButton ? <section className="account-cont" style={{padding: '0', height: '90%'}}>
           <span className="account-text text">Personal Information</span>
           <div className="account-account1">
-            <div className="home-account posibili" style={{height: '100px', width: '100px'}}>
-              <div id="account" name="account" style={{height: '80%', width: '80%'}} type="button" disabled autoFocus className="home-button03 button account">
-                {token !== undefined ? (<span classname="home-icon006" style={{display: 'flex', width: '100%',height: '100%', fill: colors?.[userDate?.fill]?.hex}} dangerouslySetInnerHTML={{ __html: userDate?.image }} />) : 
-                  (<svg viewBox="0 0 1024 1024" className="home-icon006">
-                    <path d="M512 598q108 0 225 47t117 123v86h-684v-86q0-76 117-123t225-47zM512 512q-70 0-120-50t-50-120 50-121 120-51 120 51 50 121-50 120-120 50z"></path>
-                  </svg>)}
-              </div>
-            </div>
           </div>
-          <span className="account-text01 text" style={{display: 'flex'}}>
-              <span>Song</span>
-              <br></br>
-          </span>
-          <div class="dashboard" style={{justifyContent: 'center'}}>
-            <svg style={{width: '114px', height: '114px', margin: '1em'}}>
-              <circle class="bg" cx="57" cy="57" r="52" />
-              <circle class="meter-1" cx="57" cy="57" r="52" />
-            </svg>
-            <svg style={{width: '114px', height: '114px', margin: '1em'}}>
-              <circle class="bg" cx="57" cy="57" r="52" />
-              <circle class="meter-2" cx="57" cy="57" r="52" />
-            </svg>
-            <svg style={{width: '114px', height: '114px', margin: '1em'}}>
-              <circle class="bg" cx="57" cy="57" r="52" />
-              <circle class="meter-3" cx="57" cy="57" r="52" />
-            </svg>
+          <span className="account-text01 text" style={{display: 'flex', marginBottom: '5px'}}>Song</span>
+          <div class="flex-wrapper">
+            <div class="single-chart">
+              <svg viewBox="0 0 36 36" class="circular-chart youtube">
+                <path class="circle-bg"
+                  d="M18 2.0845
+                    a 15.9155 15.9155 0 0 1 0 31.831
+                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                />
+                <path class="circleVideoYoutube circle"
+                  stroke-dasharray="30, 100"
+                  d="M18 2.0845
+                    a 15.9155 15.9155 0 0 1 0 31.831
+                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                />
+                <text x="18" y="20.35" class="percentage">{((procent?.[0]?.[0]?.[0]/procent?.[0]?.[0]?.[9])*100 || 0).toFixed(0)}%</text>
+              </svg>
+            </div>
+            <div class="single-chart">
+              <svg viewBox="0 0 36 36" class="circular-chart spotify">
+                <path class="circle-bg"
+                  d="M18 2.0845
+                    a 15.9155 15.9155 0 0 1 0 31.831
+                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                />
+                <path class="circleVideoSpotify circle"
+                  stroke-dasharray="30, 100"
+                  d="M18 2.0845
+                    a 15.9155 15.9155 0 0 1 0 31.831
+                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                />
+                <text x="18" y="20.35" class="percentage">{((procent?.[0]?.[0]?.[3]/procent?.[0]?.[0]?.[9])*100 || 0).toFixed(0)}%</text>
+              </svg>
+            </div>
+              <div class="single-chart">
+                <svg viewBox="0 0 36 36" class="circular-chart appleMusic">
+                  <path class="circle-bg"
+                    d="M18 2.0845
+                      a 15.9155 15.9155 0 0 1 0 31.831
+                      a 15.9155 15.9155 0 0 1 0 -31.831"
+                  />
+                  <path class="circleVideoAppleMusic circle"
+                    stroke-dasharray="30, 100"
+                    d="M18 2.0845
+                      a 15.9155 15.9155 0 0 1 0 31.831
+                      a 15.9155 15.9155 0 0 1 0 -31.831"
+                  />
+                  <text x="18" y="20.35" class="percentage">{((procent?.[0]?.[0]?.[6]/procent?.[0]?.[0]?.[9])*100 || 0).toFixed(0)}%</text>
+                </svg>
+              </div>
+          </div>
+          <span className="account-text01 text" style={{display: 'flex', marginBottom: '5px'}}>Playlist</span>
+          <div class="flex-wrapper">
+            <div class="single-chart">
+              <svg viewBox="0 0 36 36" class="circular-chart youtube">
+                <path class="circle-bg"
+                  d="M18 2.0845
+                    a 15.9155 15.9155 0 0 1 0 31.831
+                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                />
+                <path class="circlePlaylistYoutube circle"
+                  stroke-dasharray="30, 100"
+                  d="M18 2.0845
+                    a 15.9155 15.9155 0 0 1 0 31.831
+                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                />
+                <text x="18" y="20.35" class="percentage">{((procent?.[0]?.[0]?.[1]/procent?.[0]?.[0]?.[10])*100 || 0).toFixed(0)}%</text>
+              </svg>
+            </div>
+            <div class="single-chart">
+              <svg viewBox="0 0 36 36" class="circular-chart spotify">
+                <path class="circle-bg"
+                  d="M18 2.0845
+                    a 15.9155 15.9155 0 0 1 0 31.831
+                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                />
+                <path class="circlePlaylistSpotify circle"
+                  stroke-dasharray="30, 100"
+                  d="M18 2.0845
+                    a 15.9155 15.9155 0 0 1 0 31.831
+                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                />
+                <text x="18" y="20.35" class="percentage">{((procent?.[0]?.[0]?.[4]/procent?.[0]?.[0]?.[10])*100 || 0).toFixed(0)}%</text>
+              </svg>
+            </div>
+              <div class="single-chart">
+                <svg viewBox="0 0 36 36" class="circular-chart appleMusic">
+                  <path class="circle-bg"
+                    d="M18 2.0845
+                      a 15.9155 15.9155 0 0 1 0 31.831
+                      a 15.9155 15.9155 0 0 1 0 -31.831"
+                  />
+                  <path class="circlePlaylistAppleMusic circle"
+                    stroke-dasharray="30, 100"
+                    d="M18 2.0845
+                      a 15.9155 15.9155 0 0 1 0 31.831
+                      a 15.9155 15.9155 0 0 1 0 -31.831"
+                  />
+                  <text x="18" y="20.35" class="percentage">{((procent?.[0]?.[0]?.[7]/procent?.[0]?.[0]?.[10])*100 || 0).toFixed(0)}%</text>
+                </svg>
+              </div>
+          </div>
+          <span className="account-text01 text" style={{display: 'flex', marginBottom: '5px'}}>Channel</span>
+          <div class="flex-wrapper">
+            <div class="single-chart">
+              <svg viewBox="0 0 36 36" class="circular-chart youtube">
+                <path class="circle-bg"
+                  d="M18 2.0845
+                    a 15.9155 15.9155 0 0 1 0 31.831
+                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                />
+                <path class="circleChannelYoutube circle"
+                  stroke-dasharray="30, 100"
+                  d="M18 2.0845
+                    a 15.9155 15.9155 0 0 1 0 31.831
+                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                />
+                <text x="18" y="20.35" class="percentage">{((procent?.[0]?.[0]?.[2]/procent?.[0]?.[0]?.[11])*100 || 0).toFixed(0)}%</text>
+              </svg>
+            </div>
+            <div class="single-chart">
+              <svg viewBox="0 0 36 36" class="circular-chart spotify">
+                <path class="circle-bg"
+                  d="M18 2.0845
+                    a 15.9155 15.9155 0 0 1 0 31.831
+                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                />
+                <path class="circleChannelSpotify circle"
+                  stroke-dasharray="30, 100"
+                  d="M18 2.0845
+                    a 15.9155 15.9155 0 0 1 0 31.831
+                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                />
+                <text x="18" y="20.35" class="percentage">{((procent?.[0]?.[0]?.[5]/procent?.[0]?.[0]?.[11])*100 || 0).toFixed(0)}%</text>
+              </svg>
+            </div>
+              <div class="single-chart">
+                <svg viewBox="0 0 36 36" class="circular-chart appleMusic">
+                  <path class="circle-bg"
+                    d="M18 2.0845
+                      a 15.9155 15.9155 0 0 1 0 31.831
+                      a 15.9155 15.9155 0 0 1 0 -31.831"
+                  />
+                  <path class="circleChannelAppleMusic circle"
+                    stroke-dasharray="30, 100"
+                    d="M18 2.0845
+                      a 15.9155 15.9155 0 0 1 0 31.831
+                      a 15.9155 15.9155 0 0 1 0 -31.831"
+                  />
+                  <text x="18" y="20.35" class="percentage">{((procent?.[0]?.[0]?.[8]/procent?.[0]?.[0]?.[11])*100 || 0).toFixed(0)}%</text>
+                </svg>
+              </div>
           </div>
         </section> : null}
       </div>

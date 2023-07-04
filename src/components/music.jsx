@@ -57,7 +57,6 @@ const Music = ({video, idx, color, page, mood, treding, treding1, moood}) => {
       }
     }
   },[video]);
-//console.log(video?.attributes);
 
   return (
     <div className={`music-music `} style={{display: 'flex'}}>
@@ -90,6 +89,7 @@ const Music = ({video, idx, color, page, mood, treding, treding1, moood}) => {
                 video?.thumbnail && page === '1' ? video?.thumbnail  : null || 
                 video?.thumbnail?.[1]?.url  ? video?.thumbnail[1]?.url : null ||
                 video?.thumbnail?.url ? video?.thumbnail?.url : null || 
+                video?.thumb ? video?.thumb : null ||
                 video?.[0]?.id?.thumb  ? video?.[0]?.id?.thumb : null ||
                 video?.thumbnail?.[0]?.url && page === '2' ? video?.thumbnail?.[0]?.url : null ||
                 video?.thumbnail?.[1]?.url && page === '2' ? video?.thumbnail?.[1]?.url : null ||
@@ -159,7 +159,8 @@ const Music = ({video, idx, color, page, mood, treding, treding1, moood}) => {
                 ||like?.videoDetails?.viewCount ?  formatNumber(like?.videoDetails?.viewCount) : null || 
                 video?.[0]?.id?.view_count ? formatNumber(video?.[0]?.id?.view_count) : null || 
                 video?.video?.viewCountText ? video?.video?.viewCountText : null ||
-                video?.popularity ? video?.popularity : null ||
+                mood === 'youtube' && video?.popularity ? video?.popularity : null ||
+                video?.view_count ? video?.view_count : null ||
                 video?.[0]?.popularity ? video?.[0]?.popularity : null ||
                 video?.track?.playcount ? formatNumber(video?.track?.playcount) : null}</span>
         {(mood != 'appleMusic' || treding1 === undefined) ? <svg viewBox="0 0 1024 1024" className="music-icon2">
@@ -173,6 +174,7 @@ const Music = ({video, idx, color, page, mood, treding, treding1, moood}) => {
                 video?.[0]?.duration_ms ? millisToMinutesAndSeconds(video?.[0]?.duration_ms) : null ||
                 video?.lengthSeconds ? toTime(video?.lengthSeconds) : null || 
                 video?.[0]?.id?.length ? video?.[0]?.id?.length : null ||
+                video?.length ? video?.length : null ||
                 video?.lengthText ? video?.lengthText || 'Live' : null ||
                 video?.video?.lengthText ? video?.video?.lengthText : null ||
                 video?.duration ? formatTime(video?.duration) : null ||

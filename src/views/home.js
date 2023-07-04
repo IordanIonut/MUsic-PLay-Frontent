@@ -14,12 +14,12 @@ import MusicBar from '../componentsHome/MusicBar'
 import FiltreBar from '../componentsHome/FiltreBar'
 import SearchBar from '../componentsHome/SearchBar'
 import VideoBar from '../componentsHome/VideoBar'
-import { ApiYouTube9, ApiYouTube10, ApiSpotify1, ApiSpotify3, ApiShazam1, ApiDataBaseGet, ApiYouTube3 } from '../utils/fetchAPI'
+import { ApiYouTube9, ApiYouTube10, ApiYouTube12, ApiSpotify3, ApiShazam1, ApiDataBaseGet, ApiYouTube3 } from '../utils/fetchAPI'
 import { Link } from 'react-router-dom';
 import {useHistory} from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
-import {setDuration, toggleLoop, toggleMute, playVideo, pauseVideo, setPreview, setNext, setCurrentTime  } from '../utils/actions';
+import {setDuration, toggleLoop, toggleMute, playVideo, pauseVideo, setPreview, setNext, setCurrentTime, setAllVideo, setRad, toggleRandome  } from '../utils/actions';
 import colors from '../utils/colors';
 import Swal from 'sweetalert2';
 import axios from 'axios';
@@ -52,7 +52,9 @@ const Home = () => {
   const [activate, setactivate] = useState(false);
   const hist = useHistory();
   const mood = Cookies.get('mood') || 'youtube';
-  
+  const [bar, setbar] = useState([]);
+  const [playlist1, setplaylist1] = useState(0);
+
   Cookies.remove("idSongPlayList");
   Cookies.remove("playlistActivate");
   Cookies.remove("idChannel");
@@ -125,8 +127,10 @@ const Home = () => {
   },[selectedFiltre]);
   
   useEffect(() =>{
-   // ApiYouTube2(`sugestions?q=${seachText}`).then((data) => setAuto(data));
-  },[seachText]);
+    if(seachText != ''){
+      //ApiYouTube12(`auto-complete?q=${seachText}&hl=en&gl=US`).then((data) => setAuto(data)).catch((err) => {console.log(err?.message);});
+    }
+  },[seachText, mood]);
 
   useEffect(() =>{
     if (token) {
@@ -176,7 +180,7 @@ const Home = () => {
         ApiSpotify3(`top_200_tracks?country=RO&date=${date?.[2]+"-"+date?.[1]+"-"+date?.[0]}`).then((data2) => setTrending(data2));
       }
       if(mood === 'appleMusic'){
-        ApiShazam1(`top_country_tracks`).then((data2) => setTrending(data2?.result?.tracks));
+        ApiShazam1(`charts/get-top-songs-in-world`).then((data2) => {setTrending(data2);});
       }
     }
     styleChangeOnBar(mood);
@@ -564,7 +568,7 @@ const Home = () => {
             const base64Data = reader.result.replace(/^data:audio\/\w+;base64,/, '');
             try {
               const response = await axios.post('https://cors-anywhere.herokuapp.com/https://api.audd.io/', {
-                api_token: '04f7152000a9a1126f1285785133a0eb',
+                api_token: process.env.REACT_APP_AUDD_KEY,
                 return: 'apple_music,spotify,deezer,napster',
                 audio: base64Data
               });
@@ -672,7 +676,7 @@ const Home = () => {
 
   const dispatch = useDispatch();
   const playerRef = React.useRef(null);
-  const {url, urlReactPlayer, playing, muted, loop, played, duration, currentTime: storedTime, artis_id, name, thumbnail, previous, next} = useSelector((state) => state);
+  const {url, playing, muted, loop, played, duration, urlReactPlayer, currentTime: storedTime, qr, name, thumbnail, randome, rad } = useSelector((state) => state);
   const [index, setIndex] = useState(0);
   const [last, setLast] = useState();
   
@@ -682,6 +686,10 @@ const Home = () => {
   
   const handleLoop = () => {
     dispatch(toggleLoop(!loop));
+  };
+
+  const handleRandome = () => {
+    dispatch(toggleRandome(!randome));
   };
   
   const handlePlayPause = () => {
@@ -728,51 +736,6 @@ const Home = () => {
     }, 500);
     return () => clearInterval(interval);
   }, [dispatch, playerRef]);
-  
-  
-
-  
-  const handleNext = () => {
-    if(mood === 'youtube'){
-      if(playlist === 0){
-        let x = Math.floor((Math.random() * related?.length)); 
-        dispatch(setPreview(id));
-        hist.push('/video/'+related?.[x]?.videoId);
-      }
-      if(playlist === 1){
-        dispatch(setPreview(related?.videos?.[index]?.id));
-        dispatch(setNext(related?.videos?.[index]?.id));
-        if(related?.videos?.length === index){
-          setIndex(0);
-        }
-        else
-          setIndex(index+1);
-      }
-    }
-  };
-
-  const handlePreview = () => {
-    if(mood === 'youtube'){
-      if(playlist === 0){
-        let last1 = previous[previous?.length - 1];
-        const removeLast = previous?.pop();
-        if(last1 !== undefined) 
-          hist.push('/video/'+last1);
-        else 
-          playerRef?.current?.seekTo(0);
-      }
-      if(playlist === 1){
-        let last1 = previous[previous?.length - 1];
-        const removeLast = previous?.pop();
-        if(last1 !== undefined){
-          setLast(last1);
-          setIndex(index-1);
-        }
-        else 
-          playerRef?.current?.seekTo(0);
-      }
-    }
-  };
 
   return (
     <div className="home-container">
@@ -1032,26 +995,24 @@ const Home = () => {
             </svg>
           </Link>
           {token ? <Link to={`/qr`} id="qr" className="home-button10 navbar button account"onClick={()=>{
-                           setStatusHomeButton(false);
-                           setStatusTredingButton(false);
-                           setStatusFavoriteButton(false);
-                           setStatusPlayListButton(false);
-                           setStatusHistoryButton(false);
-                           setStatusLiveButtons(false);
-                           setStatusQrButtons(true);
-                           setStatusSendButtons(false);
-                           setStatusFiltreButtons(false);
-                           setStatusChanelButtons(false);
-                           setStatusSearchButtons(false);
-                           setStatusVideoButtons(false);
-                           styleChangeOn('qr');
-                           styleChangeOf('home');
-                           styleChangeOf('treding');
-                           styleChangeOf('favorite');
-                           styleChangeOf('playList');
-                           styleChangeOf('history');
-                           styleChangeOf('live');
-                           styleChangeOf('send');
+                            setStatusHomeButton(false);
+                            setStatusTredingButton(false);
+                            setStatusFavoriteButton(false);
+                            setStatusPlayListButton(false);
+                            setStatusHistoryButton(false);
+                            setStatusQrButtons(true);
+                            setStatusSendButtons(false);
+                            setStatusFiltreButtons(false);
+                            setStatusChanelButtons(false);
+                            setStatusSearchButtons(false);
+                            setStatusVideoButtons(false);
+                            styleChangeOn('qr');
+                            styleChangeOf('home');
+                            styleChangeOf('treding');
+                            styleChangeOf('favorite');
+                            styleChangeOf('playList');
+                            styleChangeOf('history');
+                            styleChangeOf('send');
                         }}>
                           <svg xmlns="http://www.w3.org/2000/svg" name='img2' className="home-icon034" viewBox="0 0 16 16">
                             <path d="M0 .5A.5.5 0 0 1 .5 0h3a.5.5 0 0 1 0 1H1v2.5a.5.5 0 0 1-1 0v-3Zm12 0a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0V1h-2.5a.5.5 0 0 1-.5-.5ZM.5 12a.5.5 0 0 1 .5.5V15h2.5a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5v-3a.5.5 0 0 1 .5-.5Zm15 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1 0-1H15v-2.5a.5.5 0 0 1 .5-.5ZM4 4h1v1H4V4Z"/>
@@ -1070,7 +1031,6 @@ const Home = () => {
                           setStatusFavoriteButton(false);
                           setStatusPlayListButton(false);
                           setStatusHistoryButton(false);
-                          setStatusLiveButtons(false);
                           setStatusQrButtons(false);
                           setStatusSendButtons(true);
                           setStatusFiltreButtons(false);
@@ -1084,12 +1044,10 @@ const Home = () => {
                           styleChangeOf('favorite');
                           styleChangeOf('playList');
                           styleChangeOf('history');
-                          styleChangeOf('live');
                           styleChangeOf('qr');
                           }else{
                             styleChangeOf('home');
                             styleChangeOf('treding');
-                            styleChangeOf('live');
                             styleChangeOf('history');
                           }
                         }}>
@@ -1140,7 +1098,7 @@ const Home = () => {
                                 {mood !== 'youtube' ? styleChangeOfBar('youtube') : null}
                                 {mood !== 'spotify' ? styleChangeOfBar('spotify') : null}
                                 {mood !== 'appleMusic' ? styleChangeOfBar('appleMusic') : null}
-                                <QrBar setButtonYoutube={setButtonYoutube} setButtonSpotify={setButtonSpotify} 
+                                <QrBar setButtonYoutube={setButtonYoutube} setButtonSpotify={setButtonSpotify} qr={qr} name={name}
                         setButtonAppleMusic={setButtonAppleMusic}></QrBar> 
                             </>):null}
             {statusSendButton? (<>
@@ -1166,22 +1124,20 @@ const Home = () => {
                         setButtonSpotify={setButtonSpotify} setButtonAppleMusic={setButtonAppleMusic}></SearchBar>
                             </>):null}
             {statusVideoButton? <VideoBar></VideoBar> :null}
-
       </div>
       <MusicBar 
         playing={playing}
         playerRef={playerRef}
         muted={muted}
+        randome={randome}
         loop={loop}
         onMute={handleMute}
         onLoop={handleLoop}
         onPlayStop={handlePlayPause}
-        next={handleNext}
-        previous={handlePreview}
+        onRandome={handleRandome}
         onProgress={storedTime}
         onDuration={duration}
         handleSeek={handleSeek}
-        artist={artis_id} 
         name={name} 
         thumbnail={thumbnail}
         url={url}

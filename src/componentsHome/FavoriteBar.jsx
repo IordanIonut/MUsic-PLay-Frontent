@@ -36,7 +36,6 @@ const FavoriteBar = ({mood, idSp, userDate, setButtonYoutube, setButtonSpotify, 
           item?.content_id.mood ==='spotify' ? <Music moood={item?.content_id?.mood} color={item?.fill}   video={item?.content_id?.description} idx={idx} mood={'spotify'}></Music> : null ||
           item?.content_id.mood ==='appleMusic' ? <Music moood={item?.content_id?.mood} color={item?.fill}  video={item?.content_id?.description} idx={idx} mood={'appleMusic'}></Music> : null
         }
-        
           </section>
       ))}
       </div>

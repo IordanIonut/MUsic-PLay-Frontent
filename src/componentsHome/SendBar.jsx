@@ -39,7 +39,7 @@ const SendBar = ({idSp, userDate, setButtonYoutube, setButtonSpotify, setButtonA
           formik.values.subject = '';
           formik.values.message = '';
       }).catch((error) => {
-         Swal.fire({
+          Swal.fire({
             icon: 'error',
             text: error?.response?.data,
             showConfirmButton: false,

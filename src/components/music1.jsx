@@ -4,7 +4,7 @@ import './music1.css'
 import Cookies from 'js-cookie'
 import colors from '../utils/colors';
 
-const Music1 = ({video, color, idx, idSearch,pointerEvents, text, mood, albums, playlist, idArtist, imArtist, moood}) => {
+const Music1 = ({video, color, idx, idSearch, pointerEvents, text, mood, albums, playlist, idArtist, imArtist, moood}) => {
   const [image, setImage] = React.useState('');
 
   function formatNumber(num) {
@@ -42,7 +42,7 @@ const Music1 = ({video, color, idx, idSearch,pointerEvents, text, mood, albums, 
         className="button music-line music1-line"
           onClick={() => {(mood != undefined || moood != undefined ? Cookies.set('mood',mood || moood) : null) && (
                   mood ==='youtube' ?  (video?.id ? (Cookies.set('idSongPlayList',[video?.id,"0", video?.thumbnail?.url,"0", video?.title,"0",
-                          video?.channel?.name,"0", video?.duration_formatted,"0", video?.channel?.id]),Cookies.set('idChannel', video?.id), Cookies.set('playlistActivate', '1')): null) :null||
+                          video?.channel?.name,"0", video?.duration_formatted,"0", video?.channel?.id,"0",idx]),Cookies.set('idChannel', video?.id), Cookies.set('playlistActivate', '1')): null) :null||
                   mood === 'spotify' ? (playlist === '0' && video?.id ? Cookies.set('spotifyType', '123:'+video?.type+":"+video?.id) :
                           (Cookies.set('idSongPlayList',[video?.id || video?.track?.id || video?.[0]?.id,"0", 
                           video?.album?.images?.[0]?.url || video?.track?.album?.images?.[0]?.url || video?.[0]?.album?.images?.[0]?.url,"0", 
@@ -50,11 +50,11 @@ const Music1 = ({video, color, idx, idSearch,pointerEvents, text, mood, albums, 
                           video?.artists?.[0]?.name || video?.track?.artists?.[0]?.name || video?.[0]?.artists?.[0]?.name,"0",
                           millisToMinutesAndSeconds(video?.duration_ms || video?.track?.duration_ms || video?.[0]?.duration_ms),"0", 
                           video?.album?.artists?.[0]?.id || video?.track?.album?.artists?.[0]?.id || video?.[0]?.album?.artists?.[0]?.id,"0",
-                          video?.popularity || video?.track?.popularity || video?.[0]?.popularity]),Cookies.set('idChannel', video?.album?.artists?.[0]?.id), Cookies.set('playlistActivate', '1'))) : null ||
+                          video?.popularity || video?.track?.popularity || video?.[0]?.popularity,"0",idx]),Cookies.set('idChannel', video?.album?.artists?.[0]?.id), Cookies.set('playlistActivate', '1'))) : null ||
                   mood === 'appleMusic' ? (playlist === '0' && video?.id ? video?.id &&  Cookies.set('spotifyType', '123:'+video?.value?.attributes?.type+":"+video?.id) : (Cookies.set('idSongPlayList',
-                    [video?.playParams?.id || video?.key || video?.attributes?.playParams?.id,"0", imArtist || video?.images?.coverart || image,"0", 
+                    [video?.playParams?.id || video?.key || video?.attributes?.playParams?.id,"0",  imArtist || video?.images?.coverart || image,"0", 
                     video?.name || video?.subtitle || video?.attributes?.artistName,"0", 
-                    video?.artistName || video?.title || video?.attributes?.name,"0", video?.releaseDate || video?.releasedate || video?.attributes?.releaseDate,"0", idArtist || video?.artists?.[0]?.adamid]),
+                    video?.artistName || video?.title || video?.attributes?.name,"0", video?.releaseDate || video?.releasedate || video?.attributes?.releaseDate,"0", idArtist || video?.artists?.[0]?.adamid,"0",idx]),
                     Cookies.set('idChannel', idArtist || video?.artists?.[0]?.adamid), Cookies.set('playlistActivate', '1'))) : null)}}>
         <span id="number" className="music1-text">#{++idx }
         </span>

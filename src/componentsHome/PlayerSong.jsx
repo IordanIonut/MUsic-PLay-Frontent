@@ -41,7 +41,7 @@ const PlayerSong = () => {
         loaded
         className="home-iframe"
         style={{ display: "none", zIndex: 999 }}
-        url={`https://www.youtube.com/watch?v=${urlReactPlayer}`}
+        url={`https://www.youtube.com/watch?v=${urlReactPlayer}&t=0s`}
         ref={playerRef}
         playing={playing}
         muted={muted}

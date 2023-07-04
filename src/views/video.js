@@ -7,8 +7,8 @@ import {useParams} from 'react-router-dom';
 import MusicBar from '../componentsHome/MusicBar';
 import VideoBar from '../componentsHome/VideoBar';
 import { useHistory } from 'react-router-dom';
-import {ApiYouTube3, ApiYouTube1, ApiSpotify3, ApiShazam4, ApiSpotify6, ApiShazam2, ApiDataBaseGet, ApiDataBasePost} from '../utils/fetchAPI';
-import {setCurrentTime, setDuration, toggleLoop, toggleMute, playVideo, pauseVideo, setPreview, setNext, toggleRandome, setRad  } from '../utils/actions';
+import {ApiYouTube3, ApiYouTube1, ApiSpotify3, ApiYouTube10, ApiShazam4, ApiSpotify6, ApiShazam2, ApiDataBaseGet, ApiDataBasePost} from '../utils/fetchAPI';
+import {setCurrentTime, setDuration, toggleLoop, toggleMute, playVideo, pauseVideo, setPreview, setNext, toggleRandome, setRad, setAllVideo  } from '../utils/actions';
 import { Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import colors from '../utils/colors';
@@ -44,6 +44,7 @@ const Video = () => {
     const [count, setCount] = useState([]);
     const [click, setClick] = useState(false);
     const [delete1, setDelete1] = useState([]);
+    const [ok1, setOk1] = useState(false);
 
     useEffect(() =>{
       if (token) {
@@ -178,7 +179,7 @@ const Video = () => {
           setPlaylist(0);
           ApiYouTube3(`video?search=https://www.youtube.com/watch?v=${id}`).then((data1) => setVideo(data1.result));
           ApiYouTube1(`related?id=${id}`).then((data) => setRelated(data.data));
-         // ApiYouTube10(`related?videoId=${id}`).then((data) => setRelatedPlayList(data.items))
+          ApiYouTube10(`related?videoId=${id}`).then((data) => setRelatedPlayList(data.items))
         }else {
           setPlaylist(1);
           ApiYouTube3(`playlist?list=${id}`).then((data) => setVideo(data.result));
@@ -244,7 +245,9 @@ const Video = () => {
           if(id.length  <= 11 && !playlistActivate){
             storeData(videos,'video','youtube');
           }else {
-            storeData(videos,'playlist','youtube');
+            const aaaa = JSON.parse(JSON.stringify(videos));
+            delete aaaa?.videos;
+            storeData(aaaa,'playlist','youtube');
           }
         }else if(mood === 'spotify'){
           if(typexx?.[1] === 'playlist'){
@@ -256,7 +259,9 @@ const Video = () => {
             storeData(videos,'video','appleMusic');
           }
           if(typexx?.[1] === 'albums' || typexx?.[1] === 'album'){
-            storeData(videos,'playlist','appleMusic');
+            const aaaa = JSON.parse(JSON.stringify(videos));
+            delete aaaa?.data?.[0]?.relationships;
+            storeData(aaaa,'playlist','appleMusic');
           }
         }
         if(mood === 'spotify'){
@@ -264,7 +269,9 @@ const Video = () => {
             storeData(videos,'video','spotify');
           }
           if(typexx?.[1] === 'playlist'){
-            storeData(videos,'playlist','spotify');
+            const aaaa = JSON.parse(JSON.stringify(videos));
+            delete aaaa?.tracks?.items;
+            storeData(aaaa,'playlist','spotify');
           }
         }
       }else{
@@ -274,7 +281,7 @@ const Video = () => {
               ApiDataBasePost(`content/add`, rezult).then((data) => {}).catch((error) => {console.log("error");});
             }else if(playlistActivate === null){
               const aaaa = videos;
-              delete aaaa.videos; 
+              delete aaaa?.videos; 
               const rezult = {description: aaaa, mood: 'youtube', type: 'playlist', idPage: id};
               ApiDataBasePost(`content/add`, rezult).then((data) => {}).catch((error) => {console.log(error?.message);});
               if(idSongPlayList === '' && playlist === 1){
@@ -341,92 +348,88 @@ const Video = () => {
 
     useEffect(() =>{
       if(token && videos != 0){
-        ApiDataBaseGet(`content/last`);
-        ApiDataBaseGet(`content/last`);
-        ApiDataBaseGet(`content/last`);
-        ApiDataBaseGet(`content/last`);
-        ApiDataBaseGet(`content/last`);
-        ApiDataBaseGet(`content/last`);
-        ApiDataBaseGet(`content/last`);
-        ApiDataBaseGet(`content/last`);
-        ApiDataBaseGet(`content/last`);
-        ApiDataBaseGet(`content/last`);
-        ApiDataBaseGet(`content/last`);
-        ApiDataBaseGet(`content/last`);
-        if(mood === 'youtube' && videos?.length != 0 && related?.length != 0 && !id?.includes("|")){
-          if(id.length  <= 11 && !playlistActivate){
-            ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=video&description=${id}`).then((data1) => {ApiDataBaseGet(`history/unused-content`)}).catch((err) => {console.log(err?.message);});    
-          }else if(playlistActivate === null){
-            ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=playlist&description=${id}`).then((data1) => {}).catch((err) => {console.log(err?.message);});    
-          }
+        ApiDataBaseGet(`history/last?user_id=${idSp}`).then((data) => {
+          if (data?.content_id?.idPage != id) {
+            if(mood === 'youtube' && videos?.length != 0 && !id?.includes("|")){
+              if(id.length  <= 11 && !playlistActivate){
+                ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=video&description=${id}`).then((data1) => {ApiDataBaseGet(`history/unused-content`)}).catch((err) => {console.log(err?.message);});    
+              }else if(playlistActivate === null){
+                ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=playlist&description=${id}`).then((data1) => {}).catch((err) => {console.log(err?.message);});    
+              }
+            }
+            if(mood === 'appleMusic'  && videos?.length !== 0 && !id?.includes("|")){
+              if(typexx?.[1] === 'song' || typexx?.[1] === 'MUSIC' || typexx?.[1] === 'SONG'){
+                ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=video&description=${id}`).then((data1) => {ApiDataBaseGet(`history/unused-content`)}).catch((err) => {console.log(err?.message);});    
+              }
+              if(typexx?.[1] === 'albums' || typexx?.[1] === 'album'){
+                ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=playlist&description=${id}`).then((data1) => {}).catch((err) => {console.log(err?.message);});    
+              }
+            }
+            if(mood === 'spotify' && videos?.length !== 0 && !id?.includes("|")){
+              if(typexx?.[1] === 'track'){
+                ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=video&description=${id}`).then((data1) => {ApiDataBaseGet(`history/unused-content`)}).catch((err) => {console.log(err?.message);});    
+              }
+              if(typexx?.[1] === 'playlist'){
+                ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=playlist&description=${id}`).then((data1) => {}).catch((err) => {console.log(err?.message);});    
+              }
+            }
+          } 
         }
-        if(mood === 'appleMusic' && related?.length !== 0 && videos?.length !== 0 && !id?.includes("|")){
-          if(typexx?.[1] === 'song' || typexx?.[1] === 'MUSIC' || typexx?.[1] === 'SONG'){
-            ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=video&description=${id}`).then((data1) => {ApiDataBaseGet(`history/unused-content`)}).catch((err) => {console.log(err?.message);});    
-          }
-          if(typexx?.[1] === 'albums' || typexx?.[1] === 'album'){
-            ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=playlist&description=${id}`).then((data1) => {}).catch((err) => {console.log(err?.message);});    
-          }
-        }
-        if(mood === 'spotify' && related?.length !== 0 && videos?.length !== 0 && !id?.includes("|")){
-          if(typexx?.[1] === 'track'){
-            ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=video&description=${id}`).then((data1) => {;ApiDataBaseGet(`history/unused-content`)}).catch((err) => {console.log(err?.message);});    
-          }
-          if(typexx?.[1] === 'playlist'){
-            ApiDataBasePost(`history/save?userId=${idSp}&mode=${mood}&type=playlist&description=${id}`).then((data1) => {}).catch((err) => {console.log(err?.message);});    
-          }
-        }
-    }
-    },[videos, idSp, mood, id, token, idSongPlayList, related]);
+      )};
+    },[videos, idSp, token]);
 
     useEffect(() =>{
-      if(token && !id?.includes("|")){
-        if(mood === 'youtube' && videos?.length !== 0 ){
-          if(id.length  >= 11 && playlist === 1){
-            let res = null;
-            if(idSong[0])
-              res = related?.videos?.find(obj => obj?.id ===  idSong[0]);
-            let rezult;
-            if(res === null){
-              rezult = {description: related?.videos?.[0], mood: 'youtube', type: 'video', idPage: related?.videos?.[0]?.id};
-            }else{
-              rezult = {description: res, mood: 'youtube', type: 'video', idPage: idSong[0]};
+      ApiDataBaseGet(`content/last`).then((data) => {
+        if(data?.idPage!== id){
+          if(token && !id?.includes("|")){
+            if(mood === 'youtube' && videos?.length !== 0 ){
+              if(id.length  >= 11 && playlist === 1){
+                let res = null;
+                if(idSong[0])
+                  res = related?.videos?.find(obj => obj?.id ===  idSong[0]);
+                let rezult;
+                if(res === null){
+                  rezult = {description: related?.videos?.[0], mood: 'youtube', type: 'video', idPage: related?.videos?.[0]?.id};
+                }else{
+                  rezult = {description: res, mood: 'youtube', type: 'video', idPage: idSong[0]};
+                }
+                if(rezult?.description != null)
+                  ApiDataBasePost(`content/add`, rezult).then((data) => {}).catch((error) => {console.log(error?.message);});
+              }
             }
-            if(rezult?.description != null)
-              ApiDataBasePost(`content/add`, rezult).then((data) => {}).catch((error) => {console.log(error?.message);});
+            if(mood === 'spotify' && videos?.length !== 0 ){
+              if(playlist === 1){
+                let res = null;  
+                if(idSong[0])
+                  res = related?.tracks?.items?.find(obj => obj?.track?.id ===  idSong[0]);
+                let rezult;
+                if(res === null){
+                  rezult = {description: related?.tracks?.items?.[0], mood: 'spotify', type: 'video', idPage: related?.tracks?.items?.[0]?.track?.id};
+                }else{
+                  rezult = {description: res, mood: 'spotify', type: 'video', idPage: idSong[0]};
+                }
+                if(rezult?.description != null)
+                  ApiDataBasePost(`content/add`, rezult).then((data) => {}).catch((error) => {console.log(error?.message);});
+              }
+            }
+            if(mood === 'appleMusic' && videos?.length !== 0 ){
+              if(playlist === 1){
+                let res = null;  
+                if(idSong[0])
+                  res = related?.data?.[0]?.relationships?.tracks?.data?.find(obj => obj?.id ===  idSong[0]);
+                let rezult;
+                if(res === null){
+                  rezult = {description: related?.data?.[0], mood: 'appleMusic', type: 'video', idPage: related?.data?.[0]?.id};
+                }else{
+                  rezult = {description: res, mood: 'appleMusic', type: 'video', idPage: idSong[0]};
+                }
+                if(rezult?.description != null)
+                  ApiDataBasePost(`content/add`, rezult).then((data) => {}).catch((error) => {console.log(error?.message);});
+              }
+            }
           }
         }
-        if(mood === 'spotify' && videos?.length !== 0 ){
-          if(playlist === 1){
-            let res = null;  
-            if(idSong[0])
-              res = related?.tracks?.items?.find(obj => obj?.track?.id ===  idSong[0]);
-            let rezult;
-            if(res === null){
-              rezult = {description: related?.tracks?.items?.[0], mood: 'spotify', type: 'video', idPage: related?.tracks?.items?.[0]?.track?.id};
-            }else{
-              rezult = {description: res, mood: 'spotify', type: 'video', idPage: idSong[0]};
-            }
-            if(rezult?.description != null)
-              ApiDataBasePost(`content/add`, rezult).then((data) => {}).catch((error) => {console.log(error?.message);});
-          }
-        }
-        if(mood === 'appleMusic' && videos?.length !== 0 ){
-          if(playlist === 1){
-            let res = null;  
-            if(idSong[0])
-              res = related?.data?.[0]?.relationships?.tracks?.data?.find(obj => obj?.id ===  idSong[0]);
-            let rezult;
-            if(res === null){
-              rezult = {description: related?.data?.[0], mood: 'appleMusic', type: 'video', idPage: related?.data?.[0]?.id};
-            }else{
-              rezult = {description: res, mood: 'appleMusic', type: 'video', idPage: idSong[0]};
-            }
-            if(rezult?.description != null)
-              ApiDataBasePost(`content/add`, rezult).then((data) => {}).catch((error) => {console.log(error?.message);});
-          }
-        }
-      }
+      });
     },[related, videos, idSongPlayList]);
 
     const handleValueChange = () => {
@@ -833,7 +836,7 @@ const Video = () => {
             const base64Data = reader.result.replace(/^data:audio\/\w+;base64,/, '');
             try {
               const response = await axios.post('https://cors-anywhere.herokuapp.com/https://api.audd.io/', {
-                api_token: '04f7152000a9a1126f1285785133a0eb',
+                api_token: process.env.REACT_APP_AUDD_KEY,
                 return: 'apple_music,spotify,deezer,napster',
                 audio: base64Data
               });
@@ -941,7 +944,7 @@ const Video = () => {
 
   const dispatch = useDispatch();
   const playerRef = useRef(null);
-  const {url, playing, muted, loop, played, duration, currentTime, artist_id, name, thumbnail, previous, next, randome, rad } = useSelector((state) => state);
+  const {url, playing, muted, loop, played, duration, currentTime, allVideo, name, thumbnail, previous, next, randome, rad, position } = useSelector((state) => state);
   const [index, setIndex] = useState(0);
   const [last, setLast] = useState();
 
@@ -1002,11 +1005,7 @@ const Video = () => {
     }
   }, 500);
   return () => clearInterval(interval);
-}, [dispatch, playerRef]);
-
-
-
-
+  }, [dispatch, playerRef]);
 
     useEffect(() =>{
       if(mood === 'youtube')
@@ -1028,6 +1027,25 @@ const Video = () => {
               }
             }
           }
+        if(mood === 'spotify')
+          if(playlist === 1)
+            if(randome === true) {
+              const arr = [];
+              var n = related?.tracks?.items?.length;
+              let count = 0;
+              if(rad?.length === 0){
+                for(let i=0; i <= 400; i++){
+                  const num = Math?.floor(Math?.random() * n) + 0;
+                  if (!arr?.includes(num)) {
+                    arr?.push(num);
+                    count++;
+                    dispatch(setRad(num));
+                  }
+                  if(count === n)
+                    break;
+                }
+              }
+            }
     },[randome, rad]);
 
     const handleNext = () => {
@@ -1044,6 +1062,67 @@ const Video = () => {
         if(playlist === 1 && randome === false){
           dispatch(setPreview(related?.videos?.[index]?.id));
           dispatch(setNext(related?.videos?.[index]?.id));
+          if(related?.videos?.length === index){
+            setIndex(0);
+          }
+          else
+            setIndex(index+1);
+        }
+        if(playlist === 1 && randome === true){
+          let a = rad?.[index] - 1;
+          dispatch(setPreview(related?.videos?.[a]?.id));
+          dispatch(setNext(related?.videos?.[a]?.id));
+          if(related?.videos?.length === index){
+            setIndex(0);
+          }
+          else
+            setIndex(index+1);
+        }
+      }
+      if(mood === 'spotify'){
+        if(playlist === 0 && randome === true){
+          let x = Math.floor((Math.random() * related?.length)); 
+          dispatch(setPreview(id));
+          history.push('/video/'+related?.[x]?.id);
+        }
+        if(playlist === 0 && randome === false){
+          dispatch(setPreview(id));
+          history.push('/video/'+related?.[0]?.id);
+        }
+        if(playlist === 1 && randome === false){
+          dispatch(setPreview(related?.tracks?.items?.[index]?.track?.id));
+          dispatch(setNext(related?.tracks?.items?.[index]?.track?.id));
+          if(related?.tracks?.items?.length === index){
+            setIndex(0);
+          }
+          else
+            setIndex(index+1);
+        }
+        if(playlist === 1 && randome === true){
+          let a = rad?.[index] - 1;
+          dispatch(setPreview(related?.tracks?.items?.[a]?.track?.id));
+          dispatch(setNext(related?.tracks?.items?.[a]?.track?.id));
+          if(related?.tracks?.items?.length === index){
+            setIndex(0);
+          }
+          else
+            setIndex(index+1);
+        }
+      }
+      if(mood === 'appleMusic'){
+        if(playlist === 0 && randome === true){
+          let x = Math.floor((Math.random() * related?.length)); 
+          //dispatch(setPreview(id));
+          //history.push('/video/'+related?.[x]?.videoId);
+          console.log(related)
+        }
+        if(playlist === 0 && randome === false){
+          dispatch(setPreview(id));
+          history.push('/video/'+related?.[0]?.videoId);
+        }
+        if(playlist === 1 && randome === false){
+          //dispatch(setPreview(related?.videos?.[index]?.id));
+          //dispatch(setNext(related?.videos?.[index]?.id));
           if(related?.videos?.length === index){
             setIndex(0);
           }
@@ -1081,7 +1160,7 @@ const Video = () => {
             setIndex(index-1);
           }
           else 
-            playerRef?.current?.seekTo(0);
+          playerRef?.current?.seekTo(0);
         }
       }
     };
@@ -1226,6 +1305,7 @@ const Video = () => {
           playing={playing}
           muted={muted}
           loop={loop}
+          position={position}
           setRelated={setRelated}
           index={index}
           onProgress={handleProgress}
@@ -1241,6 +1321,7 @@ const Video = () => {
           playing={playing}
           playerRef={playerRef}
           muted={muted}
+          randome={randome}
           videos={videos}
           loop={loop}
           onMute={handleMute}

@@ -81,13 +81,15 @@ const FeatureCard = ({playlist, text, mood, idxx, userDate, count, moood }) => {
           playlist?.channel?.name ? playlist?.channel?.name : null ||
           playlist?.user_id?.name ? playlist?.user_id?.name : null ||
           playlist?.[0]?.id?.channel?.name ? playlist?.[0]?.id?.channel?.name : null ||
-          playlist?.owner?.name ? playlist?.owner?.name : null ||  
+          playlist?.owner?.name ? playlist?.owner?.name : null ||
+          userDate?.name !== undefined ? userDate?.name : null || 
           playlist?.data?.owner?.name ? playlist?.data?.owner?.name : null  ||
           playlist?.owner?.display_name ? playlist?.owner?.display_name : null ||
           playlist?.artistName ? playlist?.artistName : null ||
           playlist?.value?.attributes?.artistName  ? playlist?.value?.attributes?.artistName : null ||
-          userDate?.name ? userDate?.name : null || playlist?.attributes?.artistName ? playlist?.attributes?.artistName : null ||
-          playlist?.[0]?.playlist_id?.user_id?.name ? playlist?.[0]?.playlist_id?.user_id?.name : null}
+          playlist?.attributes?.artistName ? playlist?.attributes?.artistName : null ||
+          playlist?.[0]?.playlist_id?.user_id?.name ? playlist?.[0]?.playlist_id?.user_id?.name : null ||
+          playlist?.[0]?.id?.channel?.name === undefined && userDate?.name === undefined ? 'YT Music' : null}
         </span>
       </div>
       <span className="feature-card-text3" style={{paddingTop: '30px'}}>

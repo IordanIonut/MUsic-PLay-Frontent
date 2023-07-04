@@ -18,6 +18,9 @@ export const togglePlay  = () => {
   return { type: "TOGGLE_PLAY" };
 };
 
+export const setPosition  = (position) => {
+  return { type: "SET_POSITION", payload: position };
+};
 
 export const toggleLoop = () => {
   return { type: "TOGGLE_LOOP" };
@@ -35,8 +38,8 @@ export const setDuration = (duration) => {
   return { type: "SET_DURATION", payload: duration };
 };
 
-export const setAuthor = (artist) => {
-  return { type: "SET_ARTIST", payload: artist };
+export const setQR = (qr) => {
+  return { type: "SET_QR", payload: qr };
 };
 
 export const setName = (name) => {
@@ -49,6 +52,10 @@ export const setThumbnail = (thumbnail) => {
 
 export const setPreview = (preview) => {
   return { type: "SET_PREVIEW", payload: preview };
+};
+
+export const setAllVideo = (allVideo) => {
+  return { type: "SET_ALL_VIDEO", payload: allVideo };
 };
 
 export const setNext = (next) => {

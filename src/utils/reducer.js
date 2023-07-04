@@ -12,10 +12,12 @@ const initialState = {
   currentTime: 0,
   duration: 0,
   play: false,
-  artis_id: "",
+  qr: "",
+  position: 0,
   name: "",
   thumbnail: "",
   previous: [],
+  allVideo: [],
   next: "",
   rad: [],
 };
@@ -42,16 +44,20 @@ const videoReducer = (state = initialState, action) => {
       return { ...state, currentTime: action.payload };
     case "SET_DURATION":
       return { ...state, duration: action.payload };
+    case "SET_POSITION":
+      return { ...state, position: action.payload };
     case "TOGGLE_PLAY":
       return { ...state, play: !state.play };
-    case "SET_ARTIST":
-      return { ...state, artis_id: action.payload };
+    case "SET_QR":
+      return { ...state, qr: action.payload };
     case "SET_NAME":
       return { ...state, name: action.payload };
     case "SET_THIMBNAIL":
       return { ...state, thumbnail: action.payload };
     case "SET_PREVIEW":
       return { ...state, previous: [...state.previous, action.payload]};
+    case "SET_ALL_VIDEO":
+      return { ...state, allVideo: [...state.allVideo, action.payload]};
     case "SET_NEXT":
       return { ...state, next: action.payload };
     case "SET_RAD": 
