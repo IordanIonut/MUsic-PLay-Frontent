@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 const BASE_URL1='https://yt-api.p.rapidapi.com';
-const BASE_URL2='https://ytube-videos.p.rapidapi.com';
-const BASE_URL3='https://simple-youtube-search.p.rapidapi.com';
+const BASE_URL2='https://youtube-media-downloader.p.rapidapi.com/v2';//block
+const BASE_URL3='https://youtube-v38.p.rapidapi.com';
 const BASE_URL4='https://youtube-v3-alternative.p.rapidapi.com';
 const BASE_URL5='https://returnyoutubedislikeapi.com';
 const BASE_URL7='https://youtube-video-download-info.p.rapidapi.com'
@@ -16,7 +16,7 @@ const BASE_URL14='https://spotify81.p.rapidapi.com';
 const BASE_URL15='https://spotify117.p.rapidapi.com';
 const BASE_URL16='https://spotify23.p.rapidapi.com';
 const BASE_URL17='https://spotify-data.p.rapidapi.com';
-const BASE_URL18='https://shazam-api7.p.rapidapi.com'
+const BASE_URL18='https://shazam-api7.p.rapidapi.com';
 const BASE_URL19='https://shazam.p.rapidapi.com';
 const BASE_URL20='https://shazam8.p.rapidapi.com';
 const BASE_URL21='http://localhost:8080/api';
@@ -35,21 +35,20 @@ const apiYouTube1 = {
 };
 
 const apiYouTube2 = {
-  params: {
-    location: 'RO', 
-    type: 'default',
-    max: '50',
-  },
   headers: {
     'X-RapidAPI-Key': process.env.REACT_APP_RAPID_API_KEY,
-    'X-RapidAPI-Host': 'ytube-videos.p.rapidapi.com'
+    'X-RapidAPI-Host': 'youtube-media-downloader.p.rapidapi.com'
   }
 };
 
 const apiYouTube3 = {
+  params: {
+    hl: 'en',
+    gl: 'US'
+  },
   headers: {
     'X-RapidAPI-Key': process.env.REACT_APP_RAPID_API_KEY,
-    'X-RapidAPI-Host': 'simple-youtube-search.p.rapidapi.com'
+    'X-RapidAPI-Host': 'youtube-v38.p.rapidapi.com'
   }
 };
 

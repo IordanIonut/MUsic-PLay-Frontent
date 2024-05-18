@@ -25,7 +25,7 @@ export const QrBar = ({setButtonYoutube, setButtonSpotify, setButtonAppleMusic, 
     ApiAllPlatforms(`public/search`,val).then((data) => {
       let text = '';
       if(mood === 'youtube'){
-        text = 'https://www.youtube.com/watch?v=' + data?.tracks?.[2]?.data?.externalId;
+        text = 'https://www.youtube.com/watch?v=' + data?.tracks?.[1]?.data?.externalId;
       }
       if(mood === 'spotify'){
         text = data?.tracks?.[0]?.data?.url;
@@ -56,7 +56,6 @@ export const QrBar = ({setButtonYoutube, setButtonSpotify, setButtonAppleMusic, 
       .then((response) => {
         const imageBlob = new Blob([response.data], { type: 'image/png' });
         const imageUrl = URL.createObjectURL(imageBlob);
-        console.log(imageUrl);
         Swal.fire({
           title: 'Scanner with phone',
           imageUrl: imageUrl,

@@ -89,7 +89,7 @@ const HistoryBar = ({mood, idSp, userDate, setButtonYoutube, setButtonSpotify, s
       }
     }
   }, [type, idSp, mood]);
-
+  
   return(
         <section className="home-history"style={{display: 'flex', alignContent: 'baseline'}}>
           <span className="home-text29 text"></span>

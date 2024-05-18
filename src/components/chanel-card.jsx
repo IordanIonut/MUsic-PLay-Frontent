@@ -26,6 +26,16 @@ const ChanelCard = ({channelDetail, idx, mood, text, moood}) => {
     }
   },[channelDetail]);
 
+  function formatNumber(num) {
+    if (num >= 1000000) {
+      return (num / 1000000)?.toFixed(0)+ 'M';
+    } else if (num >= 1000) {
+      return (num / 1000)?.toFixed(0) + 'K';
+    } else {
+      return num?.toString();
+    }
+  }
+
   return(
       <div className={`music-music `} style={{display: 'flex'}}>
         <Link to={channelDetail?.channelId ? `/channel/${channelDetail?.channelId}` : null ||
@@ -37,12 +47,14 @@ const ChanelCard = ({channelDetail, idx, mood, text, moood}) => {
            onClick={() => moood != undefined ? Cookies.set('mood',moood) : null}>
       <div className="button music-line"><span>{idx}</span>
         <img style={{marginLeft: '50px'}}
-              src={channelDetail?.[0]?.id?.snippet?.thumbnails?.high?.url ? channelDetail?.[0]?.id?.snippet?.thumbnails?.high?.url  : null ||
+              src={channelDetail?.snippet?.thumbnails?.default?.url ? channelDetail?.snippet?.thumbnails?.default?.url : null ||
+                channelDetail?.snippet?.thumbnails?.medium?.url ? channelDetail?.snippet?.thumbnails?.medium?.url : null ||
                 channelDetail?.snippet?.thumbnails?.high?.url ? channelDetail?.snippet?.thumbnails?.high?.url : null ||
                 channelDetail?.thumbnail?.[3]?.url ? channelDetail?.thumbnail?.[3]?.url : null || 
                 channelDetail?.thumbnail?.[2]?.url ? channelDetail?.thumbnail?.[2]?.url : null ||
                 channelDetail?.thumbnail?.[1]?.url ? channelDetail?.thumbnail?.[1]?.url : null || 
                 channelDetail?.thumbnail?.[0]?.url  ? channelDetail?.thumbnail?.[0]?.url  : null ||
+                channelDetail?.snippet?.thumbnails?.default?.url ? channelDetail?.snippet?.thumbnails?.default?.url : null ||
                 image ? image : null ||
                 channelDetail?.brandingSettings?.image?.bannerExternalUrl ? channelDetail?.brandingSettings?.image?.bannerExternalUrl : null ||
                 channelDetail?.visuals?.avatarImage?.sources?.[0]?.url ? channelDetail?.visuals?.avatarImage?.sources?.[0]?.url : null ||
@@ -52,8 +64,9 @@ const ChanelCard = ({channelDetail, idx, mood, text, moood}) => {
           </img>
         <span className="music-text04" style={{marginLeft: '50px'}}>{channelDetail?.channelTitle  || channelDetail?.attributes?.name|| channelDetail?.[0]?.id?.snippet?.title || channelDetail?.snippet?.title ||
                 channelDetail?.data?.profile?.name || channelDetail?.name || channelDetail?.profile?.name}</span>
-        <span className="music-text04" style={{marginLeft: '50px'}}>{channelDetail?.subscriberCount || channelDetail?.statistics?.subscriberCount ||
-            channelDetail?.stats?.followers || channelDetail?.[0]?.id?.statistics?.subscriberCount}</span>
+        <span className="music-text04" style={{marginLeft: '50px'}}>{formatNumber(channelDetail?.subscriberCount) || 
+        formatNumber(channelDetail?.statistics?.subscriberCount) ||
+        formatNumber(channelDetail?.stats?.followers) || formatNumber(channelDetail?.[0]?.id?.statistics?.subscriberCount)}</span>
         </div>
         </Link>
       </div>

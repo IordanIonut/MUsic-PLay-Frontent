@@ -50,12 +50,20 @@ const VideoBar = ({videos, id, related, count, playlist, views, relatedPlayList,
     var minutes = Math?.floor(millis / 60000);
     var seconds = ((millis % 60000) / 1000)?.toFixed(0);
     return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
+  };
+
+  function formatTime(seconds) {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = seconds % 60;
+    const formattedTime = `${hours}:${minutes}:${remainingSeconds}`;
+    return formattedTime;
   }
 
   useEffect(() =>{
     if(mood === 'youtube'){
       if(idSongPlayList === '' && playlist === 1){
-        ApiYouTube5(`votes?videoId=${related?.videos?.[0]?.id || related?.[0]?.content_id?.idPage}`).then((data2) => setLike(data2)); 
+        ApiYouTube5(`votes?videoId=${related?.videos?.items?.[0]?.id || related?.[0]?.content_id?.idPage}`).then((data2) => setLike(data2)); 
       }else if(idSongPlayList === ''){
         ApiYouTube5(`votes?videoId=${idSearch}`).then((data2) => setLike(data2));
       }else{
@@ -116,7 +124,7 @@ const VideoBar = ({videos, id, related, count, playlist, views, relatedPlayList,
       if(mood === 'youtube'){ 
         if(idSongPlayList === '' && playlist === 1){
           if(!id?.includes("|")){
-            ApiYouTube11(`dl?id=${related?.videos?.[0]?.id}`).then((data2) => setmp3(data2));
+            ApiYouTube11(`dl?id=${related?.videos?.items?.[0]?.id}`).then((data2) => setmp3(data2));
           }else{
             ApiYouTube11(`dl?id=${related?.[0]?.content_id?.idPage}`).then((data2) => setmp3(data2));
           }
@@ -129,14 +137,14 @@ const VideoBar = ({videos, id, related, count, playlist, views, relatedPlayList,
       if(mood != 'youtube'){ 
         if(idSongPlayList === '' && playlist === 1){
           if(!id?.includes("|")){
-            ApiYouTube11(`dl?id=${bar?.id}`).then((data2) => setmp3(data2));
+            ApiYouTube11(`dl?id=${bar?.video?.videoId}`).then((data2) => setmp3(data2));
           }else{
-            ApiYouTube11(`dl?id=${bar?.id}`).then((data2) => setmp3(data2));
+            ApiYouTube11(`dl?id=${bar?.video?.videoId}`).then((data2) => setmp3(data2));
           }
         }else if(idSongPlayList === ''){
-          ApiYouTube11(`dl?id=${bar?.id}`).then((data2) => setmp3(data2));
+          ApiYouTube11(`dl?id=${bar?.video?.videoId}`).then((data2) => setmp3(data2));
         }else{
-          ApiYouTube11(`dl?id=${bar?.id}`).then((data2) => setmp3(data2));
+          ApiYouTube11(`dl?id=${bar?.video?.videoId}`).then((data2) => setmp3(data2));
         }
       }
   },[related, videos, idSongPlayList, mood, bar, playlist]);
@@ -161,7 +169,7 @@ const VideoBar = ({videos, id, related, count, playlist, views, relatedPlayList,
     if(mood === 'youtube'){
       if(idSongPlayList === '' && playlist === 1){
         if(!id?.includes("|")){
-          ApiYouTube4(`video?id=${related?.videos?.[0]?.id}`).then((data2) => setDescription(data2));
+          ApiYouTube4(`video?id=${related?.videos?.items?.[0]?.id}`).then((data2) => setDescription(data2));
         }else{
           ApiYouTube4(`video?id=${related?.[0]?.content_id?.idPage}`).then((data2) => setDescription(data2));
         }
@@ -214,8 +222,8 @@ const VideoBar = ({videos, id, related, count, playlist, views, relatedPlayList,
       if(mood === 'youtube'){
         if(idSongPlayList === '' && playlist === 1){
           if(!id?.includes("|")){
-            copyToClipboard("https://www.youtube.com/watch?v="+related?.videos?.[0]?.id);
-            var text = 'https://www.youtube.com/watch?v=' + related?.videos?.[0]?.id ;
+            copyToClipboard("https://www.youtube.com/watch?v="+related?.videos?.items?.[0]?.id);
+            var text = 'https://www.youtube.com/watch?v=' + related?.videos?.items?.[0]?.id;
           }else{
             copyToClipboard("https://www.youtube.com/watch?v="+related?.[0]?.content_id?.idPage);
             var text = 'https://www.youtube.com/watch?v=' + related?.[0]?.content_id?.idPage;
@@ -550,7 +558,7 @@ const VideoBar = ({videos, id, related, count, playlist, views, relatedPlayList,
         }
       });
     };
-    
+
     const commentClick = () => {
       if(mood === 'youtube')
         Swal.fire({
@@ -667,18 +675,18 @@ const VideoBar = ({videos, id, related, count, playlist, views, relatedPlayList,
           if(playlist === 0){
             dispatch(setName(videos?.title?.slice(0,42)));
             dispatch(setQR(id));
-            dispatch(setThumbnail(videos?.thumbnail?.url));
+            dispatch(setThumbnail(videos?.author?.avatar?.[0]?.url));
             dispatch(setUrl(id));
             dispatch(setPosition(0));
             dispatch(setUrlReactPlayer(id))
           }
           if(playlist === 1){
-            dispatch(setName(idSong[2]?.slice(0,42) || related?.[0]?.content_id?.description?.title  ||  related?.videos?.[0]?.title ));
-            dispatch(setQR(idSong[0] || related?.videos?.[0]?.id || related?.[0]?.content_id?.description?.id || id));
-            dispatch(setThumbnail(idSong[1] || related?.[0]?.content_id?.description?.thumbnail?.url ||  related?.videos?.[0]?.thumbnail?.url));
+            dispatch(setName(idSong[2]?.slice(0,42) || related?.[0]?.content_id?.description?.title  ||  related?.videos?.items?.[0]?.title));
+            dispatch(setQR(idSong[0] || related?.videos?.items?.[0]?.id || related?.[0]?.content_id?.description?.id || id));
+            dispatch(setThumbnail(idSong[1] || related?.[0]?.content_id?.description?.thumbnail?.url ||  related?.videos?.items?.[0]?.thumbnails?.[0]?.url));
             dispatch(setUrl(id));
             dispatch(setPosition(idSong[6] || 1));
-            dispatch(setUrlReactPlayer(idSong[0]?.slice(0,42) || related?.[0]?.content_id?.description?.id  ||  related?.videos?.[0]?.id))
+            dispatch(setUrlReactPlayer(idSong[0]?.slice(0,42) || related?.[0]?.content_id?.description?.id  ||  related?.videos?.items?.[0]?.id))
           }
         }
         if(mood === 'spotify'){
@@ -688,7 +696,7 @@ const VideoBar = ({videos, id, related, count, playlist, views, relatedPlayList,
             dispatch(setThumbnail(videos?.[0]?.album?.images?.[0]?.url));
             dispatch(setUrl(id));
             dispatch(setPosition(0));
-            dispatch(setUrlReactPlayer(bar?.id))
+            dispatch(setUrlReactPlayer(bar?.video?.videoId))
           }
           if(playlist === 1){
             dispatch(setName(idSong[2]?.slice(0,42) || related?.[0]?.content_id?.description?.[0]?.name?.slice(0,42) || related?.tracks?.items?.[0]?.track?.name?.slice(0,42)));
@@ -696,7 +704,7 @@ const VideoBar = ({videos, id, related, count, playlist, views, relatedPlayList,
             dispatch(setThumbnail(idSong[1] || related?.[0]?.content_id?.description?.[0]?.album?.images?.[0]?.url || related?.tracks?.items?.[0]?.track?.album?.images?.[0]?.url));
             dispatch(setUrl(id));
             dispatch(setPosition(idSong[6] || 1));
-            dispatch(setUrlReactPlayer(bar?.id))
+            dispatch(setUrlReactPlayer(bar?.video?.videoId))
           }
         }
         if(mood === 'appleMusic'){
@@ -706,7 +714,7 @@ const VideoBar = ({videos, id, related, count, playlist, views, relatedPlayList,
             dispatch(setThumbnail(videos?.images?.coverart));
             dispatch(setUrl(id));
             dispatch(setPosition(0));
-            dispatch(setUrlReactPlayer(bar?.id))
+            dispatch(setUrlReactPlayer(bar?.video?.videoId))
           }
           if(playlist === 1){
             dispatch(setName(idSong[2]?.slice(0,42) || related?.[0]?.content_id?.description?.title?.slice(0,42) || related?.data?.[0]?.relationships?.tracks?.data?.[0]?.attributes?.name?.slice(0,42)));
@@ -714,10 +722,9 @@ const VideoBar = ({videos, id, related, count, playlist, views, relatedPlayList,
             dispatch(setThumbnail(idSong[1] || related?.[0]?.content_id?.description?.images?.coverart || image1));
             dispatch(setUrl(id));
             dispatch(setPosition(idSong[6] || 1));
-            dispatch(setUrlReactPlayer(bar?.id))
+            dispatch(setUrlReactPlayer(bar?.video?.videoId))
           }
         }
-        //console.log(related?.videos?.[0]?.id);
     },[videos, related, mood, bar, idSongPlayList])
 
     const handleClickNext = () => {
@@ -757,14 +764,14 @@ const VideoBar = ({videos, id, related, count, playlist, views, relatedPlayList,
             search = idSong[2] + " " + idSong[3];
         }
           ApiYouTube3(`search?query=${search}&type=video`).then((result) => {
-            const songs = result?.results;
+            const songs = result?.contents;
             if (!songs || songs.length === 0) {
               console.log('No results found!');
               return;
             }
             const bestMatch = songs.reduce((prev, current) => {
-              const title = current.title.toLowerCase();
-              const prevTitle = prev.title.toLowerCase();
+              const title = current?.video?.title?.toLowerCase();
+              const prevTitle = prev?.video?.title.toLowerCase();
               const currentScore = (title.includes('official') ? 2 : 1) *
                 (title.includes('lyric') ? 2 : 1) *
                 (title.includes('audio') ? 0.5 : 1) *
@@ -786,7 +793,7 @@ const VideoBar = ({videos, id, related, count, playlist, views, relatedPlayList,
           let search = null;
           if(idSongPlayList === '' && playlist === 1){
               if(!id?.includes("|")){
-                search = related?.tracks?.items?.[0]?.track?.name + " " + related?.tracks?.items?.[0]?.track?.artists?.[0]?.name;
+                search = videos?.data?.[0]?.relationships?.tracks?.data?.[0]?.attributes?.name +" "+ videos?.data?.[0]?.relationships?.tracks?.data?.[0]?.attributes?.artistName;
               }else{
                 search = related?.[0]?.content_id?.description?.subtitle + " " + related?.[0]?.content_id?.description?.title;
               }
@@ -796,14 +803,14 @@ const VideoBar = ({videos, id, related, count, playlist, views, relatedPlayList,
               search = idSong[2] + " " + idSong[3];
           }
             ApiYouTube3(`search?query=${search}&type=video`).then((result) => {
-              const songs = result?.results;
+              const songs = result?.contents;
               if (!songs || songs.length === 0) {
                 console.log('No results found!');
                 return;
               }
               const bestMatch = songs.reduce((prev, current) => {
-                const title = current.title.toLowerCase();
-                const prevTitle = prev.title.toLowerCase();
+                const title = current?.video?.title?.toLowerCase();
+                const prevTitle = prev?.video?.title?.toLowerCase();
                 const currentScore = (title.includes('official') ? 2 : 1) *
                   (title.includes('lyric') ? 2 : 1) *
                   (title.includes('audio') ? 0.5 : 1) *
@@ -828,7 +835,7 @@ const VideoBar = ({videos, id, related, count, playlist, views, relatedPlayList,
     const handleVideoReady = () => {
       setVideoLoaded(true);
     };
-console.log(relatedPlayList);
+
     return (
       <section className="home-video" style={{display: 'flex'}}>
         <div className="home-video1 video">
@@ -845,7 +852,7 @@ console.log(relatedPlayList);
               style={{ display: 'flex' }}
               className="home-iframe"
               url={playlist === 0 ? `https://www.youtube.com/watch?v=${id}` : idSongPlayList === '' && playlist === 1 ? `https://www.youtube.com/watch?v=${
-                      related?.videos?.[0]?.id || related?.[0]?.content_id?.idPage}` : `https://www.youtube.com/watch?v=${idSong[0]}`}
+                      related?.videos?.items?.[0]?.id || related?.[0]?.content_id?.idPage}` : `https://www.youtube.com/watch?v=${idSong[0]}`}
               ref={playerRef}
               playing={playing}
               startTime={currentTime}
@@ -864,9 +871,9 @@ console.log(relatedPlayList);
           : null}
           {mood === 'spotify' || mood === 'appleMusic' ? <ReactPlayer autoFocus volume={0} on  playsInline frameBorder='0' allow='autoplay; encrypted-media' 
           width='100%' height='100%'  loaded style={{display: 'none'}}  className="home-iframe"
-          url={(playlist === 0 ? `https://www.youtube.com/watch?v=${bar?.id || related?.[0]?.content_id?.idPage}` :  undefined || 
-            (idSongPlayList === '' && playlist === 1) ? `https://www.youtube.com/watch?v=${bar?.id || related?.[0]?.content_id?.idPage}` : 
-              `https://www.youtube.com/watch?v=${bar?.id}`)}
+          url={(playlist === 0 ? `https://www.youtube.com/watch?v=${bar?.video?.videoId || related?.[0]?.content_id?.idPage}` :  undefined || 
+            (idSongPlayList === '' && playlist === 1) ? `https://www.youtube.com/watch?v=${bar?.video?.videoId || related?.[0]?.content_id?.idPage}` : 
+              `https://www.youtube.com/watch?v=${bar?.video?.videoId}`)}
             ref={playerRef}
             playing={playing}
             muted={muted}
@@ -878,6 +885,7 @@ console.log(relatedPlayList);
             <div className="home-test">
             <span className="home-text08">{ mood==='youtube' ? (playlist === 0 ? videos?.title : related?.videos?.author || 
                 idSongPlayList === '' && playlist === 1 ? (related?.videos?.[0]?.title ? related?.videos?.[0]?.title : null || 
+                  related?.videos?.items?.[0]?.title ? related?.videos?.items?.[0]?.title : null ||
                   related?.[0]?.content_id?.description?.title ? related?.[0]?.content_id?.description?.title  : null  || views?.title ? views?.title : null ||
                     idSong[2] ? idSong[2] : null ): idSong[2]) : null ||
             mood === 'spotify' && playlist === 0 ? (videos?.[0]?.name ? videos?.[0]?.name : null ||
@@ -932,6 +940,7 @@ console.log(relatedPlayList);
           <figure className="home-artist artist">
             <div className="home-container2" style ={{transitionDelay: '4s'}}>
               <Link to={mood === 'youtube' ? (playlist === 0 ? `/channel/${videos?.channel?.id}` : null  || idSongPlayList === '' && playlist === 1 ?
+              `/channel/${related?.videos?.items?.[0]?.channel?.id}` || 
                 `/channel/${related?.videos?.[0]?.channel?.id || related?.[0]?.content_id?.description?.channel?.id}`  :`/channel/${idSong[5]}`) : null ||
                 mood === 'spotify' && playlist === 0 ? (videos?.[0]?.artists?.[0]?.id ? `/channel/${videos?.[0]?.artists?.[0]?.id}` : null || 
                   related?.tracks?.items?.[0]?.track?.artists?.[0]?.id ? `/channel/${related?.tracks?.items?.[0]?.track?.artists?.[0]?.id}` : null) : null ||
@@ -944,8 +953,9 @@ console.log(relatedPlayList);
               <div className="home-button19 button">
                 <img
                   alt="image"
-                  src={ mood === 'youtube' ? (playlist === 0 && views  ? videos?.channel?.icon : null  ||
-                    idSongPlayList === '' && playlist === 1 ? related?.videos?.[0]?.thumbnail?.url || related?.[0]?.content_id?.description?.thumbnail?.url : idSong[1]) : null || 
+                  src={ mood === 'youtube' ? (playlist === 0 && views  ? videos?.author?.avatar?.[0]?.url : null ||
+                    idSongPlayList === '' && playlist === 1 ? related?.videos?.[0]?.thumbnail?.url || related?.videos?.items?.[0]?.thumbnails?.[0]?.url || 
+                      related?.[0]?.content_id?.description?.thumbnail?.url : idSong[1]) : null || 
                     mood === 'spotify' && playlist === 0 ? (artist?.images?.[0]?.url ? artist?.images?.[0]?.url : null || 
                       channel?.images?.[0]?.url ? channel?.images?.[0]?.url : null) : null || 
                     mood === 'spotify' &&  idSongPlayList === '' && playlist === 1 ? (related?.tracks?.items?.[0]?.track?.album?.images?.[0]?.url || 
@@ -958,8 +968,9 @@ console.log(relatedPlayList);
               </div>
               </Link>
               <div className="home-text11" >
-                <span className="home-text12">{mood ==='youtube' ? (playlist === 0 && videos ? videos?.channel?.name?.slice(0,20) : videos?.channelTitle?.slice(0,20) || 
-                        idSongPlayList === '' && playlist === 1 ? (related?.videos?.[0]?.channel?.name ? related?.videos?.[0]?.channel?.name?.slice(0,20) : null || 
+                <span className="home-text12">{mood ==='youtube' ? (playlist === 0 && videos ? videos?.channel?.name?.slice(0,20) || videos?.author?.title?.slice(0,20) : videos?.channelTitle?.slice(0,20) ||
+                         videos?.author?.title?.slice(0,20) || 
+                        idSongPlayList === '' && playlist === 1 ? (related?.videos?.items?.[0]?.channel?.name ? related?.videos?.items?.[0]?.channel?.name : null ||
                           related?.[0]?.content_id?.description?.channel?.name?.slice(0,20) ? related?.[0]?.content_id?.description?.channel?.name?.slice(0,20) : null || 
                           idSong[3] ? idSong[3].slice(0,20): null) :  idSong[3] ? idSong[3].slice(0,20): null)  : null || 
                           mood === 'spotify' && playlist === 0 ? (videos?.[0]?.artists?.[0]?.name ? videos?.[0]?.artists?.[0]?.name : null || 
@@ -970,8 +981,6 @@ console.log(relatedPlayList);
                       mood === 'appleMusic' ? (videos?.subtitle ? videos?.subtitle : null || 
                         idSongPlayList === '' && playlist === 1 ? (related?.[0]?.content_id?.description?.subtitle ? related?.[0]?.content_id?.description?.subtitle : idSong[3] || 
                         artist?.[0]?.attributes?.name ? artist?.[0]?.attributes?.name : idSong[3]) : idSong[3]) : null}</span>
-                <span className="home-text12">{videos ? videos?.author?.stats?.subscribersText : null || views ? views?.statistics?.subscriberCount : null}
-                </span>
               </div>
             </div>
             <div className="home-view1 posibili">
@@ -979,7 +988,7 @@ console.log(relatedPlayList);
                 <path d="M512 192c-223.318 0-416.882 130.042-512 320 95.118 189.958 288.682 320 512 320 223.312 0 416.876-130.042 512-320-95.116-189.958-288.688-320-512-320zM764.45 361.704c60.162 38.374 111.142 89.774 149.434 150.296-38.292 60.522-89.274 111.922-149.436 150.296-75.594 48.218-162.89 73.704-252.448 73.704-89.56 0-176.858-25.486-252.452-73.704-60.158-38.372-111.138-89.772-149.432-150.296 38.292-60.524 89.274-111.924 149.434-150.296 3.918-2.5 7.876-4.922 11.86-7.3-9.96 27.328-15.41 56.822-15.41 87.596 0 141.382 114.616 256 256 256 141.382 0 256-114.618 256-256 0-30.774-5.452-60.268-15.408-87.598 3.978 2.378 7.938 4.802 11.858 7.302v0zM512 416c0 53.020-42.98 96-96 96s-96-42.98-96-96 42.98-96 96-96 96 42.982 96 96z"></path>
               </svg> : null }
               <span className="home-text14">
-                <span>{like?.viewCount ? formatNumber(like?.viewCount)  : null || idSong[6] ?   formatNumber(idSong[6]) : null ||
+                <span>{like?.viewCount ? formatNumber(like?.viewCount)  : null || idSong[6]  ? formatNumber(idSong[6]) : null ||
                   videos?.[0]?.popularity ? formatNumber(videos?.[0]?.popularity) : null || 
                   related?.[0]?.content_id?.description?.track?.popularity ? formatNumber(related?.[0]?.content_id?.description?.track?.popularity) : null ||
                   related?.[0]?.content_id?.description?.[0]?.popularity ? formatNumber(related?.[0]?.content_id?.description?.[0]?.popularity) : null ||
@@ -993,8 +1002,9 @@ console.log(relatedPlayList);
               <svg viewBox="0 0 1024 1024" className="home-icon056">
                 <path d="M534 298v224l192 114-32 54-224-136v-256h64zM512 854q140 0 241-101t101-241-101-241-241-101-241 101-101 241 101 241 241 101zM512 86q176 0 301 125t125 301-125 301-301 125-301-125-125-301 125-301 301-125z"></path>
               </svg>
-              <span className="home-text17">{mood ==='youtube' ? (playlist === 0 ? videos?.duration_formatted : null ||
-                idSongPlayList === '' && playlist === 1 ? related?.videos?.[0]?.duration_formatted || related?.[0]?.content_id?.description?.duration_formatted : idSong[4]) : null || 
+              <span className="home-text17">{mood ==='youtube' ? (playlist === 0 ?  formatTime(videos?.lengthSeconds) : null || 
+                idSongPlayList === '' && playlist === 1 ? related?.videos?.[0]?.duration_formatted || related?.videos?.items?.[0]?.lengthText || 
+                  related?.[0]?.content_id?.description?.duration_formatted : idSong[4]) : null || 
                 mood === 'spotify' && playlist === 0 ? (videos?.[0]?.album?.release_date ?videos?.[0]?.album?.release_date : null || 
                   related?.tracks?.items?.[0]?.track?.duration_ms ? millisToMinutesAndSeconds(related?.tracks?.items?.[0]?.track?.duration_ms) : null) : null ||  
                 mood === 'spotify' &&  idSongPlayList === '' && playlist === 1 ? (related?.tracks?.items?.[0]?.track?.duration_ms ?  millisToMinutesAndSeconds(related?.tracks?.items?.[0]?.track?.duration_ms) : null || 
@@ -1017,7 +1027,7 @@ console.log(relatedPlayList);
           </figure>
         </div>
         <div className="home-play-list02 music-card" style={{display: 'flex'}}>
-          {mood === 'youtube' && playlist === 1 && !id?.includes("|")  && <FeatureCard playlist={videos} count={related?.length} text='0'></FeatureCard>}
+          {mood === 'youtube' && playlist === 1 && !id?.includes("|")  && <FeatureCard playlist={videos} count={related?.videos?.items?.length} text='0'></FeatureCard>}
           {mood === 'youtube' && playlist === 0 && !id?.includes("|") && Array.isArray(relatedPlayList) && relatedPlayList.filter(item => item?.type === 'playlist').slice(0, 2).map((item, idx) => (
               <div key={idx} style={{ width: '100%' }}>
                 <FeatureCard playlist={item} text='1' idx={idx}></FeatureCard>
@@ -1034,12 +1044,12 @@ console.log(relatedPlayList);
           {id?.includes("|") && playlist === 1 && <FeatureCard playlist={videos} count={count} text={'0'}></FeatureCard>}
         </div>
         <div className="home-list1 music-list" >
-        {mood === 'youtube' && playlist === 0 && !id?.includes("|") && <Music1 color={same12?.find((s) => s?.content_id?.idPage === videos?.id)} video={videos} idx={-1} mood={mood} pointerEvents='none'></Music1>}
-          {mood === 'youtube' && playlist === 0 && !id?.includes("|") ? Array.isArray(related) && related.map((item, idx) => (
+        {mood === 'youtube' && playlist === 0 && !id?.includes("|") && <Music1 color={same12?.find((s) => s?.content_id?.idPage === videos?.videoId)} video={videos} idx={-1} mood={mood} pointerEvents='none'></Music1>}
+        {mood === 'youtube' && playlist === 0 && !id?.includes("|") ? Array.isArray(related) && related.map((item, idx) => (
             <div key={idx} style={{width: '100%' }}> 
             {  <Music1 color={same12?.find((s) => s?.content_id?.idPage === item?.videoId)} video={item} playlist={'0'} idx={idx} mood={mood}></Music1>}
             </div>
-          )) : mood === 'youtube' && !id?.includes("|") && Array.isArray(related?.videos) && related?.videos.map((item, idx) => (
+          )) : mood === 'youtube' && !id?.includes("|") && Array.isArray(related?.videos?.items) && related?.videos?.items?.map((item, idx) => (
             <div key={idx} style={{width: '100%' }}> 
             {  <Music1 color={same12?.find((s) => s?.content_id?.idPage === item?.id)} video={item} idx={idx} playlist={playlist} idSearch={idSearch} mood={mood}></Music1>}
             </div>

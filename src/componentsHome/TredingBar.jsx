@@ -32,7 +32,7 @@ const TredingBar = ({trending, token, mood, idSp, setButtonYoutube, setButtonSpo
             {<Music video={item} treding={'1'} mood={mood} idx={idx}></Music>}
             </section>
       ))}
-       {mood === 'appleMusic' && Array.isArray(trending) && trending?.map((item, idx) => (
+       {mood === 'appleMusic' && Array.isArray(trending?.data) && trending?.data?.map((item, idx) => (
             <section key={idx} style={{width: '100%', transitionDelay: '1s' }}> 
             {<Music video={item} mood={mood} treding={'1'} treding1={"1"} idx={idx}></Music>}
             </section>
