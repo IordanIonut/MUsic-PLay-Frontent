@@ -77,7 +77,6 @@ const HistoryBar = ({mood, idSp, userDate, setButtonYoutube, setButtonSpotify, s
       if(type === 'channel'){
         const order = [...youtube_channel, ...spotify_channel, ...appleMusic_channel] || [];
         order.sort((a, b) => {
-          console.log(a?.[0]);
           const dateA = moment(a?.[0]?.data, 'DD.MM.YYYY, HH:mm:ss');
           const dateB = moment(b?.[0]?.data, 'DD.MM.YYYY, HH:mm:ss');
           if (!dateA.isValid() || !dateB.isValid()) {

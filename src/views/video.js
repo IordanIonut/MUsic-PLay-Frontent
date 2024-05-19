@@ -37,7 +37,7 @@ import Cookies from "js-cookie";
 import colors from "../utils/colors";
 import Swal from "sweetalert2";
 import axios from "axios";
-import { debounce } from "lodash";
+import { debounce, findIndex } from "lodash";
 
 const Video = () => {
   const [videos, setVideo] = React.useState([]);
@@ -1339,7 +1339,26 @@ const Video = () => {
   }, [dispatch, playerRef]);
 
   useEffect(() => {
-    if (mood === "youtube")
+    if(token) {
+      if (playlist === 1)
+        if (randome === true) {
+          const arr = [];
+          var n = related?.length;
+          let count = 0;
+          if (rad?.length === 0 || rad?.length === 1) {
+            for (let i = 0; i <= 400; i++) {
+              const num = Math?.floor(Math?.random() * n) + 0;
+              if (!arr?.includes(num)) {
+                arr?.push(num);
+                count++;
+                dispatch(setRad(num));
+              }
+              if (count === n) break;
+            }
+          }
+        }
+    }
+    else if (mood === "youtube"){
       if (playlist === 1)
         if (randome === true) {
           const arr = [];
@@ -1357,7 +1376,8 @@ const Video = () => {
             }
           }
         }
-    if (mood === "spotify")
+      }
+    else if (mood === "spotify"){
       if (playlist === 1)
         if (randome === true) {
           const arr = [];
@@ -1375,10 +1395,48 @@ const Video = () => {
             }
           }
         }
+      }
+        else if (mood === "appleMusic"){
+          if (playlist === 1)
+            if (randome === true) {
+              const arr = [];
+              console.log(related)
+              var n = related?.data?.[0]?.relationships?.tracks?.data?.length;
+              let count = 0;
+              if (rad?.length === 0) {
+                for (let i = 0; i <= 400; i++) {
+                  const num = Math?.floor(Math?.random() * n) + 0;
+                  if (!arr?.includes(num)) {
+                    arr?.push(num);
+                    count++;
+                    dispatch(setRad(num));
+                  }
+                  if (count === n) break;
+                }
+              }
+            }
+          }
   }, [randome, rad]);
 
   const handleNext = () => {
-    if (mood === "youtube") {
+    if(token ){
+      if (playlist === 1 && randome === false) {
+        dispatch(setPreview(related?.[index]?.content_id?.idPage));
+        dispatch(setNext(related?.[index]?.content_id?.idPage));
+        if (related === index) {
+          setIndex(0);
+        } else setIndex(index + 1);
+      }
+      if (playlist === 1 && randome === true) {
+        let a = rad?.[index] - 1;
+        dispatch(setPreview(related?.[a]?.content_id?.idPage));
+        dispatch(setNext(related?.[a]?.content_id?.idPage));
+        if (related === index) {
+          setIndex(0);
+        } else setIndex(index + 1);
+      }
+    }
+    else if (mood === "youtube" ) {
       if (playlist === 0 && randome === true) {
         let x = Math.floor(Math.random() * related?.length);
         dispatch(setPreview(id));
@@ -1404,15 +1462,17 @@ const Video = () => {
         } else setIndex(index + 1);
       }
     }
-    if (mood === "spotify") {
+    else if (mood === "spotify" ) {
+      console.log(related?.tracks)
       if (playlist === 0 && randome === true) {
         let x = Math.floor(Math.random() * related?.length);
         dispatch(setPreview(id));
         history.push("/video/" + related?.[x]?.id);
       }
       if (playlist === 0 && randome === false) {
+        const result = related.findIndex(track => track?.id === id);
         dispatch(setPreview(id));
-        history.push("/video/" + related?.[0]?.id);
+        history.push("/video/" + related?.[result+1]?.id);
       }
       if (playlist === 1 && randome === false) {
         dispatch(setPreview(related?.tracks?.items?.[index]?.track?.id));
@@ -1430,29 +1490,31 @@ const Video = () => {
         } else setIndex(index + 1);
       }
     }
-    if (mood === "appleMusic") {
+    else if (mood === "appleMusic") {
       if (playlist === 0 && randome === true) {
-        let x = Math.floor(Math.random() * related?.length);
+        let x = Math.floor(Math.random() * Object.keys(related["shazam-songs"])?.length);
+        const firstIndex = Object.keys(related?.["shazam-songs"])[x];
         dispatch(setPreview(id));
-        history.push('/video/'+related?.[x]?.videoId);
-        console.log(related);
+        history.push('/video/'+related?.["shazam-songs"]?.[firstIndex]?.id);
       }
       if (playlist === 0 && randome === false) {
         dispatch(setPreview(id));
-        history.push("/video/" + related?.[0]?.videoId);
+        const firstIndex = Object.keys(related?.["shazam-songs"])[0];
+        console.log(related?.["shazam-songs"]?.[firstIndex]?.id);
+        history.push("/video/" + related?.["shazam-songs"]?.[firstIndex]?.id);
       }
       if (playlist === 1 && randome === false) {
-        dispatch(setPreview(related?.videos?.[index]?.id));
-        dispatch(setNext(related?.videos?.[index]?.id));
-        if (related?.videos?.length === index) {
+        dispatch(setPreview(related?.data?.[0]?.relationships?.tracks?.data?.[index]?.id));
+        dispatch(setNext(related?.data?.[0]?.relationships?.tracks?.data?.[index]?.id));
+        if (related?.data?.[0]?.relationships?.tracks?.data?.length === index) {
           setIndex(0);
         } else setIndex(index + 1);
       }
       if (playlist === 1 && randome === true) {
         let a = rad?.[index] - 1;
-        dispatch(setPreview(related?.videos?.[a]?.id));
-        dispatch(setNext(related?.videos?.[a]?.id));
-        if (related?.videos?.length === index) {
+        dispatch(setPreview(related?.data?.[0]?.relationships?.tracks?.data?.[a]?.id));
+        dispatch(setNext(related?.data?.[0]?.relationships?.tracks?.data?.[a]?.id));
+        if (related?.data?.[0]?.relationships?.tracks?.data?.length === index) {
           setIndex(0);
         } else setIndex(index + 1);
       }
@@ -1460,11 +1522,11 @@ const Video = () => {
   };
   
   const handlePreview = () => {
-    if (mood === "youtube") {
       if (playlist === 0) {
         let last1 = previous[previous?.length - 1];
         const removeLast = previous?.pop();
-        if (last1 !== undefined) history.push("/video/" + last1);
+        if (last1 !== undefined) 
+          history.push("/video/" + last1);
         else playerRef?.current?.seekTo(0);
       }
       if (playlist === 1) {
@@ -1475,7 +1537,6 @@ const Video = () => {
           setIndex(index - 1);
         } else playerRef?.current?.seekTo(0);
       }
-    }
   };
 
   return (

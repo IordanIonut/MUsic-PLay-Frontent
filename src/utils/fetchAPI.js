@@ -23,7 +23,7 @@ const BASE_URL21='http://localhost:8080/api';
 const BASE_URL22 ='https://shazam-core7.p.rapidapi.com';
 const BASE_URL23 ='https://youtube-data8.p.rapidapi.com';
 const BASE_URL24 = "https://musicapi13.p.rapidapi.com";
-
+const BASE_URL25 ="https://youtube-v3-lite.p.rapidapi.com";
 const apiYouTube1 = {
     params: {
       geo: 'RO',
@@ -207,6 +207,16 @@ const apiAllPlatforms = {
   }
 };
 
+const apiYouTube13 = {
+  params: {
+    order: 'relevance',
+  },
+  headers: {
+    'X-RapidAPI-Key': process.env.REACT_APP_RAPID_API_KEY,
+    'X-RapidAPI-Host': 'youtube-v3-lite.p.rapidapi.com'
+  }
+};
+
 export const ApiYouTube1 = async(url) =>{
   const {data} = await axios.get(`${BASE_URL1}/${url}`,apiYouTube1);
   return data;
@@ -336,3 +346,8 @@ export const ApiAllPlatforms = async (url, postData) => {
   const { data } = await axios.post(`${BASE_URL24}/${url}`, postData, apiAllPlatforms);
   return data;
 };
+
+export const ApiYouTube13 = async(url) =>{
+  const {data} = await axios.get(`${BASE_URL25}/${url}`,apiYouTube13);
+  return data;
+}

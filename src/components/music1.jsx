@@ -4,7 +4,7 @@ import './music1.css'
 import Cookies from 'js-cookie'
 import colors from '../utils/colors';
 
-const Music1 = ({video, color, idx, idSearch, pointerEvents, text, mood, albums, playlist, idArtist, imArtist, moood}) => {
+const Music1 = ({video, color, idx, idSearch, pointerEvents, text, mood, albums, playlist, idArtist, imArtist, moood, id}) => {
   const [image, setImage] = React.useState('');
 
   function formatNumber(num) {
@@ -42,7 +42,7 @@ const Music1 = ({video, color, idx, idSearch, pointerEvents, text, mood, albums,
 
   return (
     <div className="music1-music" style={video?.videoId ? {opacity: '0.6', marginLeft: '0px', marginRight: '0px'} : null || {pointerEvents}}>
-      <Link id={video?.id} to={mood === 'youtube' ? (video?.videoId !== undefined && playlist === '0' ? `/video/${video?.videoId}` : null || 
+      <Link id={video?.id || video?.playParams?.id || id} to={mood === 'youtube' ? (video?.videoId !== undefined && playlist === '0' ? `/video/${video?.videoId}` : null || 
                 video?.id !== undefined && playlist === '0'  ? `/video/${idSearch}` : null) : null || 
           mood === 'spotify' ? (video?.id && playlist === '0'  ? `/video/${video?.id}` : null) : null ||
           mood === 'appleMusic' ? (video?.id && playlist === '0' ? `/video/${video?.id}` : playlist === '0' && video?.attributes?.playParams?.id === undefined && 
