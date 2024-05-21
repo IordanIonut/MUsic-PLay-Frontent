@@ -477,17 +477,23 @@ const Login = () => {
         <meta property="og:title" content="MusicPLay" />
       </Helmet>
       <div className="login-up up" style={{flexWrap: 'wrap'}}>
-        <Link to={'/home'} style={{display: 'flex'}}>
-          <img 
-            alt="image"
-            src={process.env.PUBLIC_URL+`/playground_assets/1-removebg-preview-1500h.png`}
-            className="home-image"
-          />
-          <img
-            alt="image"
-            src={process.env.PUBLIC_URL+"/playground_assets/2-removebg-preview-1500h.png"}
-            className="home-image1"
-          />
+        <Link to={'/home'} style={{display: 'block ruby'}}>
+        <img
+          alt="image"
+          src={
+            process.env.PUBLIC_URL +
+            "/playground_assets/1-removebg-preview-1500h.png"
+          }
+          className="home-image"
+        />
+        <img
+          alt="image"
+          src={
+            process.env.PUBLIC_URL +
+            "/playground_assets/2-removebg-preview-1500h.png"
+          }
+          className="home-image1"
+        />
         </Link>
       </div>
       <div className="login-view content">

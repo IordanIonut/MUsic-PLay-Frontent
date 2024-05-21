@@ -24,6 +24,8 @@ const BASE_URL22 ='https://shazam-core7.p.rapidapi.com';
 const BASE_URL23 ='https://youtube-data8.p.rapidapi.com';
 const BASE_URL24 = "https://musicapi13.p.rapidapi.com";
 const BASE_URL25 ="https://youtube-v3-lite.p.rapidapi.com";
+const BASE_URL26 = "https://musicapi13.p.rapidapi.com";
+
 const apiYouTube1 = {
     params: {
       geo: 'RO',
@@ -206,6 +208,7 @@ const apiAllPlatforms = {
     'X-RapidAPI-Host': 'musicapi13.p.rapidapi.com'
   }
 };
+
 
 const apiYouTube13 = {
   params: {

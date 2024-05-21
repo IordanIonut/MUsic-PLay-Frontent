@@ -154,7 +154,7 @@ const VideoBar = ({videos, id, related, count, playlist, views, relatedPlayList,
     if(mood === 'youtube'){
       if(idSongPlayList === '' && playlist === 1){
         if(!id?.includes("|")){
-          ApiYouTube8(`commentThreads?videoId=${related?.videos?.[0]?.id}`).then((data2) => setComments(data2.items));
+          ApiYouTube8(`commentThreads?videoId=${related?.videos?.[0]?.id}`).then((data2) => {setComments(data2.items)});
         }else{
           ApiYouTube8(`commentThreads?videoId=${related?.[0]?.content_id?.idPage}`).then((data2) => setComments(data2.items));
         }
@@ -181,10 +181,10 @@ const VideoBar = ({videos, id, related, count, playlist, views, relatedPlayList,
       }
     }
     if(mood === 'spotify'){
-      if(idSongPlayList === '' && playlist === 1){
+      if(idSongPlayList === '' && playlist === 1 && related){
         if(!id?.includes("|")){
-          let a = related?.tracks?.items?.[0]?.sharing_info?.uri.split(":");
-          ApiSpotify5(`track_lyrics/?id=${a?.[2]}`).then((data2) => setDescription(data2?.lyrics));
+          ApiSpotify5(`track_lyrics/?id=${related?.tracks?.items?.[0]?.track?.id}`)
+            .then((data2) => {setDescription(data2?.lyrics)});
         }else{
           ApiSpotify5(`track_lyrics/?id=${related?.[0]?.content_id?.idPage}`).then((data2) => setDescription(data2?.lyrics));
         }
@@ -240,8 +240,8 @@ const VideoBar = ({videos, id, related, count, playlist, views, relatedPlayList,
       if(mood === 'spotify'){
         if(idSongPlayList === '' && playlist === 1){
           if(!id?.includes("|")){
-            copyToClipboard(related?.tracks?.items?.[0]?.sharing_info?.share_url);
-            var text = related?.tracks?.items?.[0]?.sharing_info?.share_url;
+            copyToClipboard(related?.tracks?.items?.[0]?.track?.external_urls?.spotify);
+            var text = related?.tracks?.items?.[0]?.track?.external_urls?.spotify;
           }else{
             copyToClipboard("https://open.spotify.com/track/"+related?.[0]?.content_id?.idPage);
             var text = 'https://open.spotify.com/track/' + related?.[0]?.content_id?.idPage;
@@ -595,7 +595,7 @@ const VideoBar = ({videos, id, related, count, playlist, views, relatedPlayList,
       if(mood === 'youtube' || mood === 'appleMusic')
         Swal.fire({
           title: 'Description',
-          html: `<p class="text-sm" style="text-align:left">${description.description || description?.lyrics?.toString()}</p>` ,
+          html: `<p class="text-sm" style="text-align:left">${description?.description || description?.lyrics?.toString()}</p>` ,
           showConfirmButton: false,
           customClass: {
             container: 'blur-background popup'

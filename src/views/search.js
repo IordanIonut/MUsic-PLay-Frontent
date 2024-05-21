@@ -439,8 +439,6 @@ const Search = () => {
                 return: 'apple_music,spotify,deezer,napster',
                 audio: base64Data
               });
-              console.log(response?.data?.result?.apple_music?.playParams?.id);
-              console.log(response?.data?.result?.spotify?.id);
               if(response?.data?.status !== 'error') {
                 Swal.fire({
                   title: 'Rezult Recognition',
@@ -463,49 +461,43 @@ const Search = () => {
                  }).then((result) => {
                    if(result.isConfirmed){
                      console.log("Youtube");
-                     ApiYouTube3(`search?query=${response?.data?.result?.artist} ${response?.data?.result?.title}&type=video`).then((result) => {
-                       const songs = result?.results;
-                       if (!songs || songs.length === 0) {
-                         console.log('No results found!');
-                         return;
-                       }
-                     
-                       const bestMatch = songs.reduce((prev, current) => {
-                         const title = current.title.toLowerCase();
-                         const prevTitle = prev.title.toLowerCase();
-                         const currentScore = (title.includes('official') ? 2 : 1) *
-                           (title.includes('video') ? 2 : 1) *
-                           (title.includes('lyric') ? 0.5 : 1) *
-                           (title.includes('audio') ? 0.5 : 1) *
-                           (title.includes('live') ? 0.5 : 1) *
-                           (title.includes('remix') ? 0.5 : 1) *
-                           (title.includes('cover') ? 0.25 : 1);
-                         const prevScore = (prevTitle.includes('official') ? 2 : 1) *
-                           (prevTitle.includes('video') ? 2 : 1) *
-                           (prevTitle.includes('lyric') ? 0.5 : 1) *
-                           (prevTitle.includes('audio') ? 0.5 : 1) *
-                           (prevTitle.includes('live') ? 0.5 : 1) *
-                           (prevTitle.includes('remix') ? 0.5 : 1) *
-                           (prevTitle.includes('cover') ? 0.25 : 1);
-                         return (currentScore > prevScore) ? current : prev;
-                       });
-                     
-                       console.log('Best match:');
-                       console.log(bestMatch);
-                       console.log('Video ID:', bestMatch?.id);
-                       Cookies.set('mood',"youtube");
-                       window.location.href = `/video/${bestMatch?.id}`;
-                     });
+                     Cookies.set('mood',"youtube");
+                     const body = {
+                      track: response?.data?.result?.title,
+                      artist: response?.data?.result?.artist,
+                      type: 'track',
+                      sources: ['youtube'],
+                    }
+                    ApiAllPlatforms('public/search', body).then((data) =>{
+                      window.location.href = `/video/${data?.tracks?.[0]?.data?.externalId}`
+                   }).catch((err) => {console.log(err?.message)})
                    }
                    if(result.isDenied){
                      console.log("Spotify");
                      Cookies.set('mood',"spotify");
-                     window.location.href = `/video/${response?.data?.result?.spotify?.id}`;
+                     const body = {
+                      track: response?.data?.result?.title,
+                      artist: response?.data?.result?.artist,
+                      type: 'track',
+                      sources: ['spotify'],
+                    }
+                    ApiAllPlatforms('public/search', body).then((data) =>{
+                      Cookies.set("spotifyType","123:track:" + data?.tracks?.[0]?.data?.externalId);
+                      window.location.href = `/video/${data?.tracks?.[0]?.data?.externalId}`
+                   }).catch((err) => {console.log(err?.message)})
                    }
                    if (result.dismiss === Swal.DismissReason.cancel) {
                      console.log("AppleMusic");
                      Cookies.set('mood',"appleMusic");
-                     window.location.href = `/video/${response?.data?.result?.apple_music?.playParams?.id}`;
+                     const body = {
+                      track: response?.data?.result?.title,
+                      artist: response?.data?.result?.artist,
+                      type: 'track',
+                      sources: ['appleMusic'],
+                    }
+                    ApiAllPlatforms('public/search', body).then((data) =>{
+                      window.location.href = `/video/${data?.tracks?.[0]?.data?.externalId}`
+                   }).catch((err) => {console.log(err?.message)})
                    }
                  });
               }else{
