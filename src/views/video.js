@@ -1517,7 +1517,7 @@ const Video = () => {
           alt="image"
           src={
             process.env.PUBLIC_URL +
-            "/playground_assets/1-removebg-preview-1500h.png"
+            "/playground_assets/1-removebg-preview-200h.png"
           }
           className="home-image"
         />
