@@ -69,7 +69,7 @@ const Music1 = ({video, color, idx, idSearch, pointerEvents, text, mood, albums,
         </span>
         <img
           alt='sadasda'
-          src={ video?.thumbnail?.url  || video?.thumbnails?.[0]?.url || video?.authorThumbnail?.[0]?.url || video?.author?.avatar?.[0]?.url || video?.track?.album?.images?.[0]?.url || video?.[0]?.album?.images?.[0]?.url || video?.images?.[0]?.url ||
+          src={ video?.thumbnail?.url|| video?.thumbnail?.[0]?.url || video?.thumbnails?.[0]?.url || video?.authorThumbnail?.[0]?.url || video?.author?.avatar?.[0]?.url || video?.track?.album?.images?.[0]?.url || video?.[0]?.album?.images?.[0]?.url || video?.images?.[0]?.url ||
             video?.thumb || albums || video?.album?.images?.[0]?.url || video?.images?.coverarthq || video?.value?.attributes?.images?.coverArtHq || image}
           className="music1-image"
         />

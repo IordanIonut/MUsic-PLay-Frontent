@@ -51,44 +51,46 @@ const HistoryBar = ({mood, idSp, userDate, setButtonYoutube, setButtonSpotify, s
       }
     }else{
       if (type === 'video') {
-        const order = [...youtube_video, ...spotify_video, ...appleMusic_video] || [];
+        const order = [...youtube_video, ...spotify_video, ...appleMusic_video];
         order.sort((a, b) => {
-          const dateA = moment(a?.data, 'DD.MM.YYYY, HH:mm:ss');
-          const dateB = moment(b?.data, 'DD.MM.YYYY, HH:mm:ss');
-          if (!dateA.isValid() || !dateB.isValid()) {
-            return dateA.isValid() ? 1 : -1;
-          }
-          return dateB.diff(dateA);
+            const dateA = moment(a?.data, 'M/D/YYYY, h:mm:ss A');
+            const dateB = moment(b?.data, 'M/D/YYYY, h:mm:ss A');
+            if (!dateA.isValid() || !dateB.isValid()) {
+                return dateA.isValid() ? 1 : -1;
+            }
+            return dateB.diff(dateA);
         });
         setCombinedArrayBD(order);
-      }
-      if(type === 'playlist'){
-        const order = [...youtube_playlist, ...spotify_playlist, ...appleMusic_playlist] || [];
+    }
+
+    if (type === 'playlist') {
+        const order = [...youtube_playlist, ...spotify_playlist, ...appleMusic_playlist];
         order.sort((a, b) => {
-          const dateA = moment(a?.data, 'DD.MM.YYYY, HH:mm:ss');
-          const dateB = moment(b?.data, 'DD.MM.YYYY, HH:mm:ss');
-          if (!dateA.isValid() || !dateB.isValid()) {
-            return dateA.isValid() ? 1 : -1;
-          }
-          return dateB.diff(dateA);
+            const dateA = moment(a?.data, 'M/D/YYYY, h:mm:ss A');
+            const dateB = moment(b?.data, 'M/D/YYYY, h:mm:ss A');
+            if (!dateA.isValid() || !dateB.isValid()) {
+                return dateA.isValid() ? 1 : -1;
+            }
+            return dateB.diff(dateA);
         });
         setCombinedArrayBD(order);
-      }
-      if(type === 'channel'){
-        const order = [...youtube_channel, ...spotify_channel, ...appleMusic_channel] || [];
+    }
+
+    if (type === 'channel') {
+        const order = [...youtube_channel, ...spotify_channel, ...appleMusic_channel];
         order.sort((a, b) => {
-          const dateA = moment(a?.[0]?.data, 'DD.MM.YYYY, HH:mm:ss');
-          const dateB = moment(b?.[0]?.data, 'DD.MM.YYYY, HH:mm:ss');
-          if (!dateA.isValid() || !dateB.isValid()) {
-            return dateA.isValid() ? 1 : -1;
-          }
-          return dateB.diff(dateA);
+            const dateA = moment(a?.[0]?.data, 'M/D/YYYY, h:mm:ss A');
+            const dateB = moment(b?.[0]?.data, 'M/D/YYYY, h:mm:ss A');
+            if (!dateA.isValid() || !dateB.isValid()) {
+                return dateA.isValid() ? 1 : -1;
+            }
+            return dateB.diff(dateA);
         });
         setCombinedArrayBD(order);
-      }
+    }
     }
   }, [type, idSp, mood]);
-  
+
   return(
         <section className="home-history"style={{display: 'flex', alignContent: 'baseline'}}>
           <span className="home-text29 text"></span>

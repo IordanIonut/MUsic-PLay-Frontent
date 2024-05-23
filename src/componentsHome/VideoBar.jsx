@@ -87,7 +87,7 @@ const VideoBar = ({videos, id, related, count, playlist, views, relatedPlayList,
           if(!id?.includes("|")){
             ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${related?.videos?.[0]?.id}&mood=${mood}`).then((data) => {setSame(data)});
           }else{
-            ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${related?.[0]?.content_id?.idPage}&mood=${mood}`).then((data) => {setSame(data)});
+            ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${id}&mood=${mood}`).then((data) => {setSame(data)});
           }
         }else if(idSongPlayList === ''){
           ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${idSearch}&mood=${mood}`).then((data) => {setSame(data)});
@@ -100,7 +100,7 @@ const VideoBar = ({videos, id, related, count, playlist, views, relatedPlayList,
           if(!id?.includes("|")){
             ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${related?.tracks?.items?.[0]?.track?.id}&mood=${mood}`).then((data) => {setSame(data)});
           }else{
-            ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${related?.[0]?.content_id?.idPage}&mood=${mood}`).then((data) => {setSame(data)});
+            ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${id}&mood=${mood}`).then((data) => {setSame(data)});
           }
           }else if(idSongPlayList === ''){
             ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${idSearch}&mood=${mood}`).then((data) => {setSame(data)});
@@ -113,7 +113,7 @@ const VideoBar = ({videos, id, related, count, playlist, views, relatedPlayList,
           if(!id?.includes("|")){
             ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${related?.data?.[0]?.attributes?.playParams?.id}&mood=${mood}`).then((data) =>{setSame(data)}).catch((err) =>{console.log(err?.message)});
           }else{
-            ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${related?.[0]?.content_id?.idPage}&mood=${mood}`).then((data) => {setSame(data)});
+            ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${id}&mood=${mood}`).then((data) => {setSame(data)});
           }
           }else if(idSongPlayList === ''){
             ApiDataBaseGet(`playList/user_id/id_page?user_id=${idSp}&id_page=${idSearch}&mood=${mood}`).then((data) => {setSame(data)})
@@ -290,7 +290,7 @@ const VideoBar = ({videos, id, related, count, playlist, views, relatedPlayList,
       const content = con?.split("|");
       if(content.length > 0 && idSp !== ''){
         ApiDataBaseGet(`playlistContent/mood/name/user_id/playlist_id?name=${content?.[1]}&user_id=${idSp}&playlist_id=${content?.[3]}`)
-          .then((data1) => {setRelated(data1); if(data1?.length === 0){history.push('/playList')
+          .then((data1) => {setRelated(data1);  if(data1?.length === 0){history.push('/playList')
           }}).catch((err1) => console.error(err1?.message));
       }
       ApiDataBaseGet(`playList/user_id/1?user_id=${idSp}`).then((data) => {setOption(data)}).catch((err) => console.error(err?.message));
@@ -1002,7 +1002,7 @@ const VideoBar = ({videos, id, related, count, playlist, views, relatedPlayList,
               <svg viewBox="0 0 1024 1024" className="home-icon056">
                 <path d="M534 298v224l192 114-32 54-224-136v-256h64zM512 854q140 0 241-101t101-241-101-241-241-101-241 101-101 241 101 241 241 101zM512 86q176 0 301 125t125 301-125 301-301 125-301-125-125-301 125-301 301-125z"></path>
               </svg>
-              <span className="home-text17">{mood ==='youtube' ? (playlist === 0 ?  formatTime(videos?.lengthSeconds) : null || 
+              <span className="home-text17" style={mood === 'appleMusic' ? {width: '100%'} : null} >{mood ==='youtube' ? (playlist === 0 ?  formatTime(videos?.lengthSeconds) : null || 
                 idSongPlayList === '' && playlist === 1 ? related?.videos?.[0]?.duration_formatted || related?.videos?.items?.[0]?.lengthText || 
                   related?.[0]?.content_id?.description?.duration_formatted : idSong[4]) : null || 
                 mood === 'spotify' && playlist === 0 ? (videos?.[0]?.album?.release_date ?videos?.[0]?.album?.release_date : null || 

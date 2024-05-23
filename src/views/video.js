@@ -227,11 +227,11 @@ const Video = () => {
         );
       } else {
         setPlaylist(1);
-        ApiYouTube2(`playlist/details?playlistId=${id}`).then((data) =>setVideo(data));
+        ApiYouTube2(`playlist/details?playlistId=${id}`).then((data) =>{setVideo(data)});
         setRelated(videos);
       }
     }
-    if (mood === "spotify" && !id?.includes("|")) {
+    else if (mood === "spotify" && !id?.includes("|")) {
       if (typexx?.[1] === "track") {
         setPlaylist(0);
         ApiSpotify3(`tracks?ids=${id}`).then((data) => setVideo(data?.tracks));
@@ -248,7 +248,7 @@ const Video = () => {
         });
       }
     }
-    if (mood === "appleMusic" && !id?.includes("|")) {
+    else if (mood === "appleMusic" && !id?.includes("|")) {
       if (
         typexx?.[1] === "song" ||
         typexx?.[1] === "MUSIC" ||

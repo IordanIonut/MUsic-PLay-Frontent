@@ -62,7 +62,7 @@ const Music = ({ video, idx, color, page, mood, treding, treding1, moood }) => {
       }
     }
   }, [video]);
-console.log(video?.playParams?.id);
+
   return (
     <div className={`music-music `} style={{ display: "flex" }}>
       <Link
