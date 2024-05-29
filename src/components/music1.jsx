@@ -4,7 +4,7 @@ import './music1.css'
 import Cookies from 'js-cookie'
 import colors from '../utils/colors';
 
-const Music1 = ({video, color, idx, idSearch, pointerEvents, text, mood, albums, playlist, idArtist, imArtist, moood, id}) => {
+const Music1 = ({video, color, idx, idSearch, pointerEvents, text, mood, albums, playlist, idArtist, imArtist, moood, id, same}) => {
   const [image, setImage] = React.useState('');
 
   function formatNumber(num) {
@@ -39,18 +39,19 @@ const Music1 = ({video, color, idx, idSearch, pointerEvents, text, mood, albums,
         setImage(a?.[0] + "1425x1425" + a?.[1]);
     }
   },[playlist]);
-
+ 
   return (
-    <div className="music1-music" style={video?.videoId ? {opacity: '0.6', marginLeft: '0px', marginRight: '0px'} : null || {pointerEvents}}>
-      <Link id={video?.id || video?.playParams?.id || id} to={mood === 'youtube' ? (video?.videoId !== undefined && playlist === '0' ? `/video/${video?.videoId}` : null || 
+    <div className="music1-music" style={video?.videoId && same === undefined ? {opacity: '0.6', marginLeft: '0px', marginRight: '0px'} : null || {pointerEvents}}>
+      <Link id={video?.id || video?.playParams?.id || id} to={mood === 'youtube' ? (video?.videoId !== undefined && playlist === '0' ?
+         `/video/${video?.videoId}` : null || 
                 video?.id !== undefined && playlist === '0'  ? `/video/${idSearch}` : null) : null || 
           mood === 'spotify' ? (video?.id && playlist === '0'  ? `/video/${video?.id}` : null) : null ||
           mood === 'appleMusic' ? (video?.id && playlist === '0' ? `/video/${video?.id}` : playlist === '0' && video?.attributes?.playParams?.id === undefined && 
                 video?.key === undefined && `/video/${video?.idSearch}`) : null}
         className="button music-line music1-line"
           onClick={() => {(mood != undefined || moood != undefined ? Cookies.set('mood',mood || moood) : null) && (
-                  mood ==='youtube' ?  (video?.id ? (Cookies.set('idSongPlayList',[video?.id,"0", video?.thumbnails?.[0]?.url,"0", video?.title,"0",
-                          video?.channel?.name,"0", video?.lengthText,"0", video?.channel?.id,"0",idx]),Cookies.set('idChannel', video?.id),
+                  mood ==='youtube' ?  (video?.id || video?.videoId ? (Cookies.set('idSongPlayList',[video?.id || video?.videoId,"0", video?.thumbnails?.[0]?.url,"0", video?.title,"0",
+                          video?.channel?.name || video?.author?.title,"0", video?.lengthText || video?.publishedDate,"0", video?.channel?.id,"0",idx]),Cookies.set('idChannel', video?.id),
                            Cookies.set('playlistActivate', '1')): null) :null||
                   mood === 'spotify' ? (playlist === '0' && video?.id ? Cookies.set('spotifyType', '123:'+video?.type+":"+video?.id) :
                           (Cookies.set('idSongPlayList',[video?.id || video?.track?.id || video?.[0]?.id,"0", 

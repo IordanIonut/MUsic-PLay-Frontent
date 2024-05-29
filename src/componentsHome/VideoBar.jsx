@@ -682,7 +682,7 @@ const VideoBar = ({videos, id, related, count, playlist, views, relatedPlayList,
           }
           if(playlist === 1){
             dispatch(setName(idSong[2]?.slice(0,42) || related?.[0]?.content_id?.description?.title  ||  related?.videos?.items?.[0]?.title));
-            dispatch(setQR(idSong[0] || related?.videos?.items?.[0]?.id || related?.[0]?.content_id?.description?.id || id));
+            dispatch(setQR(idSong[0] || related?.videos?.items?.[0]?.id || related?.[0]?.content_id?.description?.id || related?.[0]?.content_id?.description?.thumbnails?.[0]?.url || id));
             dispatch(setThumbnail(idSong[1] || related?.[0]?.content_id?.description?.thumbnail?.url ||  related?.videos?.items?.[0]?.thumbnails?.[0]?.url));
             dispatch(setUrl(id));
             dispatch(setPosition(idSong[6] || 1));
@@ -851,8 +851,10 @@ const VideoBar = ({videos, id, related, count, playlist, views, relatedPlayList,
               loaded
               style={{ display: 'flex' }}
               className="home-iframe"
-              url={playlist === 0 ? `https://www.youtube.com/watch?v=${id}` : idSongPlayList === '' && playlist === 1 ? `https://www.youtube.com/watch?v=${
-                      related?.videos?.items?.[0]?.id || related?.[0]?.content_id?.idPage}` : `https://www.youtube.com/watch?v=${idSong[0]}`}
+              url={playlist === 0 ? `https://www.youtube.com/watch?v=${id}` : idSongPlayList === '' && playlist === 1 ? 
+                `https://www.youtube.com/watch?v=${
+                      related?.videos?.items?.[0]?.id ? related?.videos?.items?.[0]?.id : null ||
+                       related?.[0]?.content_id?.idPage ? related?.[0]?.content_id?.idPage : null}` : `https://www.youtube.com/watch?v=${idSong[0]}`}
               ref={playerRef}
               playing={playing}
               startTime={currentTime}
@@ -955,7 +957,7 @@ const VideoBar = ({videos, id, related, count, playlist, views, relatedPlayList,
                   alt="image"
                   src={ mood === 'youtube' ? (playlist === 0 && views  ? videos?.author?.avatar?.[0]?.url : null ||
                     idSongPlayList === '' && playlist === 1 ? related?.videos?.[0]?.thumbnail?.url || related?.videos?.items?.[0]?.thumbnails?.[0]?.url || 
-                      related?.[0]?.content_id?.description?.thumbnail?.url : idSong[1]) : null || 
+                      related?.[0]?.content_id?.description?.thumbnail?.url || related?.[0]?.content_id?.description?.thumbnails?.[0]?.url : idSong[1]) : null || 
                     mood === 'spotify' && playlist === 0 ? (artist?.images?.[0]?.url ? artist?.images?.[0]?.url : null || 
                       channel?.images?.[0]?.url ? channel?.images?.[0]?.url : null) : null || 
                     mood === 'spotify' &&  idSongPlayList === '' && playlist === 1 ? (related?.tracks?.items?.[0]?.track?.album?.images?.[0]?.url || 
@@ -1004,7 +1006,7 @@ const VideoBar = ({videos, id, related, count, playlist, views, relatedPlayList,
               </svg>
               <span className="home-text17" style={mood === 'appleMusic' ? {width: '100%'} : null} >{mood ==='youtube' ? (playlist === 0 ?  formatTime(videos?.lengthSeconds) : null || 
                 idSongPlayList === '' && playlist === 1 ? related?.videos?.[0]?.duration_formatted || related?.videos?.items?.[0]?.lengthText || 
-                  related?.[0]?.content_id?.description?.duration_formatted : idSong[4]) : null || 
+                  related?.[0]?.content_id?.description?.duration_formatted || related?.[0]?.content_id?.description?.publishedDate : idSong[4]) : null || 
                 mood === 'spotify' && playlist === 0 ? (videos?.[0]?.album?.release_date ?videos?.[0]?.album?.release_date : null || 
                   related?.tracks?.items?.[0]?.track?.duration_ms ? millisToMinutesAndSeconds(related?.tracks?.items?.[0]?.track?.duration_ms) : null) : null ||  
                 mood === 'spotify' &&  idSongPlayList === '' && playlist === 1 ? (related?.tracks?.items?.[0]?.track?.duration_ms ?  millisToMinutesAndSeconds(related?.tracks?.items?.[0]?.track?.duration_ms) : null || 
@@ -1088,10 +1090,12 @@ const VideoBar = ({videos, id, related, count, playlist, views, relatedPlayList,
           ))}
           {id?.includes("|") && playlist === 1 ? Array.isArray(related) && related.map((item, idx) => (
             <div key={idx} style={{width: '100%' }}> 
-            {item?.content_id?.mood === 'youtube' ?  <Music1 moood={item?.content_id?.mood} color={same12?.find((s) => s?.content_id?.idPage === item?.content_id?.idPage)} video={item?.content_id?.description} id={item?.content_id?.idPage} playlist={playlist} idx={idx} mood={'youtube'}></Music1> : null ||
-            item?.content_id?.mood === 'spotify' ?  <Music1 moood={item?.content_id?.mood}  color={same12?.find((s) => s?.content_id?.idPage === item?.content_id?.idPage)} video={item?.content_id?.description} id={item?.content_id?.idPage} playlist={playlist} idx={idx} mood={'spotify'}></Music1> : null || 
-            item?.content_id?.mood === 'appleMusic' ? <Music1 moood={item?.content_id?.mood} color={same12?.find((s) => s?.content_id?.idPage === item?.content_id?.idPage)} video={item?.content_id?.description} id={item?.content_id?.idPage} playlist={playlist} idx={idx} mood={'appleMusic'}></Music1> : null 
-            }</div>
+              {
+                item?.content_id?.mood === 'youtube' ?  <Music1 moood={item?.content_id?.mood} color={same12?.find((s) => s?.content_id?.idPage === item?.content_id?.idPage)} video={item?.content_id?.description} id={item?.content_id?.idPage} playlist={playlist} idx={idx} mood={'youtube'} same={'false'}></Music1> : null ||
+                item?.content_id?.mood === 'spotify' ?  <Music1 moood={item?.content_id?.mood}  color={same12?.find((s) => s?.content_id?.idPage === item?.content_id?.idPage)} video={item?.content_id?.description} id={item?.content_id?.idPage} playlist={playlist} idx={idx} mood={'spotify'} same={'false'}></Music1> : null || 
+                item?.content_id?.mood === 'appleMusic' ? <Music1 moood={item?.content_id?.mood} color={same12?.find((s) => s?.content_id?.idPage === item?.content_id?.idPage)} video={item?.content_id?.description} id={item?.content_id?.idPage} playlist={playlist} idx={idx} mood={'appleMusic'} same={'false'}></Music1> : null 
+              }
+            </div>
           )): null}
         </div>
       </section>
